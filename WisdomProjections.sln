@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29009.5
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WisdomProjections", "WisdomProjections\WisdomProjections.csproj", "{1AA71CDA-4D92-41E7-B3C3-CD9EA631589A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1AA71CDA-4D92-41E7-B3C3-CD9EA631589A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AA71CDA-4D92-41E7-B3C3-CD9EA631589A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AA71CDA-4D92-41E7-B3C3-CD9EA631589A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AA71CDA-4D92-41E7-B3C3-CD9EA631589A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {755B9B35-91CD-42D2-8668-07A458B0AB67}
+	EndGlobalSection
+EndGlobal
