@@ -5,8 +5,45 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WisdomProjections"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="智慧投影" Width="1600" Height="900"  Background="#FF4D4646"  Loaded="Window_Loaded" Closing="Window_Closing"  >
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="18*"/>
+            <RowDefinition Height="851*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Menu HorizontalAlignment="Left"  VerticalAlignment="Top" Grid.Row="0" Background="#FF4D4646" Foreground="White" Height="17" Width="190">
+            <MenuItem Header="文件" Background="#FF4D4646">
+                <MenuItem Header="导入" Background="#FF4D4646" Foreground="White"></MenuItem>
+                <MenuItem Header="导出" Background="#FF4D4646" Foreground="White"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="编辑" Background="#FF4D4646">
+                <MenuItem Header="导入" Background="#FF4D4646" Foreground="White"></MenuItem>
+                <MenuItem Header="导出" Background="#FF4D4646" Foreground="White"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="查看" Background="#FF4D4646">
+                <MenuItem Header="导入" Background="#FF4D4646" Foreground="White"></MenuItem>
+                <MenuItem Header="导出" Background="#FF4D4646" Foreground="White"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="特效" Background="#FF4D4646">
+                <MenuItem Header="导入" Background="#FF4D4646" Foreground="White"></MenuItem>
+                <MenuItem Header="导出" Background="#FF4D4646" Foreground="White"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="帮助" Background="#FF4D4646">
+                <MenuItem Header="导入" Background="#FF4D4646" Foreground="White" BorderThickness="0"></MenuItem>
+                <MenuItem Header="导出" Background="#FF4D4646" Foreground="White"></MenuItem>
+            </MenuItem>
+        </Menu>
+        <Image x:Name="cimage" Grid.Row="1" Grid.Column="1"/>
+        <Image x:Name="dimage" Grid.Row="1" Grid.Column="2"/>
+        <Canvas x:Name="canvas"  Grid.Row="1" Grid.Column="2"/>
+        <TextBlock x:Name="facing"  Grid.Row="1" Grid.Column="2" FontSize="40" Foreground="White"/>
+
+        <Frame Grid.Row="1" Grid.Column="3"></Frame>
     </Grid>
 </Window>
