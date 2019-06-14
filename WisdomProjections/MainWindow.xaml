@@ -5,45 +5,80 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WisdomProjections"
         mc:Ignorable="d"
-        Title="智慧投影" Width="1600" Height="900"  Background="#FF4D4646"  Loaded="Window_Loaded" Closing="Window_Closing"  >
-    <Grid >
-        <Grid.RowDefinitions>
-            <RowDefinition Height="18*"/>
-            <RowDefinition Height="851*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="2*"/>
-        </Grid.ColumnDefinitions>
-        <Menu HorizontalAlignment="Left"  VerticalAlignment="Top" Grid.Row="0" Background="#FF4D4646" Foreground="White" Height="17" Width="190">
-            <MenuItem Header="文件" Background="#FF4D4646">
-                <MenuItem Header="导入" Background="#FF4D4646" Foreground="White"></MenuItem>
-                <MenuItem Header="导出" Background="#FF4D4646" Foreground="White"></MenuItem>
+        Title="智慧投影" Width="1600" Height="900"  Background="#FF272323" MinWidth="1066" MinHeight="600" Loaded="Window_Loaded" Closing="Window_Closing" SnapsToDevicePixels="True"  >
+    <Window.Resources>
+        <!--GridSplitter样式-->
+        <Style x:Key="GridSplitterPreviewStyle">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Fill="#FF4D4646"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="GridSplitterStyle1" TargetType="{x:Type GridSplitter}">
+            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+            <Setter Property="PreviewStyle" Value="{StaticResource GridSplitterPreviewStyle}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type GridSplitter}">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                            <Grid>
+                                <Button Name="btnExpend" Background="#FF4D4646" Foreground="White" Content=">" VerticalAlignment="Center" Height="50" Panel.ZIndex="0" Cursor="Hand"/>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <DockPanel >
+
+        <Menu DockPanel.Dock="Top"  VerticalAlignment="Top"  Background="#FF272323" Foreground="White" >
+            <MenuItem Header="文件" Background="#FF272323">
+                <MenuItem Header="导入" Background="#FF272323" Foreground="White"></MenuItem>
+                <MenuItem Header="导出" Background="#FF272323" Foreground="White"></MenuItem>
             </MenuItem>
-            <MenuItem Header="编辑" Background="#FF4D4646">
-                <MenuItem Header="导入" Background="#FF4D4646" Foreground="White"></MenuItem>
-                <MenuItem Header="导出" Background="#FF4D4646" Foreground="White"></MenuItem>
+            <MenuItem Header="编辑" Background="#FF272323">
+                <MenuItem Header="导入" Background="#FF272323" Foreground="White"></MenuItem>
+                <MenuItem Header="导出" Background="#FF272323" Foreground="White"></MenuItem>
             </MenuItem>
-            <MenuItem Header="查看" Background="#FF4D4646">
-                <MenuItem Header="导入" Background="#FF4D4646" Foreground="White"></MenuItem>
-                <MenuItem Header="导出" Background="#FF4D4646" Foreground="White"></MenuItem>
+            <MenuItem Header="查看" Background="#FF272323">
+                <MenuItem Header="导入" Background="#FF272323" Foreground="White"></MenuItem>
+                <MenuItem Header="导出" Background="#FF272323" Foreground="White"></MenuItem>
             </MenuItem>
-            <MenuItem Header="特效" Background="#FF4D4646">
-                <MenuItem Header="导入" Background="#FF4D4646" Foreground="White"></MenuItem>
-                <MenuItem Header="导出" Background="#FF4D4646" Foreground="White"></MenuItem>
+            <MenuItem Header="特效" Background="#FF272323">
+                <MenuItem Header="导入" Background="#FF272323" Foreground="White"></MenuItem>
+                <MenuItem Header="导出" Background="#FF272323" Foreground="White"></MenuItem>
             </MenuItem>
-            <MenuItem Header="帮助" Background="#FF4D4646">
-                <MenuItem Header="导入" Background="#FF4D4646" Foreground="White" BorderThickness="0"></MenuItem>
-                <MenuItem Header="导出" Background="#FF4D4646" Foreground="White"></MenuItem>
+            <MenuItem Header="帮助" Background="#FF272323">
+                <MenuItem Header="导入" Background="#FF272323" Foreground="White" BorderThickness="0"></MenuItem>
+                <MenuItem Header="导出" Background="#FF272323" Foreground="White"></MenuItem>
             </MenuItem>
         </Menu>
-        <Image x:Name="cimage" Grid.Row="1" Grid.Column="1"/>
-        <Image x:Name="dimage" Grid.Row="1" Grid.Column="2"/>
-        <Canvas x:Name="canvas"  Grid.Row="1" Grid.Column="2"/>
-        <TextBlock x:Name="facing"  Grid.Row="1" Grid.Column="2" FontSize="40" Foreground="White"/>
+     
+        <Grid Name="grdWorkbench">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.282*"  />
+                <ColumnDefinition Width="6"/>
+                <ColumnDefinition Width="0.718*"/>
+                <ColumnDefinition Width="6"/>
+                <ColumnDefinition Width="0.282*" />
+            </Grid.ColumnDefinitions>
+            <Grid Name="grd1"  Margin="0" Background="#FF272323"/>
+            <GridSplitter x:Name="gsSplitterr" Grid.Column="1"   Style="{DynamicResource GridSplitterStyle1}"  HorizontalAlignment="Stretch" Margin="0" Background="Black" >
+                
+            </GridSplitter>
+            <Grid Name="grd2"  Grid.Column="2" Panel.ZIndex="-1" Margin="5,0,-5,0" >
+                <TabControl BorderThickness="0" Background="#FF4D4646"  x:Name="tc_Image" AutomationProperties.IsOffscreenBehavior="Offscreen"  >
+                </TabControl>
 
-        <Frame Grid.Row="1" Grid.Column="3"></Frame>
-    </Grid>
+            </Grid>
+            <GridSplitter x:Name="gsSplitterr2" Grid.Column="3"    Style="{DynamicResource GridSplitterStyle1}" HorizontalAlignment="Stretch" Margin="0" Background="Black" />
+            <Grid Name="grd3"  Grid.Column="4" Margin="5,0,-5,0" Background="#FF272323" />
+
+        </Grid>
+    </DockPanel>
+    
 </Window>
