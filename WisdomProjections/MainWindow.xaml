@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WisdomProjections"
         mc:Ignorable="d"
-        Title="智慧投影" Width="1600" Height="900"  Background="#FF272323" MinWidth="1066" MinHeight="600" Loaded="Window_Loaded" Closing="Window_Closing" SnapsToDevicePixels="True"  >
+        Title="智慧投影" Width="1600" Height="900"  Background="#FF272323" MinWidth="1066" MinHeight="600" Loaded="Window_Loaded" Closing="Window_Closing" SnapsToDevicePixels="True" WindowState="Maximized"  >
     <Window.Resources>
         <!--GridSplitter样式-->
         <Style x:Key="GridSplitterPreviewStyle">
@@ -25,7 +25,7 @@
                     <ControlTemplate TargetType="{x:Type GridSplitter}">
                         <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
                             <Grid>
-                                <Button Name="btnExpend" Background="#FF4D4646" Foreground="White" Content=">" VerticalAlignment="Center" Height="50" Panel.ZIndex="0" Cursor="Hand"/>
+                                <Button Name="btnExpend" Background="#FF4D4646" Foreground="White" Content=":" VerticalAlignment="Center" Height="100" Panel.ZIndex="0" Cursor="Hand"/>
                             </Grid>
                         </Border>
                     </ControlTemplate>
@@ -57,7 +57,7 @@
                 <MenuItem Header="导出" Background="#FF272323" Foreground="White"></MenuItem>
             </MenuItem>
         </Menu>
-     
+
         <Grid Name="grdWorkbench">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.282*"  />
@@ -68,7 +68,7 @@
             </Grid.ColumnDefinitions>
             <Grid Name="grd1"  Margin="0" Background="#FF272323"/>
             <GridSplitter x:Name="gsSplitterr" Grid.Column="1"   Style="{DynamicResource GridSplitterStyle1}"  HorizontalAlignment="Stretch" Margin="0" Background="Black" >
-                
+
             </GridSplitter>
             <Grid Name="grd2"  Grid.Column="2" Panel.ZIndex="-1" Margin="5,0,-5,0" >
                 <TabControl BorderThickness="0" Background="#FF4D4646"  x:Name="tc_Image" AutomationProperties.IsOffscreenBehavior="Offscreen"  >
@@ -80,5 +80,5 @@
 
         </Grid>
     </DockPanel>
-    
+
 </Window>
