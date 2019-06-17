@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,21 +15,20 @@ using YDPeopleSensor.Net;
 
 namespace WisdomProjections.Data_Executor
 {
-   public class SensorDataExecutor
+    public class SensorDataExecutor
     {
-        public SensorDataExecutor(System.Windows.Controls.TabControl tc_Image)
+        private SensorDataExecutor()
+        {
+
+        }
+
+        private bool isInitedContent;
+        public void InitContent(System.Windows.Controls.TabControl tc_Image)
         {
             this.tc_Image = tc_Image;
             InitDImageColor();
-            
-        }
-        private ImageTabItem itiColor;
-        private ImageTabItem itiD;
-        public void Window_Loaded(object sender, RoutedEventArgs e)
-        {
             itiColor = new ImageTabItem("彩色图像", false, tc_Image);
             itiD = new ImageTabItem("深度图像", true, tc_Image);
-
 
             for (var i = 0; i < MaxPersons * MaxJoints; i++)
             {
@@ -50,28 +50,42 @@ namespace WisdomProjections.Data_Executor
 
                 itiD.canvas.Children.Add(bone);
             }
-
+            isInitedContent = true;
+        }
+        public enum InitStatus
+        {
+            初始化失败, 开启失败
+        }
+        public void InitSensorDE(Action<InitStatus> action)
+        {
             this.sensor = new Sensor();
 
             if (ErrorCode.Success != this.sensor.Initialize(ColorResolution.VGA, DepthResolution.VGA, true, 0))
             {
-                MessageBox.Show("Failed to initialize sensor", "PeopleSensorAppWpf");
+                action(InitStatus.初始化失败);
+                return;
             }
             this.sensor.SetDepthMappedToColor(true);
 
             if (ErrorCode.Success != this.sensor.Start())
             {
-                MessageBox.Show("Failed to start sensor", "PeopleSensorAppWpf");
+                action(InitStatus.开启失败);
+                return;
             }
 
             this.sensor.ColorFrameReady += this.OnColorFrameReady;
             this.sensor.DepthFrameAndPublishDataReady += this.OnDepthFrameAndPublishDataReady;
         }
-        public void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+
+
+
+        private ImageTabItem itiColor;
+        private ImageTabItem itiD;
+
+        public void Close(object sender, CancelEventArgs e)
         {
             this.sensor.ColorFrameReady -= this.OnColorFrameReady;
             this.sensor.DepthFrameAndPublishDataReady -= this.OnDepthFrameAndPublishDataReady;
-
             this.sensor.Stop();
             this.sensor.Uninitialize();
             this.sensor.Dispose();
@@ -137,6 +151,10 @@ namespace WisdomProjections.Data_Executor
         }
         private void OnColorFrameReady(Sensor sensor, ColorFrame frame, ErrorCode error)
         {
+            if (!isInitedContent)
+            {
+                return;
+            }
             if (ErrorCode.Success != error)
             {
                 return;
@@ -171,7 +189,10 @@ namespace WisdomProjections.Data_Executor
         {
 
 
-
+            if (!isInitedContent)
+            {
+                return;
+            }
 
             if (ErrorCode.Success != error)
             {
@@ -367,5 +388,16 @@ namespace WisdomProjections.Data_Executor
         private const int MaxPersons = 6;
         private const int MaxJoints = 17;
         private const int MaxBones = 14;
+        private static SensorDataExecutor _sensorDE;
+
+        public static SensorDataExecutor SensorDE
+        {
+            get
+            {
+                if (_sensorDE == null) _sensorDE = new SensorDataExecutor();
+
+                return _sensorDE;
+            }
+        }
     }
 }

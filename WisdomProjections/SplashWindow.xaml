@@ -1,0 +1,22 @@
+﻿<Window x:Class="WisdomProjections.SplashWindow"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:WisdomProjections"
+      mc:Ignorable="d" 
+        Loaded="Window_Loaded"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+      Height="640" Width="1066"
+      Title="SplashWindow" AllowsTransparency="True" >
+
+
+    <Window.Background>
+        <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/loading_picture.jpg"/>
+    </Window.Background>
+    <DockPanel>
+
+        <Label DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Foreground="White" FontSize="16" Width="200"  HorizontalAlignment="Left" Margin="33,0,0,46">投影设备正在拼命加载中···</Label>
+    </DockPanel>
+</Window>

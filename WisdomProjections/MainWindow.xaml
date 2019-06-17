@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WisdomProjections"
         mc:Ignorable="d"
-        Title="智慧投影" Width="1600" Height="900"  Background="#FF272323" MinWidth="1066" MinHeight="600" Loaded="Window_Loaded" Closing="Window_Closing" SnapsToDevicePixels="True" WindowState="Maximized"  >
+        Title="智慧投影" Width="1600" Height="900"  Background="#0D0918" MinWidth="1066" MinHeight="600" Loaded="Window_Loaded" Closing="Window_Closing" SnapsToDevicePixels="True" WindowState="Maximized"  >
     <Window.Resources>
         <!--GridSplitter样式-->
         <Style x:Key="GridSplitterPreviewStyle">
             <Setter Property="Control.Template">
                 <Setter.Value>
                     <ControlTemplate>
-                        <Rectangle Fill="#FF4D4646"/>
+                        <Rectangle Fill="#0D0918"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -34,49 +34,558 @@
         </Style>
     </Window.Resources>
     <DockPanel >
-
-        <Menu DockPanel.Dock="Top"  VerticalAlignment="Top"  Background="#FF272323" Foreground="White" >
-            <MenuItem Header="文件" Background="#FF272323">
-                <MenuItem Header="导入" Background="#FF272323" Foreground="White"></MenuItem>
-                <MenuItem Header="导出" Background="#FF272323" Foreground="White"></MenuItem>
-            </MenuItem>
-            <MenuItem Header="编辑" Background="#FF272323">
-                <MenuItem Header="导入" Background="#FF272323" Foreground="White"></MenuItem>
-                <MenuItem Header="导出" Background="#FF272323" Foreground="White"></MenuItem>
-            </MenuItem>
-            <MenuItem Header="查看" Background="#FF272323">
-                <MenuItem Header="导入" Background="#FF272323" Foreground="White"></MenuItem>
-                <MenuItem Header="导出" Background="#FF272323" Foreground="White"></MenuItem>
-            </MenuItem>
-            <MenuItem Header="特效" Background="#FF272323">
-                <MenuItem Header="导入" Background="#FF272323" Foreground="White"></MenuItem>
-                <MenuItem Header="导出" Background="#FF272323" Foreground="White"></MenuItem>
-            </MenuItem>
-            <MenuItem Header="帮助" Background="#FF272323">
-                <MenuItem Header="导入" Background="#FF272323" Foreground="White" BorderThickness="0"></MenuItem>
-                <MenuItem Header="导出" Background="#FF272323" Foreground="White"></MenuItem>
-            </MenuItem>
-        </Menu>
-
+        <StackPanel DockPanel.Dock="Top" VerticalAlignment="Top" Background="#19132B">
+            <Menu  Background="#19132B"  FontFamily="PingFangSC-Regular" Foreground="White" FontSize="18" >
+                <MenuItem Header="文件" Background="#19132B">
+                    <MenuItem Header="导入" Background="#19132B" Foreground="White"></MenuItem>
+                    <MenuItem Header="导出" Background="#19132B" Foreground="White"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="编辑" Background="#19132B" >
+                    <MenuItem Header="导入" Background="#19132B" Foreground="White"></MenuItem>
+                    <MenuItem Header="导出" Background="#19132B" Foreground="White"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="查看" Background="#19132B">
+                    <MenuItem Header="导入" Background="#19132B" Foreground="White"></MenuItem>
+                    <MenuItem Header="导出" Background="#19132B" Foreground="White"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="特效" Background="#19132B">
+                    <MenuItem Header="导入" Foreground="White" Background="#19132B"/>
+                    <MenuItem Header="导出" Background="#19132B" Foreground="White"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="帮助" Background="#19132B">
+                    <MenuItem Header="导入" Background="#19132B" Foreground="White" BorderThickness="0"></MenuItem>
+                    <MenuItem Header="导出" Background="#19132B" Foreground="White"></MenuItem>
+                </MenuItem>
+            </Menu>
+            <StackPanel DockPanel.Dock="Top"  VerticalAlignment="Top" Height="46" Orientation="Horizontal"  HorizontalAlignment="Left" Margin="8,0,0,0">
+                <Image Width="22" Height="22" Source="pack://siteoforigin:,,,/Resources/back.png"/>
+                <Image Width="22" Height="22" Source="pack://siteoforigin:,,,/Resources/next.png" Margin="32,0,0,0"/>
+                <Image Width="22" Height="22" Source="pack://siteoforigin:,,,/Resources/slect.png" Margin="32,0,0,0"/>
+                <Image Width="22" Height="22" Source="pack://siteoforigin:,,,/Resources/pen.png" Margin="32,0,0,0"/>
+                <Image Width="22" Height="22" Source="pack://siteoforigin:,,,/Resources/shrink.png" Margin="32,0,0,0"/>
+                <Image Width="22" Height="22" Source="pack://siteoforigin:,,,/Resources/magnify.png" Margin="32,0,0,0"/>
+            </StackPanel>
+        </StackPanel>
         <Grid Name="grdWorkbench">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.282*"  />
+                <ColumnDefinition Width="160"  />
                 <ColumnDefinition Width="6"/>
                 <ColumnDefinition Width="0.718*"/>
                 <ColumnDefinition Width="6"/>
-                <ColumnDefinition Width="0.282*" />
+                <ColumnDefinition Width="340" />
             </Grid.ColumnDefinitions>
-            <Grid Name="grd1"  Margin="0" Background="#FF272323"/>
+            <Grid Name="grd1"  Margin="0" Background="#FF171226" >
+                <StackPanel>
+                    <Label Background="#FF201A33" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">模型操作台</Label>
+                    <StackPanel>
+                        <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">模型一</Label>
+                        <Label  Foreground="#BD4DFF" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">模型二</Label>
+                        <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">模型三</Label>
+                        <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">模型四</Label>
+                        <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">模型五</Label>
+                        <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">模型六</Label>
+                    </StackPanel>
+                    <Label Background="#FF201A33" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">设备推送</Label>
+                    <StackPanel>
+                        <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">设备一</Label>
+                        <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">设备二</Label>
+                        <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">设备三</Label>
+                        <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">设备四</Label>
+                        <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">设备五</Label>
+                        <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">设备六</Label>
+                    </StackPanel>
+                </StackPanel>
+
+            </Grid>
             <GridSplitter x:Name="gsSplitterr" Grid.Column="1"   Style="{DynamicResource GridSplitterStyle1}"  HorizontalAlignment="Stretch" Margin="0" Background="Black" >
 
             </GridSplitter>
             <Grid Name="grd2"  Grid.Column="2" Panel.ZIndex="-1" Margin="5,0,-5,0" >
-                <TabControl BorderThickness="0" Background="#FF4D4646"  x:Name="tc_Image" AutomationProperties.IsOffscreenBehavior="Offscreen"  >
+                <TabControl BorderThickness="0" Background="#0D0918"  x:Name="tc_Image" AutomationProperties.IsOffscreenBehavior="Offscreen"  >
                 </TabControl>
 
             </Grid>
             <GridSplitter x:Name="gsSplitterr2" Grid.Column="3"    Style="{DynamicResource GridSplitterStyle1}" HorizontalAlignment="Stretch" Margin="0" Background="Black" />
-            <Grid Name="grd3"  Grid.Column="4" Margin="5,0,-5,0" Background="#FF272323" />
+            <Grid Name="grd3"  Grid.Column="4"  Background="#FF171226" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="144"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0">
+                    <Label Background="#FF201A33" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">特效组件</Label>
+                    <Grid Margin="10,10,10,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2.5*"/>
+                            <ColumnDefinition Width="0.2*"/>
+                            <ColumnDefinition Width="2.5*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Foreground="White" FontSize="18" HorizontalContentAlignment="Left" BorderThickness="0">类别</Label>
+                        <Border  Grid.Column="1" Height="28"  CornerRadius="6" Background="#FF2B2635">
+                            <ComboBox FontSize="18"  Margin="10,0,0,0" Background="#FF2B2635" Style="{StaticResource ComboBoxStyle}" BorderThickness="0"/>
+                        </Border>
+                        <Border  Grid.Column="3" Height="28"  CornerRadius="6" Background="#FF2B2635">
+                            <ComboBox FontSize="18" Margin="10,0,0,0" Background="#FF2B2635" Style="{StaticResource ComboBoxStyle}" BorderThickness="0"></ComboBox>
+                        </Border>
+                    </Grid>
+                    <Grid  Margin="10,8,10,0">
+                        <Border Style="{StaticResource Round}"  Padding="6,0,0,0" >
+                            <Grid >
+                                <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="18"  Style="{StaticResource NoBorderSearch}" Height="28" Foreground="White"/>
+                                <Image HorizontalAlignment="Right" DockPanel.Dock="Right" Width="18" Height="18" Source="pack://siteoforigin:,,,/Resources/delete.png" Margin="0,0,10,0"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+                <ScrollViewer Grid.Row="1" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel>
+                        <!--特效item start-->
+                        <Grid Margin="10,10,10,0">
+
+                            <Border CornerRadius="6" Background="#FF423B57" Padding="8,10,10,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="2.3*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Width="88" Height="88" CornerRadius="6" Background="#0D0918">
+                                        <Image  Source="pack://siteoforigin:,,,/Resources/projector.png"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                                        <Label FontSize="14" Foreground="White" Height="16" Padding="0">特效A</Label>
+                                        <TextBlock TextWrapping="Wrap" FontSize="12" MaxHeight="32" Foreground="White" Margin="0,3,0,0">特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A</TextBlock>
+                                        <Grid Margin="0,6,0,0" >
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="3.2*"/>
+                                                <ColumnDefinition Width="0.2*"/>
+                                                <ColumnDefinition Width="3.2*"/>
+                                                <ColumnDefinition Width="1*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0" CornerRadius="4">
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button1.png"/>
+                                                </Border.Background>
+                                                <Label Foreground="White" Height="25" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True">花</Label>
+                                            </Border>
+                                            <Border Grid.Column="2" CornerRadius="4" >
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button2.png"/>
+                                                </Border.Background>
+                                                <Label Foreground="White" Height="25" Grid.IsSharedSizeScope="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                                                    跑马灯</Label>
+                                            </Border>
+                                        </Grid>
+                                    </StackPanel>
+
+
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <!--特效item end-->
+
+                        <!--特效item start-->
+                        <Grid Margin="10,10,10,0">
+
+                            <Border CornerRadius="6" Background="#FF423B57" Padding="8,10,10,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="2.3*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Width="88" Height="88" CornerRadius="6" Background="#0D0918">
+                                        <Image  Source="pack://siteoforigin:,,,/Resources/projector.png"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                                        <Label FontSize="14" Foreground="White" Height="16" Padding="0">特效A</Label>
+                                        <TextBlock TextWrapping="Wrap" FontSize="12" MaxHeight="32" Foreground="White" Margin="0,3,0,0">特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A</TextBlock>
+                                        <Grid Margin="0,6,0,0" >
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="3.2*"/>
+                                                <ColumnDefinition Width="0.2*"/>
+                                                <ColumnDefinition Width="3.2*"/>
+                                                <ColumnDefinition Width="1*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0" CornerRadius="4">
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button1.png"/>
+                                                </Border.Background>
+                                                <Label Foreground="White" Height="25" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True">花</Label>
+                                            </Border>
+                                            <Border Grid.Column="2" CornerRadius="4" >
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button2.png"/>
+                                                </Border.Background>
+                                                <Label Foreground="White" Height="25" Grid.IsSharedSizeScope="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                                                    跑马灯</Label>
+                                            </Border>
+                                        </Grid>
+                                    </StackPanel>
+
+
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <!--特效item end-->
+
+                        <!--特效item start-->
+                        <Grid Margin="10,10,10,0">
+
+                            <Border CornerRadius="6" Background="#FF423B57" Padding="8,10,10,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="2.3*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Width="88" Height="88" CornerRadius="6" Background="#0D0918">
+                                        <Image  Source="pack://siteoforigin:,,,/Resources/projector.png"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                                        <Label FontSize="14" Foreground="White" Height="16" Padding="0">特效A</Label>
+                                        <TextBlock TextWrapping="Wrap" FontSize="12" MaxHeight="32" Foreground="White" Margin="0,3,0,0">特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A</TextBlock>
+                                        <Grid Margin="0,6,0,0" >
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="3.2*"/>
+                                                <ColumnDefinition Width="0.2*"/>
+                                                <ColumnDefinition Width="3.2*"/>
+                                                <ColumnDefinition Width="1*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0" CornerRadius="4">
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button1.png"/>
+                                                </Border.Background>
+                                                <Label Foreground="White" Height="25" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True">花</Label>
+                                            </Border>
+                                            <Border Grid.Column="2" CornerRadius="4" >
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button2.png"/>
+                                                </Border.Background>
+                                                <Label Foreground="White" Height="25" Grid.IsSharedSizeScope="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                                                    跑马灯</Label>
+                                            </Border>
+                                        </Grid>
+                                    </StackPanel>
+
+
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <!--特效item end-->
+
+                        <!--特效item start-->
+                        <Grid Margin="10,10,10,0">
+
+                            <Border CornerRadius="6" Background="#FF423B57" Padding="8,10,10,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="2.3*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Width="88" Height="88" CornerRadius="6" Background="#0D0918">
+                                        <Image  Source="pack://siteoforigin:,,,/Resources/projector.png"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                                        <Label FontSize="14" Foreground="White" Height="16" Padding="0">特效A</Label>
+                                        <TextBlock TextWrapping="Wrap" FontSize="12" MaxHeight="32" Foreground="White" Margin="0,3,0,0">特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A</TextBlock>
+                                        <Grid Margin="0,6,0,0" >
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="3.2*"/>
+                                                <ColumnDefinition Width="0.2*"/>
+                                                <ColumnDefinition Width="3.2*"/>
+                                                <ColumnDefinition Width="1*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0" CornerRadius="4">
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button1.png"/>
+                                                </Border.Background>
+                                                <Label Foreground="White" Height="25" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True">花</Label>
+                                            </Border>
+                                            <Border Grid.Column="2" CornerRadius="4" >
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button2.png"/>
+                                                </Border.Background>
+                                                <Label Foreground="White" Height="25" Grid.IsSharedSizeScope="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                                                    跑马灯</Label>
+                                            </Border>
+                                        </Grid>
+                                    </StackPanel>
+
+
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <!--特效item end-->
+
+                        <!--特效item start-->
+                        <Grid Margin="10,10,10,0">
+
+                            <Border CornerRadius="6" Background="#FF423B57" Padding="8,10,10,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="2.3*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Width="88" Height="88" CornerRadius="6" Background="#0D0918">
+                                        <Image  Source="pack://siteoforigin:,,,/Resources/projector.png"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                                        <Label FontSize="14" Foreground="White" Height="16" Padding="0">特效A</Label>
+                                        <TextBlock TextWrapping="Wrap" FontSize="12" MaxHeight="32" Foreground="White" Margin="0,3,0,0">特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A</TextBlock>
+                                        <Grid Margin="0,6,0,0" >
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="3.2*"/>
+                                                <ColumnDefinition Width="0.2*"/>
+                                                <ColumnDefinition Width="3.2*"/>
+                                                <ColumnDefinition Width="1*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0" CornerRadius="4">
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button1.png"/>
+                                                </Border.Background>
+                                                <Label Foreground="White" Height="25" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True">花</Label>
+                                            </Border>
+                                            <Border Grid.Column="2" CornerRadius="4" >
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button2.png"/>
+                                                </Border.Background>
+                                                <Label Foreground="White" Height="25" Grid.IsSharedSizeScope="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                                                    跑马灯</Label>
+                                            </Border>
+                                        </Grid>
+                                    </StackPanel>
+
+
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <!--特效item end-->
+
+                        <!--特效item start-->
+                        <Grid Margin="10,10,10,0">
+
+                            <Border CornerRadius="6" Background="#FF423B57" Padding="8,10,10,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="2.3*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Width="88" Height="88" CornerRadius="6" Background="#0D0918">
+                                        <Image  Source="pack://siteoforigin:,,,/Resources/projector.png"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                                        <Label FontSize="14" Foreground="White" Height="16" Padding="0">特效A</Label>
+                                        <TextBlock TextWrapping="Wrap" FontSize="12" MaxHeight="32" Foreground="White" Margin="0,3,0,0">特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A</TextBlock>
+                                        <Grid Margin="0,6,0,0" >
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="3.2*"/>
+                                                <ColumnDefinition Width="0.2*"/>
+                                                <ColumnDefinition Width="3.2*"/>
+                                                <ColumnDefinition Width="1*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0" CornerRadius="4">
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button1.png"/>
+                                                </Border.Background>
+                                                <Label Foreground="White" Height="25" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True">花</Label>
+                                            </Border>
+                                            <Border Grid.Column="2" CornerRadius="4" >
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button2.png"/>
+                                                </Border.Background>
+                                                <Label Foreground="White" Height="25" Grid.IsSharedSizeScope="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                                                    跑马灯</Label>
+                                            </Border>
+                                        </Grid>
+                                    </StackPanel>
+
+
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <!--特效item end-->
+
+
+                        <!--特效item start-->
+                        <Grid Margin="10,10,10,0">
+
+                            <Border CornerRadius="6" Background="#FF423B57" Padding="8,10,10,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="2.3*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Width="88" Height="88" CornerRadius="6" Background="#0D0918">
+                                        <Image  Source="pack://siteoforigin:,,,/Resources/projector.png"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                                        <Label FontSize="14" Foreground="White" Height="16" Padding="0">特效A</Label>
+                                        <TextBlock TextWrapping="Wrap" FontSize="12" MaxHeight="32" Foreground="White" Margin="0,3,0,0">特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A</TextBlock>
+                                        <Grid Margin="0,6,0,0" >
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="3.2*"/>
+                                                <ColumnDefinition Width="0.2*"/>
+                                                <ColumnDefinition Width="3.2*"/>
+                                                <ColumnDefinition Width="1*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0" CornerRadius="4">
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button1.png"/>
+                                                </Border.Background>
+                                                <Label Foreground="White" Height="25" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True">花</Label>
+                                            </Border>
+                                            <Border Grid.Column="2" CornerRadius="4" >
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button2.png"/>
+                                                </Border.Background>
+                                                <Label Foreground="White" Height="25" Grid.IsSharedSizeScope="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                                                    跑马灯</Label>
+                                            </Border>
+                                        </Grid>
+                                    </StackPanel>
+
+
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <!--特效item end-->
+
+
+                        <!--特效item start-->
+                        <Grid Margin="10,10,10,0">
+
+                            <Border CornerRadius="6" Background="#FF423B57" Padding="8,10,10,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="2.3*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Width="88" Height="88" CornerRadius="6" Background="#0D0918">
+                                        <Image  Source="pack://siteoforigin:,,,/Resources/projector.png"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                                        <Label FontSize="14" Foreground="White" Height="16" Padding="0">特效A</Label>
+                                        <TextBlock TextWrapping="Wrap" FontSize="12" MaxHeight="32" Foreground="White" Margin="0,3,0,0">特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A</TextBlock>
+                                        <Grid Margin="0,6,0,0" >
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="3.2*"/>
+                                                <ColumnDefinition Width="0.2*"/>
+                                                <ColumnDefinition Width="3.2*"/>
+                                                <ColumnDefinition Width="1*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0" CornerRadius="4">
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button1.png"/>
+                                                </Border.Background>
+                                                <Label Foreground="White" Height="25" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True">花</Label>
+                                            </Border>
+                                            <Border Grid.Column="2" CornerRadius="4" >
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button2.png"/>
+                                                </Border.Background>
+                                                <Label Foreground="White" Height="25" Grid.IsSharedSizeScope="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                                                    跑马灯</Label>
+                                            </Border>
+                                        </Grid>
+                                    </StackPanel>
+
+
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <!--特效item end-->
+
+
+                        <!--特效item start-->
+                        <Grid Margin="10,10,10,0">
+
+                            <Border CornerRadius="6" Background="#FF423B57" Padding="8,10,10,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="2.3*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Width="88" Height="88" CornerRadius="6" Background="#0D0918">
+                                        <Image  Source="pack://siteoforigin:,,,/Resources/projector.png"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                                        <Label FontSize="14" Foreground="White" Height="16" Padding="0">特效A</Label>
+                                        <TextBlock TextWrapping="Wrap" FontSize="12" MaxHeight="32" Foreground="White" Margin="0,3,0,0">特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A</TextBlock>
+                                        <Grid Margin="0,6,0,0" >
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="3.2*"/>
+                                                <ColumnDefinition Width="0.2*"/>
+                                                <ColumnDefinition Width="3.2*"/>
+                                                <ColumnDefinition Width="1*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0" CornerRadius="4">
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button1.png"/>
+                                                </Border.Background>
+                                                <Label Foreground="White" Height="25" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True">花</Label>
+                                            </Border>
+                                            <Border Grid.Column="2" CornerRadius="4" >
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button2.png"/>
+                                                </Border.Background>
+                                                <Label Foreground="White" Height="25" Grid.IsSharedSizeScope="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                                                    跑马灯</Label>
+                                            </Border>
+                                        </Grid>
+                                    </StackPanel>
+
+
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <!--特效item end-->
+
+
+                        <!--特效item start-->
+                        <Grid Margin="10,10,10,0">
+
+                            <Border CornerRadius="6" Background="#FF423B57" Padding="8,10,10,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="2.3*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Width="88" Height="88" CornerRadius="6" Background="#0D0918">
+                                        <Image  Source="pack://siteoforigin:,,,/Resources/projector.png"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                                        <Label FontSize="14" Foreground="White" Height="16" Padding="0">特效A</Label>
+                                        <TextBlock TextWrapping="Wrap" FontSize="12" MaxHeight="32" Foreground="White" Margin="0,3,0,0">特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A特效A</TextBlock>
+                                        <Grid Margin="0,6,0,0" >
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="3.2*"/>
+                                                <ColumnDefinition Width="0.2*"/>
+                                                <ColumnDefinition Width="3.2*"/>
+                                                <ColumnDefinition Width="1*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0" CornerRadius="4">
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button1.png"/>
+                                                </Border.Background>
+                                                <Label Foreground="White" Height="25" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True">花</Label>
+                                            </Border>
+                                            <Border Grid.Column="2" CornerRadius="4" >
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button2.png"/>
+                                                </Border.Background>
+                                                <Label Foreground="White" Height="25" Grid.IsSharedSizeScope="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                                                    跑马灯</Label>
+                                            </Border>
+                                        </Grid>
+                                    </StackPanel>
+
+
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <!--特效item end-->
+
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
 
         </Grid>
     </DockPanel>

@@ -28,13 +28,11 @@ namespace WisdomProjections
     /// </summary>
     public partial class MainWindow : Window
     {
-        SensorDataExecutor sde;
         public MainWindow()
         {
             InitializeComponent();
-            sde = new SensorDataExecutor(tc_Image);
-            Loaded += sde.Window_Loaded;
-            Closing += sde.Window_Closing;
+            SensorDataExecutor.SensorDE.InitContent(tc_Image);
+            Closing += SensorDataExecutor.SensorDE.Close;
         }
 
 
