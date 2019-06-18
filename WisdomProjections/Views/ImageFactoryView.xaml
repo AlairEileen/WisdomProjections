@@ -1,0 +1,30 @@
+﻿<Grid x:Class="WisdomProjections.Views.ImageFactoryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WisdomProjections.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid x:Name="IMG">
+        <Grid.Resources>
+            <TransformGroup x:Key="Imageview">
+                <ScaleTransform/>
+                <TranslateTransform/>
+            </TransformGroup>
+        </Grid.Resources>
+        <ScrollViewer   x:Name="root" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled"   Focusable="False" >
+            <ContentControl x:Name="ImgContent"  MouseLeftButtonDown="Img_MouseLeftButtonDown"   
+                             MouseLeftButtonUp="Img_MouseLeftButtonUp"
+                             MouseMove="Img_MouseMove"
+                             MouseWheel="img_MouseWheel" >
+                <Grid>
+                    <Image Name="img"  RenderTransform="{StaticResource Imageview}" RenderOptions.BitmapScalingMode="NearestNeighbor"  >
+
+                    </Image>
+                    <Canvas x:Name="canvas"  />
+                </Grid>
+            </ContentControl>
+        </ScrollViewer>
+    </Grid>
+</Grid>

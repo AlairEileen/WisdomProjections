@@ -23,12 +23,11 @@ namespace WisdomProjections.Data_Executor
         }
 
         private bool isInitedContent;
-        public void InitContent(System.Windows.Controls.TabControl tc_Image)
+
+        internal void InitContent(ImageFactoryView imgContainer)
         {
-            this.tc_Image = tc_Image;
+            this.imgContainer = imgContainer;
             InitDImageColor();
-            itiColor = new ImageTabItem("彩色图像", false, tc_Image);
-            itiD = new ImageTabItem("深度图像", true, tc_Image);
 
             for (var i = 0; i < MaxPersons * MaxJoints; i++)
             {
@@ -38,7 +37,7 @@ namespace WisdomProjections.Data_Executor
                 joint.Height = 16.0;
                 joint.Visibility = System.Windows.Visibility.Collapsed;
 
-                itiD.canvas.Children.Add(joint);
+                imgContainer.canvas.Children.Add(joint);
             }
 
             for (var i = 0; i < MaxPersons * MaxBones; i++)
@@ -48,10 +47,11 @@ namespace WisdomProjections.Data_Executor
                 bone.StrokeThickness = 6.0;
                 bone.Visibility = System.Windows.Visibility.Collapsed;
 
-                itiD.canvas.Children.Add(bone);
+                imgContainer.canvas.Children.Add(bone);
             }
             isInitedContent = true;
         }
+
         public enum InitStatus
         {
             初始化失败, 开启失败
@@ -79,8 +79,6 @@ namespace WisdomProjections.Data_Executor
 
 
 
-        private ImageTabItem itiColor;
-        private ImageTabItem itiD;
 
         public void Close(object sender, CancelEventArgs e)
         {
@@ -177,7 +175,7 @@ namespace WisdomProjections.Data_Executor
                     if (null == this.cbitmap || this.cbitmap.PixelWidth != this.cframe.Width || this.cbitmap.PixelHeight != this.cframe.Height)
                     {
                         this.cbitmap = new WriteableBitmap(this.cframe.Width, this.cframe.Height, 96, 96, PixelFormats.Bgra32, null);
-                        itiColor.img.Source = this.cbitmap;
+                        imgContainer.img.Source = this.cbitmap;
                     }
 
                     this.cbitmap.WritePixels(new Int32Rect(0, 0, this.cframe.Width, this.cframe.Height), this.cframe.Pixels, this.cframe.Width * 4, 0);
@@ -188,7 +186,10 @@ namespace WisdomProjections.Data_Executor
         private void OnDepthFrameAndPublishDataReady(Sensor sensor, DepthFrame depthFrame, PublishData publishData, ErrorCode error)
         {
 
-
+            if (!showDpImg)
+            {
+                return;
+            }
             if (!isInitedContent)
             {
                 return;
@@ -240,7 +241,7 @@ namespace WisdomProjections.Data_Executor
                         if (null == this.dbitmap || this.dbitmap.PixelHeight != this.dw || this.dbitmap.PixelHeight != this.dh)
                         {
                             this.dbitmap = new WriteableBitmap(this.dw, this.dh, 96, 96, PixelFormats.Bgra32, null);
-                            itiD.img.Source = this.dbitmap;
+                            imgContainer.img.Source = this.dbitmap;
                         }
 
                         this.dbitmap.WritePixels(new Int32Rect(0, 0, this.dw, this.dh), this.dpixels, this.dw * 4, 0);
@@ -274,8 +275,8 @@ namespace WisdomProjections.Data_Executor
         {
             int jIndex = 0;
             int bIndex = MaxPersons * MaxJoints;
-            float scaleX = (float)itiD.canvas.ActualWidth / pub.UserMask.Width;
-            float scaleY = (float)itiD.canvas.ActualHeight / pub.UserMask.Height;
+            float scaleX = (float)imgContainer.canvas.ActualWidth / pub.UserMask.Width;
+            float scaleY = (float)imgContainer.canvas.ActualHeight / pub.UserMask.Height;
 
             for (var i = 0; i < pub.Skeletons.Length; i++)
             {
@@ -284,12 +285,12 @@ namespace WisdomProjections.Data_Executor
 
             for (var i = jIndex; i < MaxPersons * MaxJoints; i++)
             {
-                itiD.canvas.Children[i].Visibility = System.Windows.Visibility.Collapsed;
+                imgContainer.canvas.Children[i].Visibility = System.Windows.Visibility.Collapsed;
             }
 
-            for (var i = bIndex; i < itiD.canvas.Children.Count; i++)
+            for (var i = bIndex; i < imgContainer.canvas.Children.Count; i++)
             {
-                itiD.canvas.Children[i].Visibility = System.Windows.Visibility.Collapsed;
+                imgContainer.canvas.Children[i].Visibility = System.Windows.Visibility.Collapsed;
             }
         }
 
@@ -329,7 +330,7 @@ namespace WisdomProjections.Data_Executor
             }
 
             var p = this.Project(position, scaleX, scaleY);
-            var e = (System.Windows.Shapes.Ellipse)itiD.canvas.Children[index++];
+            var e = (System.Windows.Shapes.Ellipse)imgContainer.canvas.Children[index++];
 
             Canvas.SetLeft(e, p.X - e.Width * 0.5);
             Canvas.SetTop(e, p.Y - e.Width * 0.5);
@@ -353,7 +354,7 @@ namespace WisdomProjections.Data_Executor
             var pt0 = this.Project(p0, scaleX, scaleY);
             var pt1 = this.Project(p1, scaleX, scaleY);
 
-            var l = (Line)itiD.canvas.Children[index++];
+            var l = (Line)imgContainer.canvas.Children[index++];
             l.X1 = pt0.X;
             l.Y1 = pt0.Y;
             l.X2 = pt1.X;
@@ -383,8 +384,10 @@ namespace WisdomProjections.Data_Executor
         private int[] palette;
         private WriteableBitmap dbitmap;
 
+        private bool showDpImg = false;
+
         private PublishData pubData;
-        private TabControl tc_Image;
+        private ImageFactoryView imgContainer;
         private const int MaxPersons = 6;
         private const int MaxJoints = 17;
         private const int MaxBones = 14;

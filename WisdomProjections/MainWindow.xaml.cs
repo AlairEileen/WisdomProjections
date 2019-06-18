@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using WisdomProjections.Data_Executor;
 using WisdomProjections.Views;
+using WisdomProjections.Views.Sys;
 using YDPeopleSensor.Net;
 
 namespace WisdomProjections
@@ -31,7 +33,7 @@ namespace WisdomProjections
         public MainWindow()
         {
             InitializeComponent();
-            SensorDataExecutor.SensorDE.InitContent(tc_Image);
+            SensorDataExecutor.SensorDE.InitContent(imgContainer);
             Closing += SensorDataExecutor.SensorDE.Close;
         }
 
@@ -46,24 +48,115 @@ namespace WisdomProjections
                 btnGrdSplitter.Click += new RoutedEventHandler(BtnGrdSplitter_Click);
             if (btnGrdSplitter2 != null)
                 btnGrdSplitter2.Click += new RoutedEventHandler(BtnGrdSplitter2_Click);
-        }
 
-      
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
+            InitData();
             
         }
 
-      
+        private void InitData()
+        {
+            cbEffectsType1.ItemsSource = new string[] { "143", "飞机打瞌睡了.", "扣税的", "房贷首付" };
+            cbEffectsType2.ItemsSource = new string[] { "发士大夫", "反倒是.", "fsffdsf", "f234ferfewrdsads" };
+            var a = new List<TextListViewItem>();
+            var a2 = new List<TextListViewItem>();
+            var a3 = new List<EffectsListViewItem>();
+            for (int i = 0; i < 30; i++)
+            {
+                a.Add(new TextListViewItem("模型"+i));
+                a2.Add(new TextListViewItem("设备"+i));
+                a3.Add(new EffectsListViewItem("特效"+i,"fjkldsjffsdk分离技术的路口附近空军副司令雕刻技法路口附近上空的房间里上空的飞机弗兰克点击上方空间分厘卡电视机开了房间裂缝的快速减肥离开房间扣税的分厘卡电视机发",null));
+            }
+            lvModel.ItemsSource = a;
+            lvDevice.ItemsSource = a2;
+
+            lvEffects.ItemsSource = a3;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
+        }
+
+
         //private IOutputArray contours;
-      
-    
+
+        #region 导航按钮点击事件
+        /// <summary>
+        /// 返回点击
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ImgBack_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+        /// <summary>
+        /// 下一个点击
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ImgNext_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+        /// <summary>
+        /// 拖动点击
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ImgSlect_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!imgContainer.CanMouseMove)
+            {
+                this.Cursor = Cursors.Hand;
+                imgContainer.CanMouseMove = true;
+                imgSlect.Opacity = 0.5;
+            }
+            else
+            {
+                this.Cursor = Cursors.Arrow;
+                imgContainer.CanMouseMove = false;
+                imgSlect.Opacity = 1;
+            }
+        }
+        /// <summary>
+        /// 笔点击
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ImgPen_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+        /// <summary>
+        /// 缩小点击
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ImgShrink_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            imgContainer.ChangeImageSize(-60);
+        }
+        /// <summary>
+        /// 放大点击
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ImgMagnify_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            imgContainer.ChangeImageSize(60);
+        }
+        private void ChangeCursor()
+        {
+
+        }
+        #endregion
 
 
+        #region 左右两侧折叠与缩放
         GridLength m_WidthCache1, m_WidthCache2;
         int grid1Index = 0, grid2Index = 4;
-
-        public  void BtnGrdSplitter_Click(object sender, RoutedEventArgs e)
+        public void BtnGrdSplitter_Click(object sender, RoutedEventArgs e)
         {
             GridSplitterClick(ref m_WidthCache1, grid1Index);
         }
@@ -72,13 +165,15 @@ namespace WisdomProjections
             GridSplitterClick(ref m_WidthCache2, grid2Index);
         }
 
-      
-
+        private void ICleanSearchText_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            tbSearch.Text = "";
+        }
 
         private void GridSplitterClick(ref GridLength w, int grid1Index)
         {
             GridLength temp = grdWorkbench.ColumnDefinitions[grid1Index].Width;
-            GridLength def = new GridLength();
+            GridLength def = new GridLength(0);
             if (temp.Equals(def))
             {
                 //恢复
@@ -91,6 +186,7 @@ namespace WisdomProjections
                 grdWorkbench.ColumnDefinitions[grid1Index].Width = def;
             }
         }
+        #endregion
 
 
 
@@ -180,6 +276,8 @@ namespace WisdomProjections
             }
         }
 
-       
+
     }
+
+ 
 }

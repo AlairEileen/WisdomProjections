@@ -96,8 +96,19 @@
     <Compile Include="SplashWindow.xaml.cs">
       <DependentUpon>SplashWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\EffectsListViewItem.xaml.cs">
+      <DependentUpon>EffectsListViewItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ImageFactoryView.xaml.cs">
+      <DependentUpon>ImageFactoryView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ImageTabItem.xaml.cs">
       <DependentUpon>ImageTabItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Sys\BitmapCursor.cs" />
+    <Compile Include="Views\Sys\CursorHelper.cs" />
+    <Compile Include="Views\TextListViewItem.xaml.cs">
+      <DependentUpon>TextListViewItem.xaml</DependentUpon>
     </Compile>
     <Page Include="Styles\Common.xaml">
       <SubType>Designer</SubType>
@@ -120,7 +131,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\EffectsListViewItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ImageFactoryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ImageTabItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TextListViewItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
