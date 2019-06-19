@@ -93,6 +93,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Data_Executor\SensorDataExecutor.cs" />
+    <Compile Include="Paints\AnchorPoint.cs" />
+    <Compile Include="Paints\AnchorPointType.cs" />
+    <Compile Include="Paints\RectangleDraw.cs" />
+    <Compile Include="Paints\RectanglePaint.cs" />
     <Compile Include="SplashWindow.xaml.cs">
       <DependentUpon>SplashWindow.xaml</DependentUpon>
     </Compile>
@@ -104,6 +108,9 @@
     </Compile>
     <Compile Include="Views\ImageTabItem.xaml.cs">
       <DependentUpon>ImageTabItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RectangleView.xaml.cs">
+      <DependentUpon>RectangleView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Sys\BitmapCursor.cs" />
     <Compile Include="Views\Sys\CursorHelper.cs" />
@@ -140,6 +147,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ImageTabItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RectangleView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -222,11 +233,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\pen.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\select lisk.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -243,6 +249,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\projector.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\circle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pen.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\square.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -32,13 +32,13 @@
                             <Border.Background>
                                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button1.png"/>
                             </Border.Background>
-                            <Label Foreground="White" Height="25" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True">花</Label>
+                            <Label Foreground="White" Style="{StaticResource LabelButton}" Height="25" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True">花</Label>
                         </Border>
                         <Border Grid.Column="2" x:Name="bRightButton" CornerRadius="4" >
                             <Border.Background>
                                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button2.png"/>
                             </Border.Background>
-                            <Label Foreground="White" Height="25" Grid.IsSharedSizeScope="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                            <Label Foreground="White" Style="{StaticResource LabelButton}" Height="25" Grid.IsSharedSizeScope="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
                                 跑马灯</Label>
                         </Border>
                     </Grid>

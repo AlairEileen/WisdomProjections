@@ -62,6 +62,8 @@
                 <Image Width="22" Name="imgBack" Height="22" Source="pack://siteoforigin:,,,/Resources/back.png" MouseLeftButtonDown="ImgBack_MouseLeftButtonDown" Style="{StaticResource ImageButton}"/>
                 <Image Width="22" Name="imgNext" Height="22" Source="pack://siteoforigin:,,,/Resources/next.png" Margin="32,0,0,0" MouseLeftButtonDown="ImgNext_MouseLeftButtonDown" Style="{StaticResource ImageButton}"/>
                 <Image Width="22" Name="imgSlect" Height="22" Source="pack://siteoforigin:,,,/Resources/slect.png" Margin="32,0,0,0" MouseLeftButtonDown="ImgSlect_MouseLeftButtonDown" Style="{StaticResource ImageButton}"/>
+                <Image Width="22" Name="imgSquare" Height="22" Source="pack://siteoforigin:,,,/Resources/square.png" Margin="32,0,0,0"  Style="{StaticResource ImageButton}" MouseLeftButtonDown="ImgSquare_MouseLeftButtonDown"/>
+                <Image Width="22" Name="imgCircle" Height="22" Source="pack://siteoforigin:,,,/Resources/circle.png" Margin="32,0,0,0"  Style="{StaticResource ImageButton}" MouseLeftButtonDown="ImgCircle_MouseLeftButtonDown"/>
                 <Image Width="22" Name="imgPen" Height="22" Source="pack://siteoforigin:,,,/Resources/pen.png" Margin="32,0,0,0" MouseLeftButtonDown="ImgPen_MouseLeftButtonDown" Style="{StaticResource ImageButton}"/>
                 <Image Width="22" Name="imgShrink" Height="22" Source="pack://siteoforigin:,,,/Resources/shrink.png" Margin="32,0,0,0" MouseLeftButtonDown="ImgShrink_MouseLeftButtonDown" Style="{StaticResource ImageButton}"/>
                 <Image Width="22" Name="imgMagnify" Height="22" Source="pack://siteoforigin:,,,/Resources/magnify.png" Margin="32,0,0,0" MouseLeftButtonDown="ImgMagnify_MouseLeftButtonDown" Style="{StaticResource ImageButton}"/>

@@ -12,17 +12,19 @@
                 <ScaleTransform/>
                 <TranslateTransform/>
             </TransformGroup>
+           
         </Grid.Resources>
         <ScrollViewer   x:Name="root" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled"   Focusable="False" >
             <ContentControl x:Name="ImgContent"  MouseLeftButtonDown="Img_MouseLeftButtonDown"   
                              MouseLeftButtonUp="Img_MouseLeftButtonUp"
                              MouseMove="Img_MouseMove"
-                             MouseWheel="img_MouseWheel" >
-                <Grid>
-                    <Image Name="img"  RenderTransform="{StaticResource Imageview}" RenderOptions.BitmapScalingMode="NearestNeighbor"  >
+                             MouseWheel="Img_MouseWheel" >
+                <Grid >
+                   
+                    <Image Name="img" RenderTransform="{StaticResource Imageview}" RenderOptions.BitmapScalingMode="NearestNeighbor"  >
 
                     </Image>
-                    <Canvas x:Name="canvas"  />
+                    <Canvas Width="{Binding ElementName=img, Path=ActualWidth}" Height="{Binding ElementName=img, Path=ActualHeight}" x:Name="canvas" RenderTransform="{StaticResource Imageview}"/>
                 </Grid>
             </ContentControl>
         </ScrollViewer>

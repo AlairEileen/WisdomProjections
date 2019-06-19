@@ -50,11 +50,20 @@ namespace WisdomProjections
                 btnGrdSplitter2.Click += new RoutedEventHandler(BtnGrdSplitter2_Click);
 
             InitData();
-            
+
         }
 
         private void InitData()
         {
+            imgContainer.PaintTypeSelects = new PaintTypeSelect[] {
+                new PaintTypeSelect { PaintType = PaintType.None, IsSelected = true },
+            new PaintTypeSelect { PaintType = PaintType.Cricle, IsSelected = false ,TypeView=imgCircle},
+            new PaintTypeSelect { PaintType = PaintType.Move, IsSelected = false ,TypeView=imgSlect},
+            new PaintTypeSelect { PaintType = PaintType.Rectangle, IsSelected = false,TypeView=imgSquare },
+            new PaintTypeSelect { PaintType = PaintType.Pen, IsSelected = false ,TypeView=imgPen},
+        };
+
+
             cbEffectsType1.ItemsSource = new string[] { "143", "飞机打瞌睡了.", "扣税的", "房贷首付" };
             cbEffectsType2.ItemsSource = new string[] { "发士大夫", "反倒是.", "fsffdsf", "f234ferfewrdsads" };
             var a = new List<TextListViewItem>();
@@ -62,9 +71,9 @@ namespace WisdomProjections
             var a3 = new List<EffectsListViewItem>();
             for (int i = 0; i < 30; i++)
             {
-                a.Add(new TextListViewItem("模型"+i));
-                a2.Add(new TextListViewItem("设备"+i));
-                a3.Add(new EffectsListViewItem("特效"+i,"fjkldsjffsdk分离技术的路口附近空军副司令雕刻技法路口附近上空的房间里上空的飞机弗兰克点击上方空间分厘卡电视机开了房间裂缝的快速减肥离开房间扣税的分厘卡电视机发",null));
+                a.Add(new TextListViewItem("模型" + i));
+                a2.Add(new TextListViewItem("设备" + i));
+                a3.Add(new EffectsListViewItem("特效" + i, "fjkldsjffsdk分离技术的路口附近空军副司令雕刻技法路口附近上空的房间里上空的飞机弗兰克点击上方空间分厘卡电视机开了房间裂缝的快速减肥离开房间扣税的分厘卡电视机发", null));
             }
             lvModel.ItemsSource = a;
             lvDevice.ItemsSource = a2;
@@ -106,18 +115,47 @@ namespace WisdomProjections
         /// <param name="e"></param>
         private void ImgSlect_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (!imgContainer.CanMouseMove)
+            SwitchPaintType(PaintType.Move);
+
+        }
+        /// <summary>
+        /// 矩形点击
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ImgSquare_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            SwitchPaintType(PaintType.Rectangle);
+        }
+
+        private void SwitchPaintType(PaintType rectangle)
+        {
+            foreach (var item in imgContainer.PaintTypeSelects)
             {
-                this.Cursor = Cursors.Hand;
-                imgContainer.CanMouseMove = true;
-                imgSlect.Opacity = 0.5;
+                if (item.PaintType == rectangle && item.IsSelected)
+                {
+                    item.IsSelected = false;
+                    imgContainer.PaintTypeSelects.Where(x => x.PaintType == PaintType.None).FirstOrDefault().IsSelected = true;
+                    item.ChangeCursor(this);
+                    break;
+                }
+                else
+                {
+                    item.IsSelected = item.PaintType == rectangle;
+                    item.ChangeCursor(this);
+                }
             }
-            else
-            {
-                this.Cursor = Cursors.Arrow;
-                imgContainer.CanMouseMove = false;
-                imgSlect.Opacity = 1;
-            }
+
+        }
+
+        /// <summary>
+        /// 圆点击
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ImgCircle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
         }
         /// <summary>
         /// 笔点击
@@ -169,6 +207,8 @@ namespace WisdomProjections
         {
             tbSearch.Text = "";
         }
+
+
 
         private void GridSplitterClick(ref GridLength w, int grid1Index)
         {
@@ -279,5 +319,5 @@ namespace WisdomProjections
 
     }
 
- 
+
 }
