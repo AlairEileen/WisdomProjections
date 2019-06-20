@@ -109,6 +109,7 @@ namespace WisdomProjections.Views
         /// <param name="e"></param>
         private void Img_MouseMove(object sender, MouseEventArgs e)
         {
+          
             switch (GetPaintTypeSelect().PaintType)
             {
                 case PaintType.None:
@@ -119,7 +120,8 @@ namespace WisdomProjections.Views
                     {
                         if (!isEx0)
                         {
-                            isEx0 = item.OnContainerMouseMove(sender, e);
+                            if (item.CurrentPointType != PointLocationType.NO)
+                                isEx0 = item.OnContainerMouseMove(sender, e);
 
                         }
                         else item.OnContainerMouseMove(sender, e);
@@ -136,7 +138,7 @@ namespace WisdomProjections.Views
                             Domousemove(img, e);
                         }
                     }
-                    
+
 
                     break;
                 case PaintType.Rectangle:
@@ -205,7 +207,7 @@ namespace WisdomProjections.Views
                     break;
                 case PaintType.Rectangle:
                     mouseCanvasXY = e.GetPosition(canvas);
-                    RectangleViews.Add(new RectangleView(0, 0));
+                    RectangleViews.Add(new RectangleView(this,0, 0));
                     RectangleViews[RectangleViews.Count - 1].SetValue(Canvas.LeftProperty, mouseCanvasXY.X);
                     RectangleViews[RectangleViews.Count - 1].SetValue(Canvas.TopProperty, mouseCanvasXY.Y);
                     canvas.Children.Add(RectangleViews[RectangleViews.Count - 1]);
@@ -213,8 +215,11 @@ namespace WisdomProjections.Views
                 default:
                     break;
             }
+           
+
             foreach (var item in RectangleViews)
             {
+                
                 item.OnContainerMouseDown(sender, e);
             }
         }
@@ -232,6 +237,7 @@ namespace WisdomProjections.Views
             }
             img.ReleaseMouseCapture();
             mouseDown = false;
+
             foreach (var item in RectangleViews)
             {
                 item.OnContainerMouseUp(sender, e);

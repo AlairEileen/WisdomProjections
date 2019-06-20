@@ -114,6 +114,7 @@
     </Compile>
     <Compile Include="Views\Sys\BitmapCursor.cs" />
     <Compile Include="Views\Sys\CursorHelper.cs" />
+    <Compile Include="Views\Sys\ViewTool.cs" />
     <Compile Include="Views\TextListViewItem.xaml.cs">
       <DependentUpon>TextListViewItem.xaml</DependentUpon>
     </Compile>

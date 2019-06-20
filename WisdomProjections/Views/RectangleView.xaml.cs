@@ -20,93 +20,150 @@ namespace WisdomProjections.Views
     /// </summary>
     public partial class RectangleView : Grid
     {
-        public RectangleView(double width, double height)
+        public RectangleView(ImageFactoryView ifv, double width, double height)
         {
             InitializeComponent();
             this.Height = height;
             this.Width = width;
+            this.ifv = ifv;
         }
-        private PointLocationType currentPointType;
+        public PointLocationType CurrentPointType { get; set; }
         private bool mouseIsDown;
         #region 各个点的鼠标进入事件
         private void BLT_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (!mouseIsDown) { currentPointType = PointLocationType.LT; this.Cursor = Cursors.SizeNWSE; }
+            if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.LT; this.Cursor = Cursors.SizeNWSE; }
 
         }
 
         private void BLB_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (!mouseIsDown) { currentPointType = PointLocationType.LB; this.Cursor = Cursors.SizeNESW; }
+            if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.LB; this.Cursor = Cursors.SizeNESW; }
 
         }
 
         private void BLC_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (!mouseIsDown) { currentPointType = PointLocationType.LC; this.Cursor = Cursors.SizeWE; }
+            if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.LC; this.Cursor = Cursors.SizeWE; }
 
         }
 
         private void BCT_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (!mouseIsDown) { currentPointType = PointLocationType.CT; this.Cursor = Cursors.SizeNS; }
+            if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.CT; this.Cursor =Cursors.SizeNS; }
 
         }
 
         private void BCB_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (!mouseIsDown) { currentPointType = PointLocationType.CB; this.Cursor = Cursors.SizeNS; }
+            if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.CB; this.Cursor =Cursors.SizeNS; }
         }
 
         private void BRT_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (!mouseIsDown) { currentPointType = PointLocationType.RT; this.Cursor = Cursors.SizeNESW; }
+            if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.RT; this.Cursor =Cursors.SizeNESW; }
 
         }
 
         private void BRC_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (!mouseIsDown) { currentPointType = PointLocationType.RC; this.Cursor = Cursors.SizeWE; }
+            if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.RC; this.Cursor =Cursors.SizeWE; }
 
         }
 
         private void BRB_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (!mouseIsDown) { currentPointType = PointLocationType.RB; this.Cursor = Cursors.SizeNWSE; }
+            if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.RB; this.Cursor =Cursors.SizeNWSE; }
         }
+
         #endregion
 
         #region 父容器鼠标事件
+        Point ltdM;
+        private ImageFactoryView ifv;
 
         internal bool OnContainerMouseMove(object sender, MouseEventArgs e)
         {
-            bool isEx=true;
+            return DoMove(sender, e);
+
+        }
+
+        private bool DoMove(object sender, MouseEventArgs e)
+        {
+            bool isEx = true;
             if (mouseIsDown)
             {
-                switch (currentPointType)
+                var p = e.GetPosition(CurrentPointType == PointLocationType.LB ? bRT : CurrentPointType == PointLocationType.RT ? bLB : bLT);
+                var cy = p.Y - ltdM.Y;
+                var cx = p.X - ltdM.X;
+                var h = this.Height;
+                var w = this.Width;
+                var l = Convert.ToDouble(this.GetValue(Canvas.LeftProperty));
+                var t = Convert.ToDouble(this.GetValue(Canvas.TopProperty));
+                switch (CurrentPointType)
                 {
                     case PointLocationType.LT:
-                        ChangeLT(e);
+                        e.MouseDevice.SetCursor(Cursors.SizeNWSE);
+                        h = this.Height - cy;
+                        w = this.Width - cx;
+                        l = Convert.ToDouble(this.GetValue(Canvas.LeftProperty)) + cx;
+                        t = Convert.ToDouble(this.GetValue(Canvas.TopProperty)) + cy;
                         break;
                     case PointLocationType.LC:
-                        ChangeLC(e);
+                        e.MouseDevice.SetCursor(Cursors.SizeWE);
+                        w = this.Width - cx;
+                        l = Convert.ToDouble(this.GetValue(Canvas.LeftProperty)) + cx;
                         break;
                     case PointLocationType.LB:
-                        ChangeLB(e);
+                        e.MouseDevice.SetCursor(Cursors.SizeNESW);
+                        w = this.Width - cx;
+                        h = this.Height + cy;
+                        l = Convert.ToDouble(this.GetValue(Canvas.LeftProperty)) + cx;
+                        ltdM = p;
                         break;
                     case PointLocationType.CT:
+                        e.MouseDevice.SetCursor(Cursors.SizeNS);
+                        h = this.Height - cy;
+                        t = Convert.ToDouble(this.GetValue(Canvas.TopProperty)) + cy;
                         break;
                     case PointLocationType.CB:
+                        e.MouseDevice.SetCursor(Cursors.SizeNS);
+                        h = this.Height + cy;
+                        ltdM = p;
                         break;
                     case PointLocationType.RT:
+                        e.MouseDevice.SetCursor(Cursors.SizeNESW);
+                        w = this.Width + cx;
+                        h = this.Height - cy;
+                        t = Convert.ToDouble(this.GetValue(Canvas.TopProperty)) + cy;
+                        ltdM = p;
                         break;
                     case PointLocationType.RC:
+                        e.MouseDevice.SetCursor(Cursors.SizeWE);
+                        w = this.Width + cx;
+                        ltdM = p;
                         break;
                     case PointLocationType.RB:
+                        e.MouseDevice.SetCursor(Cursors.SizeNWSE);
+                        h = this.Height + cy;
+                        w = this.Width + cx;
+                        ltdM = p;
+                        break;
+                    case PointLocationType.CC:
+                        e.MouseDevice.SetCursor(Cursors.SizeAll);
+                        l = Convert.ToDouble(this.GetValue(Canvas.LeftProperty)) + cx;
+                        t = Convert.ToDouble(this.GetValue(Canvas.TopProperty)) + cy;
                         break;
                     default:
                         isEx = false;
                         break;
+                }
+                if (h > 0 && w > 0)
+                {
+                    this.Height = h;
+                    this.Width = w;
+                    this.SetValue(Canvas.LeftProperty, l);
+                    this.SetValue(Canvas.TopProperty, t);
                 }
 
             }
@@ -114,67 +171,73 @@ namespace WisdomProjections.Views
             return isEx;
         }
 
-        private void ChangeLB(MouseEventArgs e)
-        {
-            var p = e.GetPosition(gSelect);
-            var cy = p.Y - ltdM.Y;
-            var cx = p.X - ltdM.X;
-            if (this.Height < cy || this.Width < cx)
-            {
-                return;
-            }
-            this.Height += cy;
-            this.Width -= cx;
-            this.SetValue(Canvas.LeftProperty, Convert.ToDouble(this.GetValue(Canvas.LeftProperty)) + cx);
-
-        }
-
-        private void ChangeLC(MouseEventArgs e)
-        {
-            var p = e.GetPosition(gSelect);
-            var cx = p.X - ltdM.X;
-            if ( this.Width < cx)
-            {
-                return;
-            }
-            this.Width -= cx;
-            this.SetValue(Canvas.LeftProperty, Convert.ToDouble(this.GetValue(Canvas.LeftProperty)) + cx);
-        }
-
-        Point ltdM;
-        private void ChangeLT(MouseEventArgs e)
-        {
-            var p = e.GetPosition(gSelect);
-            var cy = p.Y - ltdM.Y;
-            var cx = p.X - ltdM.X;
-            if (this.Height < cy || this.Width < cx)
-            {
-                return;
-            }
-            this.Height -= cy;
-            this.Width -= cx;
-            this.SetValue(Canvas.LeftProperty, Convert.ToDouble(this.GetValue(Canvas.LeftProperty)) + cx);
-            this.SetValue(Canvas.TopProperty, Convert.ToDouble(this.GetValue(Canvas.TopProperty)) + cy);
-        }
-
         internal void OnContainerMouseDown(object sender, MouseButtonEventArgs e)
         {
+            StartMove(e);
+
+        }
+
+        private void StartMove(MouseButtonEventArgs e)
+        {
             mouseIsDown = true;
-            ltdM = e.GetPosition(gSelect);
+            switch (CurrentPointType)
+            {
+                case PointLocationType.LB:
+                    ltdM = e.GetPosition(bRT);
+                    break;
+                case PointLocationType.RT:
+                    ltdM = e.GetPosition(bLB);
+                    break;
+                default:
+                    ltdM = e.GetPosition(bLT);
+                    break;
+            }
+
         }
 
         internal void OnContainerMouseUp(object sender, MouseButtonEventArgs e)
         {
-            mouseIsDown = false;
-            currentPointType = PointLocationType.NO;
+            EndMove();
         }
+
+        private void EndMove()
+        {
+            mouseIsDown = false;
+            CurrentPointType = PointLocationType.NO;
+        }
+
+
 
         #endregion
 
+
+        #region 挪动控件
+
+        private void BContent_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.CC; this.Cursor = Cursors.SizeAll; }
+        }
+        //private void BContent_MouseMove(object sender, MouseEventArgs e)
+        //{
+        //    DoMove(sender, e);
+        //}
+
+        //private void BContent_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        //{
+        //    StartMove(e);
+        //}
+
+        //private void BContent_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        //{
+        //    EndMove();
+        //}
+        #endregion
     }
 
     public enum PointLocationType
     {
-        LT, LC, LB, CT, CB, RT, RC, RB,NO
+        LT, LC, LB, CT, CB, RT, RC, RB, NO, CC
     }
+
+
 }

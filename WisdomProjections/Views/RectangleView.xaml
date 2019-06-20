@@ -33,6 +33,8 @@
             <Border Width="10" Height="10" Background="white" BorderThickness="1" BorderBrush="Blue" HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Border>
 
-        <Border x:Name="bContent" BorderThickness="1" BorderBrush="Blue" Margin="15" />
+        <!--<Border x:Name="bContent" BorderThickness="1" BorderBrush="Blue" Margin="15" MouseEnter="BContent_MouseEnter" MouseMove="BContent_MouseMove" MouseLeftButtonDown="BContent_MouseLeftButtonDown" MouseLeftButtonUp="BContent_MouseLeftButtonUp" />-->
+        <Border x:Name="bContent" BorderThickness="2" BorderBrush="Blue" Margin="15" MouseEnter="BContent_MouseEnter">
+        </Border>
     </Grid>
 </Grid>
