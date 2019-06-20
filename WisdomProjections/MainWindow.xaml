@@ -38,7 +38,7 @@
         <StackPanel DockPanel.Dock="Top" VerticalAlignment="Top" Background="#19132B">
             <Menu Margin="15,0,0,0"  Background="#19132B"  FontFamily="PingFangSC-Regular" BorderThickness="0" Padding="0" Foreground="White" FontSize="18" >
                 <MenuItem Header="文件"  Background="#19132B" Style="{StaticResource TranslateMenuItem}" >
-                    <MenuItem Header="导入" Background="#19132B" Foreground="White" Style="{StaticResource TranslateMenuItem}" />
+                    <MenuItem Header="导入素材" Background="#19132B" Foreground="White" Style="{StaticResource TranslateMenuItem}" Click="MenuItem_Click" />
                     <MenuItem Header="导出"  Background="#19132B" Foreground="White" Style="{StaticResource TranslateMenuItem}" />
                 </MenuItem>
                 <MenuItem Header="编辑"  Background="#19132B"  Style="{StaticResource TranslateMenuItem}" >

@@ -109,6 +109,9 @@
     <Compile Include="Views\ImageTabItem.xaml.cs">
       <DependentUpon>ImageTabItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\MaterialInputWindow.xaml.cs">
+      <DependentUpon>MaterialInputWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\RectangleView.xaml.cs">
       <DependentUpon>RectangleView.xaml</DependentUpon>
     </Compile>
@@ -148,6 +151,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ImageTabItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MaterialInputWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

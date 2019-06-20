@@ -208,7 +208,26 @@ namespace WisdomProjections
             tbSearch.Text = "";
         }
 
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
+            openFileDialog.Filter = MaterialInputWindow.OpenFilter;
+            openFileDialog.Title = "请选择需要导入的视频或者图片";
+            openFileDialog.Multiselect = false;
 
+            try
+            {
+                if ((bool)openFileDialog.ShowDialog())
+                {
+                    new MaterialInputWindow(openFileDialog.FileName).ShowDialog();
+
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+        }
 
         private void GridSplitterClick(ref GridLength w, int grid1Index)
         {
