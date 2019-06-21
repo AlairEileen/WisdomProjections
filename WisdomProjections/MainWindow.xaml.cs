@@ -1,5 +1,6 @@
 ﻿using Emgu.CV;
 using Emgu.CV.Structure;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -19,6 +20,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using WisdomProjections.Data_Executor;
+using WisdomProjections.Models;
 using WisdomProjections.Views;
 using WisdomProjections.Views.Sys;
 using YDPeopleSensor.Net;
@@ -30,16 +32,20 @@ namespace WisdomProjections
     /// </summary>
     public partial class MainWindow : Window
     {
+
+
+        #region Window事件
         public MainWindow()
         {
             InitializeComponent();
             SensorDataExecutor.SensorDE.InitContent(imgContainer);
             Closing += SensorDataExecutor.SensorDE.Close;
         }
-
-
-
-
+        /// <summary>
+        /// 窗口加载完
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Button btnGrdSplitter = gsSplitterr.Template.FindName("btnExpend", gsSplitterr) as Button;
@@ -52,7 +58,9 @@ namespace WisdomProjections
             InitData();
 
         }
-
+        /// <summary>
+        /// 初始化数据
+        /// </summary>
         private void InitData()
         {
             imgContainer.PaintTypeSelects = new PaintTypeSelect[] {
@@ -64,28 +72,33 @@ namespace WisdomProjections
         };
 
 
-            cbEffectsType1.ItemsSource = new string[] { "143", "飞机打瞌睡了.", "扣税的", "房贷首付" };
-            cbEffectsType2.ItemsSource = new string[] { "发士大夫", "反倒是.", "fsffdsf", "f234ferfewrdsads" };
+
             var a = new List<TextListViewItem>();
             var a2 = new List<TextListViewItem>();
-            var a3 = new List<EffectsListViewItem>();
             for (int i = 0; i < 30; i++)
             {
                 a.Add(new TextListViewItem("模型" + i));
                 a2.Add(new TextListViewItem("设备" + i));
-                a3.Add(new EffectsListViewItem("特效" + i, "fjkldsjffsdk分离技术的路口附近空军副司令雕刻技法路口附近上空的房间里上空的飞机弗兰克点击上方空间分厘卡电视机开了房间裂缝的快速减肥离开房间扣税的分厘卡电视机发", null));
             }
             lvModel.ItemsSource = a;
             lvDevice.ItemsSource = a2;
 
-            lvEffects.ItemsSource = a3;
-        }
 
+            InitEffects();
+
+
+
+        }
+        /// <summary>
+        /// 窗口关闭中
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
 
         }
-
+        #endregion
 
         //private IOutputArray contours;
 
@@ -190,10 +203,13 @@ namespace WisdomProjections
         }
         #endregion
 
-
         #region 左右两侧折叠与缩放
+        /// <summary>
+        /// Grid窗口属性
+        /// </summary>
         GridLength m_WidthCache1, m_WidthCache2;
         int grid1Index = 0, grid2Index = 4;
+
         public void BtnGrdSplitter_Click(object sender, RoutedEventArgs e)
         {
             GridSplitterClick(ref m_WidthCache1, grid1Index);
@@ -202,33 +218,11 @@ namespace WisdomProjections
         {
             GridSplitterClick(ref m_WidthCache2, grid2Index);
         }
-
-        private void ICleanSearchText_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            tbSearch.Text = "";
-        }
-
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
-            openFileDialog.Filter = MaterialInputWindow.OpenFilter;
-            openFileDialog.Title = "请选择需要导入的视频或者图片";
-            openFileDialog.Multiselect = false;
-
-            try
-            {
-                if ((bool)openFileDialog.ShowDialog())
-                {
-                    new MaterialInputWindow(openFileDialog.FileName).ShowDialog();
-
-                }
-            }
-            catch (Exception)
-            {
-
-            }
-        }
-
+        /// <summary>
+        /// Grid分割器点击
+        /// </summary>
+        /// <param name="w"></param>
+        /// <param name="grid1Index"></param>
         private void GridSplitterClick(ref GridLength w, int grid1Index)
         {
             GridLength temp = grdWorkbench.ColumnDefinitions[grid1Index].Width;
@@ -247,7 +241,196 @@ namespace WisdomProjections
         }
         #endregion
 
+        #region 特效部分操作
+        /// <summary>
+        /// 特效数据
+        /// </summary>
+        private MaterialJsonModel materialJsonModel;
+        /// <summary>
+        /// 初始化特效
+        /// </summary>
+        private void InitEffects()
+        {
 
+            if (File.Exists(MaterialInputWindow.ResourcesMaterialPath))
+            {
+
+                try
+                {
+                    var json = File.ReadAllText(MaterialInputWindow.ResourcesMaterialPath);
+                    if (json.Trim().Length > 0)
+                    {
+                        materialJsonModel = JsonConvert.DeserializeObject<MaterialJsonModel>(json);
+                        if (materialJsonModel != null && materialJsonModel.TagModels != null && materialJsonModel.MaterialModels != null)
+                        {
+                            currentMaterialModels = materialJsonModel.MaterialModels;
+                            InitAllEffectsItem(materialJsonModel.MaterialModels);
+
+                            var list1 = new List<string>();
+                            materialJsonModel.TagModels.ForEach(x => list1.Add(x.Name));
+                            cbEffectsType1.ItemsSource = list1;
+                            cbEffectsType1.SelectedIndex = 0;
+                            InitEffectsType(0);
+                            cbEffectsType2.SelectedIndex = 0;
+
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                }
+
+            }
+        }
+        /// <summary>
+        /// 初始化所有特效
+        /// </summary>
+        /// <param name="materials"></param>
+        private void InitAllEffectsItem(List<MaterialModel> materials)
+        {
+            var a3 = new List<EffectsListViewItem>();
+            materials.ForEach(x =>
+            {
+                a3.Add(new EffectsListViewItem(x.Id, x.Tag1.Name, x.Tag2.Name, x.Title, x.Content, x.ResourceFileName));
+            });
+            lvEffects.ItemsSource = a3;
+        }
+        /// <summary>
+        /// 初始化特效标签
+        /// </summary>
+        /// <param name="v"></param>
+        private void InitEffectsType(int v)
+        {
+
+            var list2 = new List<string>();
+            materialJsonModel.TagModels[v == -1 ? 0 : v].Tag2.ForEach(x => list2.Add(x.Name));
+            cbEffectsType2.ItemsSource = list2;
+        }
+        /// <summary>
+        /// 当前筛选后的特效数据
+        /// </summary>
+        private List<MaterialModel> currentMaterialModels;
+        /// <summary>
+        /// 清除搜索空内容点击
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ICleanSearchText_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            tbSearch.Text = "";
+        }
+        /// <summary>
+        /// 导入特效选项点击
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
+            openFileDialog.Filter = MaterialInputWindow.OpenFilter;
+            openFileDialog.Title = "请选择需要导入的视频或者图片";
+            openFileDialog.Multiselect = false;
+
+            try
+            {
+                if ((bool)openFileDialog.ShowDialog())
+                {
+                    var miw =
+                    new MaterialInputWindow(openFileDialog.FileName);
+                    miw.Closed += MaterialInput_Closed;
+                    miw.ShowDialog();
+
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+        /// <summary>
+        /// 导入特效窗口关闭后
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MaterialInput_Closed(object sender, EventArgs e)
+        {
+            InitEffects();
+        }
+        /// <summary>
+        /// 特效标签1选项更变后
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CbEffectsType1_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            InitEffectsType(cbEffectsType1.SelectedIndex);
+            CbEffectsTypeChanged();
+            if (cbEffectsType2.SelectedIndex != 0)
+            {
+                cbEffectsType2.SelectedIndex = 0;
+            }
+        }
+        /// <summary>
+        /// 特效标签2选项更变后
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CbEffectsType2_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            CbEffectsTypeChanged();
+
+        }
+        /// <summary>
+        /// 类型下拉框改变后，重置特效内容
+        /// </summary>
+        private void CbEffectsTypeChanged()
+        {
+            try
+            {
+                var t1 = cbEffectsType1.SelectedValue.ToString();
+                var t2 = cbEffectsType2.SelectedValue.ToString();
+                var index1 = cbEffectsType1.SelectedIndex;
+                var index2 = cbEffectsType2.SelectedIndex;
+                if (materialJsonModel != null && materialJsonModel.MaterialModels != null)
+                {
+                    if (index1 == 0)
+                    {
+                        currentMaterialModels = materialJsonModel.MaterialModels;
+                        InitAllEffectsItem(materialJsonModel.MaterialModels);
+                        cbEffectsType1.SelectedIndex = 0;
+                        cbEffectsType2.SelectedIndex = 0;
+                        if (tbSearch.Text.Trim().Length != 0) TbSearch_TextChanged(null, null);
+                    }
+                    else
+                    {
+                        var findList = materialJsonModel.MaterialModels.FindAll(x => index2 == 0 ? x.Tag1.Name.Equals(t1) : x.Tag1.Name.Equals(t1) && x.Tag2.Name.Equals(t2)).ToList();
+                        currentMaterialModels = findList;
+                        InitAllEffectsItem(findList);
+                        if (index2 == 0)
+                        {
+                            cbEffectsType2.SelectedIndex = 0;
+                        }
+                        if (tbSearch.Text.Trim().Length != 0) TbSearch_TextChanged(null, null);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+        /// <summary>
+        /// 搜索框文字改变
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TbSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var sText = tbSearch.Text;
+            var list = currentMaterialModels.FindAll(x => x.Title.Contains(sText));
+            InitAllEffectsItem(list);
+
+        }
+        #endregion
 
         ///create by alair
         ///

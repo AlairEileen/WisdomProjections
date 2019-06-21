@@ -64,6 +64,9 @@
     <Reference Include="Emgu.CV.World, Version=4.1.0.3420, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=MSIL">
       <HintPath>..\packages\EMGU.CV.4.1.0.3420\lib\net35\Emgu.CV.World.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -93,6 +96,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Data_Executor\SensorDataExecutor.cs" />
+    <Compile Include="Models\MaterialModel.cs" />
     <Compile Include="Paints\AnchorPoint.cs" />
     <Compile Include="Paints\AnchorPointType.cs" />
     <Compile Include="Paints\RectangleDraw.cs" />
@@ -117,6 +121,8 @@
     </Compile>
     <Compile Include="Views\Sys\BitmapCursor.cs" />
     <Compile Include="Views\Sys\CursorHelper.cs" />
+    <Compile Include="Views\Sys\EditableComboBox.cs" />
+    <Compile Include="Views\Sys\UIChildFinder.cs" />
     <Compile Include="Views\Sys\ViewTool.cs" />
     <Compile Include="Views\TextListViewItem.xaml.cs">
       <DependentUpon>TextListViewItem.xaml</DependentUpon>

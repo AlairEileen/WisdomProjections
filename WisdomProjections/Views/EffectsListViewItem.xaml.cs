@@ -20,15 +20,43 @@ namespace WisdomProjections.Views
     /// </summary>
     public partial class EffectsListViewItem : ListViewItem
     {
-        public EffectsListViewItem(string title, string content,ImageSource imageSource)
+        public string Id { get; set; }
+        public string Tag1 { get; set; }
+        public string Tag2 { get; set; }
+        public string Resource { get; set; }
+        public bool IsVideo { get; set; }
+        public EffectsListViewItem(string id,string tag1,string tag2,string title, string content, string resource)
         {
             InitializeComponent();
+            Resource = resource;
+            Tag1 = tag1;
+            Tag2 = tag2;
+            Id = id;
+
+            this.lTag1.Content = Tag1;
+            this.lTag2.Content = Tag2;
             this.lTitle.Content = title;
             this.tbContent.Text = content;
-            if (imageSource!=null)
+            var ex = System.IO.Path.GetExtension(resource);
+
+
+            for (int i = 0; i <MaterialInputWindow. FileExtension.Length; i++)
             {
-                this.iIcon.Source = imageSource;
+                if (MaterialInputWindow.FileExtension[i].Equals(ex) && i >=MaterialInputWindow. VStart)
+                {
+                    IsVideo = true;
+                }
             }
+
+            if (IsVideo)
+            {
+                iIcon.Visibility = Visibility.Hidden;
+                meIcon.Visibility = Visibility.Visible;
+                meIcon.Source = new Uri(resource);
+            }
+            else iIcon.Source = (ImageSource)new BitmapImage(new Uri(resource));
+
+          
         }
        
     }

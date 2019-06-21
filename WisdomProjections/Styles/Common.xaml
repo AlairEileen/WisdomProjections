@@ -4,6 +4,7 @@
     <!--#region Combox自定义-->
     <Style TargetType="ToggleButton" x:Key="ComboxStyleBtn">
         <Setter Property="Height" Value="24"/>
+  
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
@@ -70,7 +71,7 @@
                             <ColumnDefinition Width="0.3*" MaxWidth="30"/>
                         </Grid.ColumnDefinitions>
                         <!--文字区域背景和边线样式-->
-                        <TextBox Background="#2B2635" VerticalAlignment="Center"  Grid.Column="0" Foreground="White"  BorderThickness="0" IsReadOnly="{TemplateBinding IsReadOnly}" Text="{TemplateBinding Text}"></TextBox>
+                        <TextBox Background="#2B2635" x:Name="cbtb" VerticalAlignment="Center"  Grid.Column="0" Foreground="White"  BorderThickness="0" MaxLength="5" IsReadOnly="{TemplateBinding IsReadOnly}" Text="{TemplateBinding Text}"></TextBox>
                         <Border  Grid.Column="0" BorderThickness="0" BorderBrush="#03ffea" CornerRadius="6">
 
                         </Border>
@@ -97,7 +98,10 @@
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
+
         </Setter>
+        <!--<Setter Property="Text" Value="{Binding  Path=}"/>-->
+
     </Style>
     
     <!--#endregion-->

@@ -205,14 +205,10 @@ namespace WisdomProjections.Views
             mouseIsDown = false;
             CurrentPointType = PointLocationType.NO;
         }
-
-
-
         #endregion
 
 
         #region 挪动控件
-
         private void BContent_MouseEnter(object sender, MouseEventArgs e)
         {
             if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.CC; this.Cursor = Cursors.SizeAll; }

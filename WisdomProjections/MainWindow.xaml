@@ -145,23 +145,23 @@
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" Foreground="White" FontSize="18" HorizontalContentAlignment="Left" BorderThickness="0">类别</Label>
                         <Border  Grid.Column="1" Height="28"  CornerRadius="6" Background="#FF2B2635">
-                            <ComboBox FontSize="18" x:Name="cbEffectsType1" Margin="10,0,0,0" Foreground="White" Background="#2B2635" Style="{StaticResource ComboBoxStyle}" BorderThickness="0"/>
+                            <ComboBox FontSize="18" x:Name="cbEffectsType1" Margin="10,0,0,0" Foreground="White"  Background="#2B2635" Style="{StaticResource ComboBoxStyle}" BorderThickness="0" IsReadOnly="True" SelectionChanged="CbEffectsType1_SelectionChanged"/>
                         </Border>
                         <Border  Grid.Column="3" Height="28"  CornerRadius="6" Background="#FF2B2635">
-                            <ComboBox FontSize="18" x:Name="cbEffectsType2" Margin="10,0,0,0" Foreground="White" Background="#2B2635" Style="{StaticResource ComboBoxStyle}" BorderThickness="0"></ComboBox>
+                            <ComboBox FontSize="18" x:Name="cbEffectsType2" Margin="10,0,0,0" Foreground="White"  Background="#2B2635" Style="{StaticResource ComboBoxStyle}" BorderThickness="0" SelectionChanged="CbEffectsType2_SelectionChanged" IsReadOnly="True"></ComboBox>
                         </Border>
                     </Grid>
                     <Grid  Margin="10,8,10,0">
                         <Border Style="{StaticResource Round}"  Padding="6,0,0,0" >
                             <Grid >
-                                <TextBox x:Name="tbSearch" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="18"   Style="{StaticResource NoBorderSearch}" Height="28" Foreground="White" CaretBrush="White"/>
+                                <TextBox x:Name="tbSearch" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="18"   Style="{StaticResource NoBorderSearch}" Height="28" Foreground="White" CaretBrush="White" TextChanged="TbSearch_TextChanged"/>
                                 <Image Style="{StaticResource ImageButton}" x:Name="iCleanSearchText" HorizontalAlignment="Right" DockPanel.Dock="Right" Width="18" Height="18" Source="pack://siteoforigin:,,,/Resources/delete.png" Margin="0,0,10,0" MouseLeftButtonDown="ICleanSearchText_MouseLeftButtonDown"/>
                             </Grid>
                         </Border>
                     </Grid>
                 </StackPanel>
 
-                <ListView Grid.Row="1" x:Name="lvEffects" HorizontalContentAlignment="Left" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
+                <ListView Grid.Row="1" x:Name="lvEffects" HorizontalContentAlignment="Stretch" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
 
                 
             </Grid>
