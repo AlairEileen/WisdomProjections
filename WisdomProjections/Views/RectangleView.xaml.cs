@@ -35,42 +35,35 @@ namespace WisdomProjections.Views
             if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.LT; this.Cursor = Cursors.SizeNWSE; }
 
         }
-
         private void BLB_MouseEnter(object sender, MouseEventArgs e)
         {
             if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.LB; this.Cursor = Cursors.SizeNESW; }
 
         }
-
         private void BLC_MouseEnter(object sender, MouseEventArgs e)
         {
             if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.LC; this.Cursor = Cursors.SizeWE; }
 
         }
-
         private void BCT_MouseEnter(object sender, MouseEventArgs e)
         {
             if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.CT; this.Cursor =Cursors.SizeNS; }
 
         }
-
         private void BCB_MouseEnter(object sender, MouseEventArgs e)
         {
             if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.CB; this.Cursor =Cursors.SizeNS; }
         }
-
         private void BRT_MouseEnter(object sender, MouseEventArgs e)
         {
             if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.RT; this.Cursor =Cursors.SizeNESW; }
 
         }
-
         private void BRC_MouseEnter(object sender, MouseEventArgs e)
         {
             if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.RC; this.Cursor =Cursors.SizeWE; }
 
         }
-
         private void BRB_MouseEnter(object sender, MouseEventArgs e)
         {
             if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.RB; this.Cursor =Cursors.SizeNWSE; }
@@ -87,7 +80,6 @@ namespace WisdomProjections.Views
             return DoMove(sender, e);
 
         }
-
         private bool DoMove(object sender, MouseEventArgs e)
         {
             bool isEx = true;
@@ -170,13 +162,11 @@ namespace WisdomProjections.Views
             else isEx = false;
             return isEx;
         }
-
         internal void OnContainerMouseDown(object sender, MouseButtonEventArgs e)
         {
             StartMove(e);
 
         }
-
         private void StartMove(MouseButtonEventArgs e)
         {
             mouseIsDown = true;
@@ -194,12 +184,10 @@ namespace WisdomProjections.Views
             }
 
         }
-
         internal void OnContainerMouseUp(object sender, MouseButtonEventArgs e)
         {
             EndMove();
         }
-
         private void EndMove()
         {
             mouseIsDown = false;
