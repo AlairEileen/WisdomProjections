@@ -25,13 +25,16 @@ namespace WisdomProjections.Views
         public string Tag2 { get; set; }
         public string Resource { get; set; }
         public bool IsVideo { get; set; }
-        public EffectsListViewItem(string id,string tag1,string tag2,string title, string content, string resource)
+        private MainWindow mainWindow;
+        public EffectsListViewItem(MainWindow mainWindow,string id,string tag1,string tag2,string title, string content, string resource)
         {
             InitializeComponent();
             Resource = resource;
             Tag1 = tag1;
             Tag2 = tag2;
             Id = id;
+            this.mainWindow = mainWindow;
+
 
             this.lTag1.Content = Tag1;
             this.lTag2.Content = Tag2;
@@ -45,6 +48,7 @@ namespace WisdomProjections.Views
                 if (MaterialInputWindow.FileExtension[i].Equals(ex) && i >=MaterialInputWindow. VStart)
                 {
                     IsVideo = true;
+                    break;
                 }
             }
 
@@ -52,12 +56,33 @@ namespace WisdomProjections.Views
             {
                 iIcon.Visibility = Visibility.Hidden;
                 meIcon.Visibility = Visibility.Visible;
-                meIcon.Source = new Uri(resource);
+                meIcon.Source = new Uri(MaterialInputWindow.ResourcesFilePath+ resource);
             }
-            else iIcon.Source = (ImageSource)new BitmapImage(new Uri(resource));
+            else iIcon.Source = (ImageSource)new BitmapImage(new Uri(MaterialInputWindow.ResourcesFilePath + resource));
 
           
         }
-       
+
+        private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var rv = mainWindow.imgContainer.RectangleViews.Find(x => x.Selected);
+            if (rv!=null)
+            {
+                rv.IsVideo = IsVideo;
+
+                if (IsVideo)
+                {
+                    rv.video.Visibility = Visibility.Visible;
+                    rv.img.Visibility = Visibility.Hidden;
+                    rv.video.Source = meIcon.Source;
+                }
+                else
+                {
+                    rv.img.Visibility = Visibility.Visible;
+                    rv.video.Visibility = Visibility.Hidden;
+                    rv.img.Source = iIcon.Source;
+                }
+            }
+        }
     }
 }

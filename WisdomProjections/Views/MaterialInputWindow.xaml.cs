@@ -24,10 +24,21 @@ namespace WisdomProjections.Views
     public partial class MaterialInputWindow : Window
     {
 
-        public static string ResourcesRootPath = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Wisdom\";
+
+        private static string rootPath;
+
+        public static string ResourcesRootPath
+        {
+            get
+            {
+                if (rootPath == null)
+                    rootPath = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Wisdom\";
+                return rootPath;
+            }
+        }
         public static string ResourcesFilePath = ResourcesRootPath + @"Resources\";
         public static string ResourcesMaterialPath = ResourcesRootPath + @"Material.json";
-        public  static string[] FileExtension = { ".jpg", ".png", ".jpeg", ".bmp", ".gif", ".mp4", ".avi" };
+        public static string[] FileExtension = { ".jpg", ".png", ".jpeg", ".bmp", ".gif", ".mp4", ".avi" };
         public const int VStart = 5;
         public static string OpenFilter
         {
@@ -88,11 +99,11 @@ namespace WisdomProjections.Views
                     var json = File.ReadAllText(ResourcesMaterialPath);
                     if (json.Trim().Length > 0)
                     {
-                         materialJsonModel = JsonConvert.DeserializeObject<MaterialJsonModel>(json);
-                        if (materialJsonModel!=null&&materialJsonModel.TagModels!=null)
+                        materialJsonModel = JsonConvert.DeserializeObject<MaterialJsonModel>(json);
+                        if (materialJsonModel != null && materialJsonModel.TagModels != null)
                         {
                             var tags = new List<string>();
-                            materialJsonModel.TagModels.ForEach(x=>tags.Add(x.Name));
+                            materialJsonModel.TagModels.ForEach(x => tags.Add(x.Name));
                             cbTag1.ItemsSource = tags;
                             cbTag2.ItemsSource = tags;
                         }
@@ -131,7 +142,7 @@ namespace WisdomProjections.Views
                 {
                     File.Move(ResourcesMaterialPath, ResourcesMaterialPath + ".bak");
                 }
-                
+
                 TagModel tag1 = null, tag2 = null;
                 if (materialJsonModel == null)
                 {
@@ -149,10 +160,10 @@ namespace WisdomProjections.Views
                 if (materialJsonModel.TagModels != null)
                 {
                     tag1 = materialJsonModel.TagModels.Find(x => x.Name.Equals(tag1Text));
-                   if(tag1!=null) tag2 = tag1.Tag2.Find(x => x.Name.Equals(tag2Text));
+                    if (tag1 != null) tag2 = tag1.Tag2.Find(x => x.Name.Equals(tag2Text));
 
                 }
-                else materialJsonModel.TagModels = new List<TagModel> { new TagModel { Id = Guid.NewGuid().ToString("N"), Name = "全部" ,Tag2=new List<TagModel> { new TagModel { Id = Guid.NewGuid().ToString("N"), Name = "全部" } } } };
+                else materialJsonModel.TagModels = new List<TagModel> { new TagModel { Id = Guid.NewGuid().ToString("N"), Name = "全部", Tag2 = new List<TagModel> { new TagModel { Id = Guid.NewGuid().ToString("N"), Name = "全部" } } } };
                 if (tag1 == null)
                 {
                     tag1 = new TagModel { Id = Guid.NewGuid().ToString("N"), Name = tag1Text };
@@ -161,23 +172,24 @@ namespace WisdomProjections.Views
                 if (tag2 == null)
                 {
                     tag2 = new TagModel { Id = Guid.NewGuid().ToString("N"), Name = tag2Text };
-                    if (tag1.Tag2 == null) tag1.Tag2 = new List<TagModel>{ new TagModel { Id = Guid.NewGuid().ToString("N"), Name = "全部" } };
+                    if (tag1.Tag2 == null) tag1.Tag2 = new List<TagModel> { new TagModel { Id = Guid.NewGuid().ToString("N"), Name = "全部" } };
                     tag1.Tag2.Add(tag2);
                 }
 
                 var realName = System.IO.Path.GetFileNameWithoutExtension(fileName);
                 var mmId = Guid.NewGuid().ToString("N");
-                var resourceName = ResourcesFilePath + mmId + System.IO.Path.GetExtension(fileName);
+                var resouceFileName = mmId + System.IO.Path.GetExtension(fileName);
+                var resourceName = ResourcesFilePath +resouceFileName;
                 File.Copy(fileName, resourceName);
 
 
-                var materialModel = new MaterialModel { Content = tbContent.Text, Id = mmId, Tag1 = tag1, Tag2 = tag2, ResourceFileRealName = realName, ResourceFileName = resourceName, Title = tbTitle.Text };
+                var materialModel = new MaterialModel { Content = tbContent.Text, Id = mmId, Tag1 = tag1, Tag2 = tag2, ResourceFileRealName = realName, ResourceFileName = resouceFileName, Title = tbTitle.Text };
                 materialJsonModel.MaterialModels.Add(materialModel);
                 var wJson = JsonConvert.SerializeObject(materialJsonModel);
                 File.WriteAllText(ResourcesMaterialPath, wJson);
 
                 if (MessageBoxResult.OK == MessageBox.Show("添加成功！")) this.Close();
-                    
+
             }
             else MessageBox.Show("标题、标签为必填项!");
         }

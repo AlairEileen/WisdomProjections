@@ -20,10 +20,13 @@ namespace WisdomProjections.Views
     /// </summary>
     public partial class TextListViewItem : ListViewItem
     {
-        public TextListViewItem(string text)
+        
+        public TextListViewItem(string text,Func<TextListViewItem, MouseButtonEventHandler> itemClick)
         {
             InitializeComponent();
             lText.Content = text;
+            lText.MouseLeftButtonDown += itemClick(this);
         }
+
     }
 }

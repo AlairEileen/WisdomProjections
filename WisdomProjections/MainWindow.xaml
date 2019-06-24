@@ -102,7 +102,7 @@
                             <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">模型六</Label>
                             <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">模型六</Label>-->
                     <Label Background="#FF201A33" Grid.Row="2" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="46" FontSize="18">设备推送</Label>
-                    <ListView Grid.Row="3" x:Name="lvDevice" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden" />
+                    <ListView Grid.Row="3" x:Name="lvDevice" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden"  />
 
                     <!--<StackPanel Grid.Row="2" VerticalAlignment="Stretch">
                         <ScrollViewer  HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">

@@ -9,7 +9,7 @@
     <Grid >
 
         <Border CornerRadius="6" Background="#FF423B57" Padding="8,10,10,10">
-            <Grid>
+            <Grid MouseLeftButtonDown="Grid_MouseLeftButtonDown">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="88"/>
                     <ColumnDefinition Width="5"/>

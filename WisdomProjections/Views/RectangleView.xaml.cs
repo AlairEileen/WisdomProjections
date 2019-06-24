@@ -20,6 +20,26 @@ namespace WisdomProjections.Views
     /// </summary>
     public partial class RectangleView : Grid
     {
+        private bool selected;
+        public bool Selected
+        {
+            get => selected;
+            set
+            {
+                selected = value;
+                bContent.BorderBrush = new SolidColorBrush(selected ? Colors.Red : Colors.Blue);
+            }
+        }
+        private bool isVideo;
+        public bool IsVideo
+        {
+            get => isVideo; set
+            {
+                isVideo = value;
+                img.Visibility = isVideo ? Visibility.Hidden : Visibility.Visible;
+                video.Visibility = isVideo ? Visibility.Visible : Visibility.Hidden;
+            }
+        }
         public RectangleView(ImageFactoryView ifv, double width, double height)
         {
             InitializeComponent();
@@ -28,6 +48,7 @@ namespace WisdomProjections.Views
             this.ifv = ifv;
         }
         public PointLocationType CurrentPointType { get; set; }
+
         private bool mouseIsDown;
         #region 各个点的鼠标进入事件
         private void BLT_MouseEnter(object sender, MouseEventArgs e)
@@ -47,26 +68,26 @@ namespace WisdomProjections.Views
         }
         private void BCT_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.CT; this.Cursor =Cursors.SizeNS; }
+            if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.CT; this.Cursor = Cursors.SizeNS; }
 
         }
         private void BCB_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.CB; this.Cursor =Cursors.SizeNS; }
+            if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.CB; this.Cursor = Cursors.SizeNS; }
         }
         private void BRT_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.RT; this.Cursor =Cursors.SizeNESW; }
+            if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.RT; this.Cursor = Cursors.SizeNESW; }
 
         }
         private void BRC_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.RC; this.Cursor =Cursors.SizeWE; }
+            if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.RC; this.Cursor = Cursors.SizeWE; }
 
         }
         private void BRB_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.RB; this.Cursor =Cursors.SizeNWSE; }
+            if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.RB; this.Cursor = Cursors.SizeNWSE; }
         }
 
         #endregion
@@ -216,6 +237,16 @@ namespace WisdomProjections.Views
         //    EndMove();
         //}
         #endregion
+
+        private void BContent_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var pt = ifv.PaintTypeSelects.Where(x => x.PaintType == PaintType.None && x.IsSelected).FirstOrDefault();
+            if (pt != null)
+            {
+                ifv.RectangleViews.ForEach(x => x.Selected = false);
+                Selected = true;
+            }
+        }
     }
 
     public enum PointLocationType

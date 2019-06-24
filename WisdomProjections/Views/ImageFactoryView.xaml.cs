@@ -109,7 +109,7 @@ namespace WisdomProjections.Views
         /// <param name="e"></param>
         private void Img_MouseMove(object sender, MouseEventArgs e)
         {
-          
+
             switch (GetPaintTypeSelect().PaintType)
             {
                 case PaintType.None:
@@ -207,7 +207,7 @@ namespace WisdomProjections.Views
                     break;
                 case PaintType.Rectangle:
                     mouseCanvasXY = e.GetPosition(canvas);
-                    RectangleViews.Add(new RectangleView(this,0, 0));
+                    RectangleViews.Add(new RectangleView(this, 0, 0));
                     RectangleViews[RectangleViews.Count - 1].SetValue(Canvas.LeftProperty, mouseCanvasXY.X);
                     RectangleViews[RectangleViews.Count - 1].SetValue(Canvas.TopProperty, mouseCanvasXY.Y);
                     canvas.Children.Add(RectangleViews[RectangleViews.Count - 1]);
@@ -215,11 +215,11 @@ namespace WisdomProjections.Views
                 default:
                     break;
             }
-           
+
 
             foreach (var item in RectangleViews)
             {
-                
+
                 item.OnContainerMouseDown(sender, e);
             }
         }
@@ -292,6 +292,7 @@ namespace WisdomProjections.Views
                         window.Cursor = Cursors.Pen;
                         break;
                     default:
+                        window.Cursor = Cursors.Arrow;
                         break;
                 }
             }

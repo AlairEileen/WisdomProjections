@@ -34,7 +34,12 @@
         </Border>
 
         <!--<Border x:Name="bContent" BorderThickness="1" BorderBrush="Blue" Margin="15" MouseEnter="BContent_MouseEnter" MouseMove="BContent_MouseMove" MouseLeftButtonDown="BContent_MouseLeftButtonDown" MouseLeftButtonUp="BContent_MouseLeftButtonUp" />-->
-        <Border x:Name="bContent" BorderThickness="2" BorderBrush="Blue" Margin="15" MouseEnter="BContent_MouseEnter">
+        <Border x:Name="bContent" BorderThickness="2" BorderBrush="Blue" Margin="15"  MouseEnter="BContent_MouseEnter" MouseLeftButtonDown="BContent_MouseLeftButtonDown" >
+            <Grid x:Name="gData">
+                <Image x:Name="img"/>
+                <MediaElement x:Name="video" Visibility="Hidden"/>
+                <Canvas x:Name="canvas"  Width="{Binding ElementName=bContent, Path=ActualWidth}" Height="{Binding ElementName=bContent, Path=ActualHeight}"/>
+            </Grid>
         </Border>
         
     </Grid>

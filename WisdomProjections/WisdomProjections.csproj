@@ -70,6 +70,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -116,12 +117,19 @@
     <Compile Include="Views\MaterialInputWindow.xaml.cs">
       <DependentUpon>MaterialInputWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\OutEffectsView.xaml.cs">
+      <DependentUpon>OutEffectsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OutEffectsWindow.xaml.cs">
+      <DependentUpon>OutEffectsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\RectangleView.xaml.cs">
       <DependentUpon>RectangleView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Sys\BitmapCursor.cs" />
     <Compile Include="Views\Sys\CursorHelper.cs" />
     <Compile Include="Views\Sys\EditableComboBox.cs" />
+    <Compile Include="Views\Sys\ScreenTool.cs" />
     <Compile Include="Views\Sys\UIChildFinder.cs" />
     <Compile Include="Views\Sys\ViewTool.cs" />
     <Compile Include="Views\TextListViewItem.xaml.cs">
@@ -161,6 +169,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MaterialInputWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OutEffectsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OutEffectsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

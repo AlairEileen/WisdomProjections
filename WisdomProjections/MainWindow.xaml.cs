@@ -8,6 +8,7 @@ using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -54,10 +55,12 @@ namespace WisdomProjections
                 btnGrdSplitter.Click += new RoutedEventHandler(BtnGrdSplitter_Click);
             if (btnGrdSplitter2 != null)
                 btnGrdSplitter2.Click += new RoutedEventHandler(BtnGrdSplitter2_Click);
-
             InitData();
-
+            deviceTimer = new Timer(o => App.Current.Dispatcher.Invoke(InitDevices), null, 500, 500);
         }
+
+
+
         /// <summary>
         /// 初始化数据
         /// </summary>
@@ -65,29 +68,19 @@ namespace WisdomProjections
         {
             imgContainer.PaintTypeSelects = new PaintTypeSelect[] {
                 new PaintTypeSelect { PaintType = PaintType.None, IsSelected = true },
-            new PaintTypeSelect { PaintType = PaintType.Cricle, IsSelected = false ,TypeView=imgCircle},
-            new PaintTypeSelect { PaintType = PaintType.Move, IsSelected = false ,TypeView=imgSlect},
-            new PaintTypeSelect { PaintType = PaintType.Rectangle, IsSelected = false,TypeView=imgSquare },
-            new PaintTypeSelect { PaintType = PaintType.Pen, IsSelected = false ,TypeView=imgPen},
-        };
-
-
+                new PaintTypeSelect { PaintType = PaintType.Cricle, IsSelected = false ,TypeView=imgCircle},
+                new PaintTypeSelect { PaintType = PaintType.Move, IsSelected = false ,TypeView=imgSlect},
+                new PaintTypeSelect { PaintType = PaintType.Rectangle, IsSelected = false,TypeView=imgSquare },
+                new PaintTypeSelect { PaintType = PaintType.Pen, IsSelected = false ,TypeView=imgPen},
+            };
 
             var a = new List<TextListViewItem>();
-            var a2 = new List<TextListViewItem>();
             for (int i = 0; i < 30; i++)
             {
-                a.Add(new TextListViewItem("模型" + i));
-                a2.Add(new TextListViewItem("设备" + i));
+                a.Add(new TextListViewItem("模型" + i, t => (s, e) => { }));
             }
             lvModel.ItemsSource = a;
-            lvDevice.ItemsSource = a2;
-
-
             InitEffects();
-
-
-
         }
         /// <summary>
         /// 窗口关闭中
@@ -129,7 +122,6 @@ namespace WisdomProjections
         private void ImgSlect_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             SwitchPaintType(PaintType.Move);
-
         }
         /// <summary>
         /// 矩形点击
@@ -140,7 +132,6 @@ namespace WisdomProjections
         {
             SwitchPaintType(PaintType.Rectangle);
         }
-
         private void SwitchPaintType(PaintType rectangle)
         {
             foreach (var item in imgContainer.PaintTypeSelects)
@@ -148,8 +139,10 @@ namespace WisdomProjections
                 if (item.PaintType == rectangle && item.IsSelected)
                 {
                     item.IsSelected = false;
-                    imgContainer.PaintTypeSelects.Where(x => x.PaintType == PaintType.None).FirstOrDefault().IsSelected = true;
-                    item.ChangeCursor(this);
+
+                    var ic = imgContainer.PaintTypeSelects.Where(x => x.PaintType == PaintType.None).FirstOrDefault();
+                    ic.IsSelected = true;
+                    ic.ChangeCursor(this);
                     break;
                 }
                 else
@@ -160,7 +153,6 @@ namespace WisdomProjections
             }
 
         }
-
         /// <summary>
         /// 圆点击
         /// </summary>
@@ -202,6 +194,82 @@ namespace WisdomProjections
 
         }
         #endregion
+
+        #region 设备列表检测
+        Timer deviceTimer;
+        private OutEffectsView outEffectsView = new OutEffectsView();
+        private List<System.Windows.Forms.Screen> otherScreens = new List<System.Windows.Forms.Screen>();
+        private List<ScreenWindow> screenWindows = new List<ScreenWindow>();
+        private System.Windows.Forms.Screen primaryScreen;
+        private List<TextListViewItem> deviceNameList = new List<TextListViewItem>();
+        private Dictionary<string, Window> deviceWindow = new Dictionary<string, Window>();
+        /// <summary>
+        /// 初始化显示设备
+        /// </summary>
+        private void InitDevices()
+        {
+            deviceNameList.Clear();
+            otherScreens.Clear();
+            //otherScreens = System.Windows.Forms.Screen.AllScreens.Where(s => !s.Primary).ToList();
+            var ss = System.Windows.Forms.Screen.AllScreens.ToList();
+            ss.ForEach(x => { if (x.Primary) primaryScreen = x; else otherScreens.Add(x); });
+            //otherScreens = System.Windows.Forms.Screen.AllScreens.ToList();
+            for (int i = 0; i < otherScreens.Count; i++)
+            {
+
+                var si = otherScreens[i];
+                deviceNameList.Add(new TextListViewItem(si.DeviceName, t => (s, e) =>
+                {
+
+                    if (t.lText.Content.Equals(si.DeviceName))
+                    {
+                        var w = screenWindows.Find(x => x.Screen.Equals(si));
+                        if (w == null)
+                        {
+
+                            var workingArea = si.WorkingArea;
+                            //otw.Top = (primaryScreen.WorkingArea.Height - workingArea.Height) / 2;
+                            //Console.WriteLine($"Dpi:{ScreenTool.GetDpiFromVisual(this).X},{ScreenTool.GetDpiFromVisual(this).Y}");
+                            var otw = new OutEffectsWindow(new WinLocation(ScreenTool.GetRealSize(this, workingArea.Left), 0, workingArea.Width, workingArea.Height));
+                            w = new ScreenWindow { Screen = si, Window = otw };
+                            screenWindows.Add(w);
+                            otw.Show();
+                        }
+                        var oevList = new List<OutEffectsView>();
+                        foreach (UIElement item in imgContainer.canvas.Children)
+                        {
+                            var rv = item as RectangleView;
+                            if (rv == null) continue;
+                            var outEffectsView = new OutEffectsView();
+                            outEffectsView.gContainer.Width = rv.gData.ActualWidth;
+                            outEffectsView.gContainer.Height = rv.gData.ActualHeight;
+                            outEffectsView.img.Source = rv.img.Source;
+                            //outEffectsView.img.Width = rv.img.ActualWidth;
+                            //outEffectsView.img.Height = rv.img.Height;
+                            outEffectsView.IsVideo = rv.IsVideo;
+                            outEffectsView.video.Source = rv.video.Source;
+                            //outEffectsView.video.Width = rv.video.ActualWidth;
+                            //outEffectsView.video.Height = rv.video.Height;
+                            outEffectsView.SetValue(Canvas.LeftProperty, rv.GetValue(Canvas.LeftProperty));
+                            outEffectsView.SetValue(Canvas.TopProperty, rv.GetValue(Canvas.TopProperty));
+                            oevList.Add(outEffectsView);
+                        }
+                        //outEffectsView.canvas
+
+                        w.Window.Refresh(oevList);
+                        //if (otw.IsLoaded)
+                        //    otw.WindowState = WindowState.Maximized;
+                    }
+                }));
+            }
+            lvDevice.ItemsSource = deviceNameList;
+
+        }
+
+
+        #endregion
+
+
 
         #region 左右两侧折叠与缩放
         /// <summary>
@@ -276,8 +344,9 @@ namespace WisdomProjections
                         }
                     }
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Console.WriteLine(e.StackTrace);
                 }
 
             }
@@ -291,7 +360,7 @@ namespace WisdomProjections
             var a3 = new List<EffectsListViewItem>();
             materials.ForEach(x =>
             {
-                a3.Add(new EffectsListViewItem(x.Id, x.Tag1.Name, x.Tag2.Name, x.Title, x.Content, x.ResourceFileName));
+                a3.Add(new EffectsListViewItem(this,x.Id, x.Tag1.Name, x.Tag2.Name, x.Title, x.Content, x.ResourceFileName));
             });
             lvEffects.ItemsSource = a3;
         }
@@ -310,6 +379,7 @@ namespace WisdomProjections
         /// 当前筛选后的特效数据
         /// </summary>
         private List<MaterialModel> currentMaterialModels;
+
         /// <summary>
         /// 清除搜索空内容点击
         /// </summary>
@@ -418,6 +488,9 @@ namespace WisdomProjections
             {
             }
         }
+
+
+
         /// <summary>
         /// 搜索框文字改变
         /// </summary>
