@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WisdomProjections.Views.Sys;
 
 namespace WisdomProjections.Views
 {
@@ -20,13 +21,21 @@ namespace WisdomProjections.Views
     /// </summary>
     public partial class TextListViewItem : ListViewItem
     {
-        
-        public TextListViewItem(string text,Func<TextListViewItem, MouseButtonEventHandler> itemClick)
+        private bool isChecked;
+        public TextListViewItem(string text, Func<TextListViewItem, MouseButtonEventHandler> itemClick)
         {
             InitializeComponent();
             lText.Content = text;
             lText.MouseLeftButtonDown += itemClick(this);
         }
-
+       
+        public bool IsChecked
+        {
+            get => isChecked; set
+            {
+                isChecked = value;
+                //lText.Foreground = new SolidColorBrush(isChecked ? ColorTool.GetMediaColorFromDrawingColor(System.Drawing.Color.FromName("#FF493F61")) : Colors.White);
+            }
+        }
     }
 }

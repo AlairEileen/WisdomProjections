@@ -88,7 +88,18 @@
                     </Grid.RowDefinitions>
                     <Label Background="#FF201A33" Grid.Row="0" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="46" FontSize="18">模型操作台</Label>
 
-                    <ListView Grid.Row="1" x:Name="lvModel" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden" />
+                    <ListView Grid.Row="1" x:Name="lvModel" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden" >
+
+                        <ListView.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem x:Name="miDelModelItem" Header="删除" Click="MiDelModelItem_Click">
+                                   
+                                </MenuItem>
+
+                            </ContextMenu>
+                        </ListView.ContextMenu>
+
+                    </ListView>
                     <!--<Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">模型一</Label>
                             <Label  Foreground="#BD4DFF" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">模型二</Label>
                             <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">模型三</Label>

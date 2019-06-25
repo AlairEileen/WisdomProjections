@@ -98,6 +98,7 @@
     </ApplicationDefinition>
     <Compile Include="Data_Executor\SensorDataExecutor.cs" />
     <Compile Include="Models\MaterialModel.cs" />
+    <Compile Include="Models\ModelItem.cs" />
     <Compile Include="Paints\AnchorPoint.cs" />
     <Compile Include="Paints\AnchorPointType.cs" />
     <Compile Include="Paints\RectangleDraw.cs" />
@@ -127,6 +128,7 @@
       <DependentUpon>RectangleView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Sys\BitmapCursor.cs" />
+    <Compile Include="Views\Sys\ColorTool.cs" />
     <Compile Include="Views\Sys\CursorHelper.cs" />
     <Compile Include="Views\Sys\EditableComboBox.cs" />
     <Compile Include="Views\Sys\ScreenTool.cs" />

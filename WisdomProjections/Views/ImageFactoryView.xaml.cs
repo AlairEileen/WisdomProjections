@@ -22,6 +22,8 @@ namespace WisdomProjections.Views
     {
         public PaintTypeSelect[] PaintTypeSelects { get; set; }
         public List<RectangleView> RectangleViews { get; } = new List<RectangleView>();
+        public event Action<RectangleView> RectangleAdd;
+        public event Action<RectangleView> RectangleDel;
         public ImageFactoryView()
         {
             InitializeComponent();
@@ -208,6 +210,7 @@ namespace WisdomProjections.Views
                 case PaintType.Rectangle:
                     mouseCanvasXY = e.GetPosition(canvas);
                     RectangleViews.Add(new RectangleView(this, 0, 0));
+                    if (RectangleAdd!=null) RectangleAdd(RectangleViews[RectangleViews.Count-1]);
                     RectangleViews[RectangleViews.Count - 1].SetValue(Canvas.LeftProperty, mouseCanvasXY.X);
                     RectangleViews[RectangleViews.Count - 1].SetValue(Canvas.TopProperty, mouseCanvasXY.Y);
                     canvas.Children.Add(RectangleViews[RectangleViews.Count - 1]);
@@ -223,6 +226,14 @@ namespace WisdomProjections.Views
                 item.OnContainerMouseDown(sender, e);
             }
         }
+
+        internal void DelRectangle(RectangleView view)
+        {
+            if (RectangleDel != null) RectangleDel(view);
+            canvas.Children.Remove(view);
+            RectangleViews.Remove(view);
+        }
+
         /// <summary>
         /// 鼠标左键松开
         /// </summary>

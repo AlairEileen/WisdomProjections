@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -175,13 +177,16 @@ namespace WisdomProjections.Data_Executor
                     if (null == this.cbitmap || this.cbitmap.PixelWidth != this.cframe.Width || this.cbitmap.PixelHeight != this.cframe.Height)
                     {
                         this.cbitmap = new WriteableBitmap(this.cframe.Width, this.cframe.Height, 96, 96, PixelFormats.Bgra32, null);
-                        imgContainer.img.Source = this.cbitmap;
+                        imgContainer.img.Source =this.cbitmap;
                     }
-
                     this.cbitmap.WritePixels(new Int32Rect(0, 0, this.cframe.Width, this.cframe.Height), this.cframe.Pixels, this.cframe.Width * 4, 0);
+
+
                 }
             }), DispatcherPriority.Render);
         }
+
+
 
         private void OnDepthFrameAndPublishDataReady(Sensor sensor, DepthFrame depthFrame, PublishData publishData, ErrorCode error)
         {

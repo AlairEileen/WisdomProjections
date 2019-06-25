@@ -74,14 +74,13 @@ namespace WisdomProjections
                 new PaintTypeSelect { PaintType = PaintType.Pen, IsSelected = false ,TypeView=imgPen},
             };
 
-            var a = new List<TextListViewItem>();
-            for (int i = 0; i < 30; i++)
-            {
-                a.Add(new TextListViewItem("模型" + i, t => (s, e) => { }));
-            }
-            lvModel.ItemsSource = a;
+            InitModelItems();
+
             InitEffects();
         }
+
+
+
         /// <summary>
         /// 窗口关闭中
         /// </summary>
@@ -194,6 +193,79 @@ namespace WisdomProjections
 
         }
         #endregion
+
+
+        #region 模型列表操作
+        /// <summary>
+        /// 模型列表
+        /// </summary>
+        public List<ModelItem> ModelItems { get; set; } = new List<ModelItem>();
+        private int rectNameIndex;
+        private List<TextListViewItem> modelTextList = new List<TextListViewItem>();
+        private void InitModelItems()
+        {
+            lvModel.ItemsSource = modelTextList;
+            lvModel.SelectionChanged += LvModel_SelectionChanged;
+
+
+            imgContainer.RectangleAdd += d =>
+            {
+                ModelItems.Add(new ModelItem { Name = "矩形" + ++rectNameIndex, View = d });
+                modelTextList.Add(new TextListViewItem(ModelItems[ModelItems.Count - 1].Name, t => (s, e) =>
+                    {
+                        foreach (var item in modelTextList)
+                        {
+                            item.IsChecked = false;
+                        }
+                        t.IsChecked = true;
+
+                    }));
+                lvModel.Items.Refresh();
+            };
+            imgContainer.RectangleDel += d =>
+            {
+                for (int i = 0; i < ModelItems.Count; i++)
+                {
+                    if (d.Equals(ModelItems[i].View))
+                    {
+                        ModelItems.RemoveAt(i);
+                        modelTextList.RemoveAt(i);
+                    }
+                }
+                lvModel.Items.Refresh();
+            };
+
+        }
+
+        private void LvModel_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var item = lvModel.SelectedValue as TextListViewItem;
+            imgContainer.RectangleViews.ForEach(x => x.Selected = false);
+            for (int i = 0; i < modelTextList.Count; i++)
+            {
+                if (modelTextList[i].Equals(item))
+                {
+                    ModelItems[i].View.Selected = true;
+                }
+            }
+        }
+
+        private void MiDelModelItem_Click(object sender, RoutedEventArgs e)
+        {
+            var item = lvModel.SelectedValue as TextListViewItem;
+            for (int i = 0; i < modelTextList.Count; i++)
+            {
+                if (modelTextList[i].Equals(item))
+                {
+                    imgContainer.DelRectangle(ModelItems[i].View);
+                }
+            }
+
+        }
+
+        #endregion
+
+
 
         #region 设备列表检测
         Timer deviceTimer;
@@ -360,7 +432,7 @@ namespace WisdomProjections
             var a3 = new List<EffectsListViewItem>();
             materials.ForEach(x =>
             {
-                a3.Add(new EffectsListViewItem(this,x.Id, x.Tag1.Name, x.Tag2.Name, x.Title, x.Content, x.ResourceFileName));
+                a3.Add(new EffectsListViewItem(this, x.Id, x.Tag1.Name, x.Tag2.Name, x.Title, x.Content, x.ResourceFileName));
             });
             lvEffects.ItemsSource = a3;
         }
@@ -488,6 +560,7 @@ namespace WisdomProjections
             {
             }
         }
+
 
 
 

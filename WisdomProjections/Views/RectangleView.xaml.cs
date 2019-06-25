@@ -21,6 +21,7 @@ namespace WisdomProjections.Views
     public partial class RectangleView : Grid
     {
         private bool selected;
+        public string Title { get; set; }
         public bool Selected
         {
             get => selected;
