@@ -97,6 +97,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Data_Executor\SensorDataExecutor.cs" />
+    <Compile Include="Extensions\ListIndexChangeExtension.cs" />
     <Compile Include="Models\MaterialModel.cs" />
     <Compile Include="Models\ModelItem.cs" />
     <Compile Include="Paints\AnchorPoint.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="SplashWindow.xaml.cs">
       <DependentUpon>SplashWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Convertors\HalfNumConvertor.cs" />
     <Compile Include="Views\EffectsListViewItem.xaml.cs">
       <DependentUpon>EffectsListViewItem.xaml</DependentUpon>
     </Compile>

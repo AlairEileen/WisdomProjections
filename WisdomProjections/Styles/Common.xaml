@@ -4,7 +4,7 @@
     <!--#region Combox自定义-->
     <Style TargetType="ToggleButton" x:Key="ComboxStyleBtn">
         <Setter Property="Height" Value="24"/>
-  
+
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
@@ -93,7 +93,7 @@
 
                                 </ScrollViewer>
                             </Border>
-                            
+
                         </Popup>
                     </Grid>
                 </ControlTemplate>
@@ -103,9 +103,9 @@
         <!--<Setter Property="Text" Value="{Binding  Path=}"/>-->
 
     </Style>
-    
+
     <!--#endregion-->
-    
+
 
     <VisualBrush x:Key="HintText" TileMode="None" Opacity="0.9" Stretch="None" AlignmentX="Left">
         <VisualBrush.Visual>
@@ -113,7 +113,7 @@
         </VisualBrush.Visual>
 
     </VisualBrush>
-    
+
     <Style TargetType="TextBox" x:Key="NoBorderSearch">
         <Style.Triggers>
             <Trigger Property="Text" Value="{x:Null}">
@@ -294,6 +294,60 @@
     <!--#endregion-->
 
 
- 
-    
+
+    <Style x:Key="ListViewStyle" TargetType="{x:Type ListView}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListView}">
+                    <ScrollViewer Padding="{TemplateBinding Padding}" Style="{DynamicResource ScrollViewerStyle}">
+                        <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                    </ScrollViewer>
+
+                </ControlTemplate>
+            </Setter.Value>
+
+        </Setter>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="Transparent"/>
+       
+
+    </Style>
+    <Style x:Key="ScrollViewerStyle" TargetType="{x:Type ScrollViewer}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                    <Grid Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                        <DockPanel Margin="{TemplateBinding Padding}">
+                            <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanContentScroll="{TemplateBinding CanContentScroll}" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" KeyboardNavigation.DirectionalNavigation="Local"
+ SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        </DockPanel>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ListViewItemStyle" TargetType="ListViewItem">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListViewItem">
+                    <Border Name="BD_Collector" CornerRadius="0" BorderThickness="1" BorderBrush="Transparent" Background="Transparent" Width="auto" Height="60" >
+                        <Label Content="{Binding Name}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="18" Foreground="White" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="BD_Collector" Property="BorderBrush" Value="Blue" />
+                        </Trigger>
+                       
+                        <Trigger Property="Selector.IsSelected" Value="True">
+                            <Setter TargetName="BD_Collector" Property="BorderBrush" Value="Blue" />
+                        </Trigger>
+
+                     
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

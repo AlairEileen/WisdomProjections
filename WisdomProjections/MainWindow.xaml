@@ -88,45 +88,44 @@
                     </Grid.RowDefinitions>
                     <Label Background="#FF201A33" Grid.Row="0" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="46" FontSize="18">模型操作台</Label>
 
-                    <ListView Grid.Row="1" x:Name="lvModel" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden" >
+                    <ListView Grid.Row="1" x:Name="lvModel" Background="Transparent" ItemContainerStyle="{StaticResource ListViewItemStyle}" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Hidden" MouseMove="lvModel_MouseMove" Drop="lvModel_Drop"  ScrollViewer.HorizontalScrollBarVisibility="Hidden" AllowDrop="True" SelectionMode="Extended" Style="{StaticResource ListViewStyle}" >
+                      
+                        <ListView.View>
+                            <GridView>
+                                <GridView.Columns>
+                                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
+                                </GridView.Columns>
+                            </GridView>
+                        </ListView.View>
+
 
                         <ListView.ContextMenu>
                             <ContextMenu>
                                 <MenuItem x:Name="miDelModelItem" Header="删除" Click="MiDelModelItem_Click">
-                                   
+
                                 </MenuItem>
 
                             </ContextMenu>
                         </ListView.ContextMenu>
 
                     </ListView>
-                    <!--<Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">模型一</Label>
-                            <Label  Foreground="#BD4DFF" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">模型二</Label>
-                            <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">模型三</Label>
-                            <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">模型四</Label>
-                            <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">模型五</Label>
-                            <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">模型六</Label>
-                            <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">模型六</Label>
-                            <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">模型六</Label>
-                            <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">模型六</Label>
-                            <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">模型六</Label>
-                            <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">模型六</Label>
-                            <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">模型六</Label>-->
+                 
                     <Label Background="#FF201A33" Grid.Row="2" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="46" FontSize="18">设备推送</Label>
-                    <ListView Grid.Row="3" x:Name="lvDevice" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden"  />
+                    <ListView Grid.Row="3" x:Name="lvDevice" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden"  >
 
-                    <!--<StackPanel Grid.Row="2" VerticalAlignment="Stretch">
-                        <ScrollViewer  HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
-                            <StackPanel>
-                                <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">设备一</Label>
-                                <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">设备二</Label>
-                                <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">设备三</Label>
-                                <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">设备四</Label>
-                                <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">设备五</Label>
-                                <Label  Foreground="#FF493F61" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="18">设备六</Label>
-                            </StackPanel>
-                        </ScrollViewer>
-                    </StackPanel>-->
+                        <ListView.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem x:Name="miCheckModelItem" Header="校对模式" Click="MiCheckModelItem_Click">
+
+                                </MenuItem>
+
+                            </ContextMenu>
+                        </ListView.ContextMenu>
+
+
+                    </ListView>
+
+                 
                 </Grid>
 
 
@@ -174,7 +173,7 @@
 
                 <ListView Grid.Row="1" x:Name="lvEffects" HorizontalContentAlignment="Stretch" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
 
-                
+
             </Grid>
 
         </Grid>

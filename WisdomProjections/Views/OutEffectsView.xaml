@@ -8,9 +8,9 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Border x:Name="gContainer">
         <Grid>
-            <Image x:Name="img"/>
-            <MediaElement x:Name="video" Visibility="Hidden" LoadedBehavior="Manual" UnloadedBehavior="Manual" MediaEnded="Video_MediaEnded" Loaded="Video_Loaded"/>
-            <Canvas x:Name="canvas"/>
+            <Image x:Name="img" Stretch="UniformToFill"/>
+            <MediaElement x:Name="video" Visibility="Hidden" LoadedBehavior="Manual" UnloadedBehavior="Manual" MediaEnded="Video_MediaEnded" Loaded="Video_Loaded" Stretch="UniformToFill"/>
+            <Canvas x:Name="canvas"  Width="{Binding ElementName=bContent, Path=ActualWidth}" Height="{Binding ElementName=bContent, Path=ActualHeight}"/>
         </Grid>
     </Border>
 </Grid>

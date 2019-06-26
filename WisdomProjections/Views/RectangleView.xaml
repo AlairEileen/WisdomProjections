@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:WisdomProjections.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid x:Name="gSelect">
+    <Grid x:Name="gSelect" Panel.ZIndex="{Binding ZIndex}" >
         <Border Width="30" x:Name="bLT" Height="30"   HorizontalAlignment="Left" VerticalAlignment="Top" MouseEnter="BLT_MouseEnter" >
             <Border Width="10"  Height="10" Background="white"  BorderThickness="1" BorderBrush="Blue" HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Border>

@@ -26,6 +26,7 @@ namespace WisdomProjections.Views
         {
             InitializeComponent();
             lText.Content = text;
+            
             lText.MouseLeftButtonDown += itemClick(this);
         }
        

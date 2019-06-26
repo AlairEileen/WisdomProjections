@@ -40,6 +40,7 @@ namespace WisdomProjections.Views
 
         internal void Refresh(List<OutEffectsView> outEffectsView)
         {
+            this.Background = new SolidColorBrush(Colors.Black);
             if (gContainer.Children!=null)
             {
                 gContainer.Children.Clear();

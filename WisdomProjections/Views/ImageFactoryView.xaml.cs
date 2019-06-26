@@ -210,6 +210,7 @@ namespace WisdomProjections.Views
                 case PaintType.Rectangle:
                     mouseCanvasXY = e.GetPosition(canvas);
                     RectangleViews.Add(new RectangleView(this, 0, 0));
+                    RefreshRectangleZIndex();
                     if (RectangleAdd!=null) RectangleAdd(RectangleViews[RectangleViews.Count-1]);
                     RectangleViews[RectangleViews.Count - 1].SetValue(Canvas.LeftProperty, mouseCanvasXY.X);
                     RectangleViews[RectangleViews.Count - 1].SetValue(Canvas.TopProperty, mouseCanvasXY.Y);
@@ -262,6 +263,14 @@ namespace WisdomProjections.Views
         public PaintTypeSelect GetPaintTypeSelect()
         {
             return PaintTypeSelects.Where(x => x.IsSelected).FirstOrDefault();
+        }
+
+        internal void RefreshRectangleZIndex()
+        {
+            for (int j = 0; j < RectangleViews.Count; j++)
+            {
+                Panel.SetZIndex(RectangleViews[j], RectangleViews.Count - j);
+            }
         }
     }
     public class PaintTypeSelect

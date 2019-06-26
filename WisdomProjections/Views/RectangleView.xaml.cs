@@ -22,6 +22,7 @@ namespace WisdomProjections.Views
     {
         private bool selected;
         public string Title { get; set; }
+        public int ZIndex { get; set; }
         public bool Selected
         {
             get => selected;

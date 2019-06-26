@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WisdomProjections.Views"
-             mc:Ignorable="d" 
+      xmlns:local1="clr-namespace:WisdomProjections.Views.Convertors"
+      mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid x:Name="IMG">
         <Grid.Resources>
@@ -20,8 +21,16 @@
                              MouseMove="Img_MouseMove"
                              MouseWheel="Img_MouseWheel" >
                 <Grid >
-
-                    <Image Name="img" RenderTransform="{StaticResource Imageview}" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                    <Grid RenderTransform="{StaticResource Imageview}" HorizontalAlignment="Center">
+                        <Image Name="img"  RenderOptions.BitmapScalingMode="NearestNeighbor">
+                            <Image.Resources>
+                                <local1:HalfNumConvertor x:Key="HalfConvertor"/>
+                            </Image.Resources>
+                            <Image.RenderTransform>
+                                <ScaleTransform ScaleX="-1" CenterX="{Binding ElementName=img, Path=ActualWidth,Converter={StaticResource HalfConvertor},ConverterParameter=2}" CenterY="0"/>
+                            </Image.RenderTransform>
+                        </Image>
+                    </Grid>
                     <Canvas Width="{Binding ElementName=img, Path=ActualWidth}" Height="{Binding ElementName=img, Path=ActualHeight}" x:Name="canvas" RenderTransform="{StaticResource Imageview}"/>
                 </Grid>
             </ContentControl>

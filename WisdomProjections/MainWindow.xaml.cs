@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -56,7 +57,7 @@ namespace WisdomProjections
             if (btnGrdSplitter2 != null)
                 btnGrdSplitter2.Click += new RoutedEventHandler(BtnGrdSplitter2_Click);
             InitData();
-            deviceTimer = new Timer(o => App.Current.Dispatcher.Invoke(InitDevices), null, 500, 500);
+            deviceTimer = new Timer(o => { if (App.Current != null && App.Current.Dispatcher != null) App.Current.Dispatcher.Invoke(InitDevices); }, null, 500, 500);
         }
 
 
@@ -201,25 +202,26 @@ namespace WisdomProjections
         /// </summary>
         public List<ModelItem> ModelItems { get; set; } = new List<ModelItem>();
         private int rectNameIndex;
-        private List<TextListViewItem> modelTextList = new List<TextListViewItem>();
         private void InitModelItems()
         {
-            lvModel.ItemsSource = modelTextList;
+            lvModel.ItemsSource = ModelItems;
             lvModel.SelectionChanged += LvModel_SelectionChanged;
 
 
             imgContainer.RectangleAdd += d =>
             {
-                ModelItems.Add(new ModelItem { Name = "矩形" + ++rectNameIndex, View = d });
-                modelTextList.Add(new TextListViewItem(ModelItems[ModelItems.Count - 1].Name, t => (s, e) =>
-                    {
-                        foreach (var item in modelTextList)
-                        {
-                            item.IsChecked = false;
-                        }
-                        t.IsChecked = true;
+                var name = "矩形" + ++rectNameIndex;
+                d.ToolTip = name;
+                ModelItems.Add(new ModelItem { Name = name, View = d });
+                //modelTextList.Add(new TextListViewItem(ModelItems[ModelItems.Count - 1].Name, t => (s, e) =>
+                //    {
+                //        foreach (var item in modelTextList)
+                //        {
+                //            item.IsChecked = false;
+                //        }
+                //        t.IsChecked = true;
 
-                    }));
+                //    }));
                 lvModel.Items.Refresh();
             };
             imgContainer.RectangleDel += d =>
@@ -229,40 +231,118 @@ namespace WisdomProjections
                     if (d.Equals(ModelItems[i].View))
                     {
                         ModelItems.RemoveAt(i);
-                        modelTextList.RemoveAt(i);
                     }
                 }
                 lvModel.Items.Refresh();
             };
 
         }
-
         private void LvModel_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var item = lvModel.SelectedValue as TextListViewItem;
+            var item = lvModel.SelectedValue as ModelItem;
+            if (item == null) return;
             imgContainer.RectangleViews.ForEach(x => x.Selected = false);
-            for (int i = 0; i < modelTextList.Count; i++)
-            {
-                if (modelTextList[i].Equals(item))
-                {
-                    ModelItems[i].View.Selected = true;
-                }
-            }
+            item.View.Selected = true;
+            //for (int i = 0; i < modelTextList.Count; i++)
+            //{
+            //    if (modelTextList[i].Equals(item))
+            //    {
+            //        ModelItems[i].View.Selected = true;
+            //    }
+            //}
         }
-
         private void MiDelModelItem_Click(object sender, RoutedEventArgs e)
         {
-            var item = lvModel.SelectedValue as TextListViewItem;
-            for (int i = 0; i < modelTextList.Count; i++)
-            {
-                if (modelTextList[i].Equals(item))
-                {
-                    imgContainer.DelRectangle(ModelItems[i].View);
-                }
-            }
+            var item = lvModel.SelectedValue as ModelItem;
+            imgContainer.DelRectangle(item.View);
+            //for (int i = 0; i < modelTextList.Count; i++)
+            //{
+            //    if (modelTextList[i].Equals(item))
+            //    {
+            //        imgContainer.DelRectangle(ModelItems[i].View);
+            //    }
+            //}
 
         }
 
+
+
+        private void lvModel_MouseMove(object sender, MouseEventArgs e)
+        {
+            ListView listview = sender as ListView;
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                System.Collections.IList list = listview.SelectedItems as System.Collections.IList;
+                DataObject data = new DataObject(typeof(System.Collections.IList), list);
+                if (list.Count > 0)
+                {
+                    DragDrop.DoDragDrop(listview, data, DragDropEffects.Move);
+                }
+            }
+        }
+
+        private void lvModel_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(System.Collections.IList)))
+            {
+                System.Collections.IList peopleList = e.Data.GetData(typeof(System.Collections.IList)) as System.Collections.IList;
+                //index為放置時鼠標下元素項的索引
+                int index = GetCurrentIndex(new GetPositionDelegate(e.GetPosition));
+                if (index > -1)
+                {
+                    ModelItem Logmess = peopleList[0] as ModelItem;
+                    //拖動元素集合的第一個元素索引
+                    int OldFirstIndex = ModelItems.IndexOf(Logmess);
+                    //下邊那個循環要求數據源必須為ObservableCollection<T>類型，T為對象
+                    for (int i = 0; i < peopleList.Count; i++)
+                    {
+                        ModelItems.RemoveAt(OldFirstIndex);
+                        ModelItems.Insert(index, Logmess);
+                        imgContainer.RectangleViews.RemoveAt(OldFirstIndex);
+                        imgContainer.RectangleViews.Insert(index, Logmess.View);
+
+                    }
+                    imgContainer.RefreshRectangleZIndex();
+                    lvModel.SelectedItems.Clear();
+                    lvModel.Items.Refresh();
+                }
+            }
+        }
+
+        private int GetCurrentIndex(GetPositionDelegate getPosition)
+        {
+            int index = -1;
+            for (int i = 0; i < lvModel.Items.Count; ++i)
+            {
+                ListViewItem item = GetListViewItem(i);
+                if (item != null && this.IsMouseOverTarget(item, getPosition))
+                {
+                    index = i;
+                    break;
+                }
+            }
+            return index;
+        }
+
+        private bool IsMouseOverTarget(Visual target, GetPositionDelegate getPosition)
+        {
+            Rect bounds = VisualTreeHelper.GetDescendantBounds(target);
+            System.Windows.Point mousePos = getPosition((IInputElement)target);
+            return bounds.Contains(mousePos);
+        }
+
+        delegate System.Windows.Point GetPositionDelegate(IInputElement element);
+
+        ListViewItem GetListViewItem(int index)
+        {
+            if (lvModel.ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated)
+                return null;
+            return lvModel.ItemContainerGenerator.ContainerFromIndex(index) as ListViewItem;
+        }
+
+
+
+      
         #endregion
 
 
@@ -337,8 +417,13 @@ namespace WisdomProjections
             lvDevice.ItemsSource = deviceNameList;
 
         }
-
-
+        private void MiCheckModelItem_Click(object sender, RoutedEventArgs e)
+        {
+            //var tlvi = lvDevice.SelectedValue as TextListViewItem;
+            var index = lvDevice.SelectedIndex;
+            if (screenWindows.Count > index)
+                screenWindows[index].Window.Background = new SolidColorBrush(Colors.Red);
+        }
         #endregion
 
 
@@ -560,6 +645,8 @@ namespace WisdomProjections
             {
             }
         }
+
+
 
 
 
