@@ -5,8 +5,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WisdomProjections.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid x:Name="gSelect" Panel.ZIndex="{Binding ZIndex}" >
+      Background="Green"
+             d:DesignHeight="450" d:DesignWidth="800" Focusable="True" >
+
+    <Grid x:Name="gSelect" Panel.ZIndex="{Binding ZIndex}" RenderTransformOrigin="0.5,0.5">
+        <Grid.RenderTransform>
+            <TransformGroup x:Name="gTG">
+                <RotateTransform x:Name="gRT"/>
+            </TransformGroup>
+        </Grid.RenderTransform>
+
         <Border Width="30" x:Name="bLT" Height="30"   HorizontalAlignment="Left" VerticalAlignment="Top" MouseEnter="BLT_MouseEnter" >
             <Border Width="10"  Height="10" Background="white"  BorderThickness="1" BorderBrush="Blue" HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Border>
@@ -34,6 +42,7 @@
         </Border>
 
         <!--<Border x:Name="bContent" BorderThickness="1" BorderBrush="Blue" Margin="15" MouseEnter="BContent_MouseEnter" MouseMove="BContent_MouseMove" MouseLeftButtonDown="BContent_MouseLeftButtonDown" MouseLeftButtonUp="BContent_MouseLeftButtonUp" />-->
+        
         <Border x:Name="bContent" BorderThickness="2" BorderBrush="Blue" Margin="15"  MouseEnter="BContent_MouseEnter" MouseLeftButtonDown="BContent_MouseLeftButtonDown" >
             <Grid x:Name="gData">
                 <Image x:Name="img" Stretch="UniformToFill"/>
@@ -42,5 +51,6 @@
             </Grid>
         </Border>
         
+        <Border x:Name="bCC" Visibility="Hidden" Background="Red" Height="1" Width="1" HorizontalAlignment="Center" VerticalAlignment="Center"></Border>
     </Grid>
 </Grid>

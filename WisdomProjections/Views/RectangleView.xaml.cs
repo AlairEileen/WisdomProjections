@@ -109,12 +109,24 @@ namespace WisdomProjections.Views
             if (mouseIsDown)
             {
                 var p = e.GetPosition(CurrentPointType == PointLocationType.LB ? bRT : CurrentPointType == PointLocationType.RT ? bLB : bLT);
-                var cy = p.Y - ltdM.Y;
-                var cx = p.X - ltdM.X;
+                //var p = e.GetPosition(bCC);
+                var cy = (p.Y - ltdM.Y);
+                var cx = (p.X - ltdM.X) ;
                 var h = this.Height;
                 var w = this.Width;
                 var l = Convert.ToDouble(this.GetValue(Canvas.LeftProperty));
                 var t = Convert.ToDouble(this.GetValue(Canvas.TopProperty));
+                //h = this.Height + cy;
+                //w = this.Width + cx;
+
+                //if (p.Y-ltdM.Y>0)
+                //{
+
+                //}
+
+
+
+
                 switch (CurrentPointType)
                 {
                     case PointLocationType.LT:
@@ -224,20 +236,25 @@ namespace WisdomProjections.Views
         {
             if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.CC; this.Cursor = Cursors.SizeAll; }
         }
-        //private void BContent_MouseMove(object sender, MouseEventArgs e)
-        //{
-        //    DoMove(sender, e);
-        //}
 
-        //private void BContent_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        //{
-        //    StartMove(e);
-        //}
-
-        //private void BContent_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        //{
-        //    EndMove();
-        //}
+        public void MoveWithKey(int size, MoveType moveType)
+        {
+            var l = Convert.ToDouble(this.GetValue(Canvas.LeftProperty)) + (moveType == MoveType.Left ? -size : moveType == MoveType.Right ? size : 0);
+            var t = Convert.ToDouble(this.GetValue(Canvas.TopProperty)) + (moveType == MoveType.Top ? -size : moveType == MoveType.Bottom ? size : 0);
+            this.SetValue(Canvas.LeftProperty, l);
+            this.SetValue(Canvas.TopProperty, t);
+        }
+        public void RotateWithKey(int size, RotateType rotateType)
+        {
+            //RotateTransform rotateTransform = new RotateTransform(rotateType == RotateType.Clockwise ? size : -size);   //其中180是旋转180度
+            //double cx = this.ActualWidth / 2;
+            //double cy = this.ActualHeight / 2;
+            //rotateTransform.CenterX = cx <= 0 ? 0 : cx;
+            //rotateTransform.CenterY = cy <= 0 ? 0 : cy;
+            //bCC.GetValue(Canvas.LeftProperty);
+            //gTG.Children.Add(rotateTransform);
+            gRT.Angle += rotateType == RotateType.Clockwise ? size : -size;
+        }
         #endregion
 
         private void BContent_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -257,4 +274,37 @@ namespace WisdomProjections.Views
     }
 
 
+
+
+    public enum MoveType
+    {
+        /// <summary>
+        /// 左
+        /// </summary>
+        Left,
+        /// <summary>
+        /// 上
+        /// </summary>
+        Top,
+        /// <summary>
+        /// 右
+        /// </summary>
+        Right,
+        /// <summary>
+        /// 下
+        /// </summary>
+        Bottom
+    }
+
+    public enum RotateType
+    {
+        /// <summary>
+        /// 顺时针
+        /// </summary>
+        Clockwise,
+        /// <summary>
+        /// 逆时针
+        /// </summary>
+        Anticlockwise
+    }
 }

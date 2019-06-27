@@ -6,7 +6,13 @@
         xmlns:local="clr-namespace:WisdomProjections"
         xmlns:views="clr-namespace:WisdomProjections.Views"
         mc:Ignorable="d"
-        Title="智慧投影" Width="1600" Height="900"  Background="#0D0918" MinWidth="1066" MinHeight="600" Loaded="Window_Loaded" Closing="Window_Closing" SnapsToDevicePixels="True" WindowState="Maximized"  >
+        Title="智慧投影" Width="1600" Height="900"  Background="#0D0918" MinWidth="1066" MinHeight="600" Loaded="Window_Loaded" Closing="Window_Closing" SnapsToDevicePixels="True" WindowState="Maximized" PreviewKeyDown="Window_PreviewKeyDown_1">
+    <Window.InputBindings>
+        <KeyBinding Key="Up" Command="ApplicationCommands.NotACommand"/>
+        <KeyBinding Key="Down" Command="ApplicationCommands.NotACommand"/>
+        <KeyBinding Key="Left" Command="ApplicationCommands.NotACommand"/>
+        <KeyBinding Key="Right" Command="ApplicationCommands.NotACommand"/>
+    </Window.InputBindings>
     <Window.Resources>
         <!--GridSplitter样式-->
         <Style x:Key="GridSplitterPreviewStyle">
@@ -88,14 +94,18 @@
                     </Grid.RowDefinitions>
                     <Label Background="#FF201A33" Grid.Row="0" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="46" FontSize="18">模型操作台</Label>
 
-                    <ListView Grid.Row="1" x:Name="lvModel" Background="Transparent" ItemContainerStyle="{StaticResource ListViewItemStyle}" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Hidden" MouseMove="lvModel_MouseMove" Drop="lvModel_Drop"  ScrollViewer.HorizontalScrollBarVisibility="Hidden" AllowDrop="True" SelectionMode="Extended" Style="{StaticResource ListViewStyle}" >
-                      
+                    <ListView Grid.Row="1" x:Name="lvModel"  Background="Transparent" ItemContainerStyle="{StaticResource ListViewItemStyle}" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Hidden" MouseMove="lvModel_MouseMove" Drop="lvModel_Drop"  ScrollViewer.HorizontalScrollBarVisibility="Hidden" AllowDrop="True" SelectionMode="Extended" Style="{StaticResource ListViewStyle}"  >
+                     
                         <ListView.View>
-                            <GridView>
+                        
+                        <GridView>
+                                
+                                
                                 <GridView.Columns>
                                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
                                 </GridView.Columns>
                             </GridView>
+                           
                         </ListView.View>
 
 
@@ -133,10 +143,10 @@
             <GridSplitter x:Name="gsSplitterr" Grid.Column="1"   Style="{DynamicResource GridSplitterStyle1}"  HorizontalAlignment="Stretch" Margin="0" Background="Black" >
 
             </GridSplitter>
-            <Grid Name="grd2"  Grid.Column="2" Panel.ZIndex="-1" Margin="5,0,-5,0" >
+            <Grid Name="grd2"  Grid.Column="2" Panel.ZIndex="-1" Margin="5,0,-5,0" Focusable="True">
                 <!--<TabControl BorderThickness="0" Background="#0D0918"  x:Name="tc_Image" AutomationProperties.IsOffscreenBehavior="Offscreen"  >
                 </TabControl>-->
-                <views:ImageFactoryView x:Name="imgContainer"></views:ImageFactoryView>
+                <views:ImageFactoryView x:Name="imgContainer" ></views:ImageFactoryView>
             </Grid>
             <GridSplitter x:Name="gsSplitterr2" Grid.Column="3"    Style="{DynamicResource GridSplitterStyle1}" HorizontalAlignment="Stretch" Margin="0" Background="Black" />
             <Grid Name="grd3"  Grid.Column="4"  Background="#FF171226" >

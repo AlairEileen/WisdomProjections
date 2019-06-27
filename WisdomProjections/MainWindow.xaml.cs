@@ -243,26 +243,14 @@ namespace WisdomProjections
             if (item == null) return;
             imgContainer.RectangleViews.ForEach(x => x.Selected = false);
             item.View.Selected = true;
-            //for (int i = 0; i < modelTextList.Count; i++)
-            //{
-            //    if (modelTextList[i].Equals(item))
-            //    {
-            //        ModelItems[i].View.Selected = true;
-            //    }
-            //}
+            //Keyboard.Focus(this);
+            Keyboard.Focus(item.View);
+            Console.WriteLine("LvModel_SelectionChanged");
         }
         private void MiDelModelItem_Click(object sender, RoutedEventArgs e)
         {
             var item = lvModel.SelectedValue as ModelItem;
             imgContainer.DelRectangle(item.View);
-            //for (int i = 0; i < modelTextList.Count; i++)
-            //{
-            //    if (modelTextList[i].Equals(item))
-            //    {
-            //        imgContainer.DelRectangle(ModelItems[i].View);
-            //    }
-            //}
-
         }
 
 
@@ -342,7 +330,7 @@ namespace WisdomProjections
 
 
 
-      
+
         #endregion
 
 
@@ -490,14 +478,12 @@ namespace WisdomProjections
                         {
                             currentMaterialModels = materialJsonModel.MaterialModels;
                             InitAllEffectsItem(materialJsonModel.MaterialModels);
-
                             var list1 = new List<string>();
                             materialJsonModel.TagModels.ForEach(x => list1.Add(x.Name));
                             cbEffectsType1.ItemsSource = list1;
                             cbEffectsType1.SelectedIndex = 0;
                             InitEffectsType(0);
                             cbEffectsType2.SelectedIndex = 0;
-
                         }
                     }
                 }
@@ -646,10 +632,53 @@ namespace WisdomProjections
             }
         }
 
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
 
 
+        }
 
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            var moveType = MoveType.Left;
+            if (Keyboard.Modifiers == ModifierKeys.Alt)
+            {
+                var rotateType = RotateType.Clockwise;
+                if (e.KeyStates == Keyboard.GetKeyStates(Key.Right))
+                {
+                    imgContainer.RectangleViews.Find(x => x.Selected).RotateWithKey(1, rotateType);
+                }
+                else if (e.KeyStates == Keyboard.GetKeyStates(Key.Left))
+                {
+                    rotateType = RotateType.Anticlockwise;
+                    imgContainer.RectangleViews.Find(x => x.Selected).RotateWithKey(1, rotateType);
+                }
+            }
+            else
+            {
+                switch (e.Key)
+                {
+                    case Key.Up:
+                        moveType = MoveType.Top;
+                        break;
+                    case Key.Right:
+                        moveType = MoveType.Right;
+                        break;
+                    case Key.Down:
+                        moveType = MoveType.Bottom;
+                        break;
+                    default:
+                        break;
+                }
+                imgContainer.RectangleViews.Find(x => x.Selected).MoveWithKey(1, moveType);
+            }
+        }
 
+        private void Window_PreviewKeyDown_1(object sender, KeyEventArgs e)
+        {
+            Window_PreviewKeyDown(sender, e);
+            e.Handled = true;
+        }
 
         /// <summary>
         /// 搜索框文字改变
@@ -664,6 +693,7 @@ namespace WisdomProjections
 
         }
         #endregion
+
 
         ///create by alair
         ///
