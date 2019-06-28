@@ -6,14 +6,15 @@
              xmlns:local="clr-namespace:WisdomProjections.Views"
              mc:Ignorable="d" 
       Background="Green"
-             d:DesignHeight="450" d:DesignWidth="800" Focusable="True" >
+      RenderTransformOrigin="0.5,0.5"
+             d:DesignHeight="450" d:DesignWidth="800" Focusable="True">
+    <Grid.RenderTransform>
+        <TransformGroup x:Name="gTG">
+            <RotateTransform x:Name="gRT"/>
+        </TransformGroup>
+    </Grid.RenderTransform>
+    <Grid x:Name="gSelect" Panel.ZIndex="{Binding ZIndex}" >
 
-    <Grid x:Name="gSelect" Panel.ZIndex="{Binding ZIndex}" RenderTransformOrigin="0.5,0.5">
-        <Grid.RenderTransform>
-            <TransformGroup x:Name="gTG">
-                <RotateTransform x:Name="gRT"/>
-            </TransformGroup>
-        </Grid.RenderTransform>
 
         <Border Width="30" x:Name="bLT" Height="30"   HorizontalAlignment="Left" VerticalAlignment="Top" MouseEnter="BLT_MouseEnter" >
             <Border Width="10"  Height="10" Background="white"  BorderThickness="1" BorderBrush="Blue" HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -42,15 +43,22 @@
         </Border>
 
         <!--<Border x:Name="bContent" BorderThickness="1" BorderBrush="Blue" Margin="15" MouseEnter="BContent_MouseEnter" MouseMove="BContent_MouseMove" MouseLeftButtonDown="BContent_MouseLeftButtonDown" MouseLeftButtonUp="BContent_MouseLeftButtonUp" />-->
-        
-        <Border x:Name="bContent" BorderThickness="2" BorderBrush="Blue" Margin="15"  MouseEnter="BContent_MouseEnter" MouseLeftButtonDown="BContent_MouseLeftButtonDown" >
+
+        <Border x:Name="bContent" BorderThickness="2" BorderBrush="White" Margin="15"  MouseEnter="BContent_MouseEnter" MouseLeftButtonDown="BContent_MouseLeftButtonDown" >
             <Grid x:Name="gData">
                 <Image x:Name="img" Stretch="UniformToFill"/>
                 <MediaElement x:Name="video" Visibility="Hidden" Stretch="UniformToFill"/>
                 <Canvas x:Name="canvas"  Width="{Binding ElementName=bContent, Path=ActualWidth}" Height="{Binding ElementName=bContent, Path=ActualHeight}"/>
             </Grid>
         </Border>
-        
-        <Border x:Name="bCC" Visibility="Hidden" Background="Red" Height="1" Width="1" HorizontalAlignment="Center" VerticalAlignment="Center"></Border>
+
+        <Border x:Name="bPLT" Visibility="Visible" Background="Red" Height="0.1" Width="0.1" HorizontalAlignment="Left" VerticalAlignment="Top" ></Border>
+        <Border x:Name="bPLC" Visibility="Visible" Background="Red" Height="0.1" Width="0.1" HorizontalAlignment="Left" VerticalAlignment="Center" ></Border>
+        <Border x:Name="bPLB" Visibility="Visible" Background="Red" Height="0.1" Width="0.1" HorizontalAlignment="Left" VerticalAlignment="Bottom" ></Border>
+        <Border x:Name="bPCT" Visibility="Visible" Background="Red" Height="0.1" Width="0.1" HorizontalAlignment="Center" VerticalAlignment="Top" ></Border>
+        <Border x:Name="bPCB" Visibility="Visible" Background="Red" Height="0.1" Width="0.1" HorizontalAlignment="Center" VerticalAlignment="Bottom"></Border>
+        <Border x:Name="bPRT" Visibility="Visible" Background="Red" Height="0.1" Width="0.1" HorizontalAlignment="Right" VerticalAlignment="Top" ></Border>
+        <Border x:Name="bPRC" Visibility="Visible" Background="Red" Height="0.1" Width="0.1" HorizontalAlignment="Right" VerticalAlignment="Center" ></Border>
+        <Border x:Name="bPRB" Visibility="Visible" Background="Red" Height="0.1" Width="0.1" HorizontalAlignment="Right" VerticalAlignment="Bottom" ></Border>
     </Grid>
 </Grid>

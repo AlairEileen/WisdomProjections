@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -95,23 +96,109 @@ namespace WisdomProjections.Views
         #endregion
 
         #region 父容器鼠标事件
-        Point ltdM;
+        /// <summary>
+        /// 原点
+        /// </summary>
+        Point pointOrigin;
+        /// <summary>
+        /// 矩形原点
+        /// </summary>
+        Point pointO;
+        /// <summary>
+        /// 被动点
+        /// </summary>
+        Point pointPassiveM;
+        /// <summary>
+        /// 动点
+        /// </summary>
+        Point pointM;
+        /// <summary>
+        /// 移动前的点
+        /// </summary>
+        Point pointOldM;
+        /// <summary>
+        /// image工厂画布
+        /// </summary>
         private ImageFactoryView ifv;
 
         internal bool OnContainerMouseMove(object sender, MouseEventArgs e)
         {
             return DoMove(sender, e);
+        }
+
+
+
+        /// <summary>
+        /// 根据余弦定理求两个线段夹角
+        /// </summary>
+        /// <param name="o">端点</param>
+        /// <param name="s">start点</param>
+        /// <param name="e">end点</param>
+        /// <returns></returns>
+        double Angle(Point o, Point s, Point e)
+        {
+            double cosfi = 0, fi = 0, norm = 0;
+            double dsx = s.X - o.X;
+            double dsy = s.Y - o.Y;
+            double dex = e.X - o.X;
+            double dey = e.Y - o.Y;
+
+            cosfi = dsx * dex + dsy * dey;
+            norm = (dsx * dsx + dsy * dsy) * (dex * dex + dey * dey);
+            cosfi /= Math.Sqrt(norm);
+
+            if (cosfi >= 1.0) return 0;
+            if (cosfi <= -1.0) return Math.PI;
+            fi = Math.Acos(cosfi);
+
+            if (180 * fi / Math.PI < 180)
+            {
+                return 180 * fi / Math.PI;
+            }
+            else
+            {
+                return 360 - 180 * fi / Math.PI;
+            }
+        }
+
+
+        /// <summary>
+        /// 计算两点距离
+        /// </summary>
+        /// <param name="startPoint">起点</param>
+        /// <param name="endPoint">终点</param>
+        /// <returns></returns>
+        public static double GetDistance(Point startPoint, Point endPoint)
+        {
+            var x = Math.Abs(endPoint.X - startPoint.X);
+            var y = Math.Abs(endPoint.Y - startPoint.Y);
+            return Math.Sqrt(x * x + y * y);
 
         }
+        /// <summary>
+        /// 计算两点距离
+        /// </summary>
+        /// <param name="startPoint">起点</param>
+        /// <param name="endPoint">终点</param>
+        /// <returns></returns>
+        public static double GetDistancePoint(Point startPoint, Point endPoint)
+        {
+            var x = Math.Abs(endPoint.X - startPoint.X);
+            var y = Math.Abs(endPoint.Y - startPoint.Y);
+            return Math.Sqrt(x * x + y * y);
+
+        }
+
         private bool DoMove(object sender, MouseEventArgs e)
         {
             bool isEx = true;
             if (mouseIsDown)
             {
-                var p = e.GetPosition(CurrentPointType == PointLocationType.LB ? bRT : CurrentPointType == PointLocationType.RT ? bLB : bLT);
+                //pointM = e.GetPosition(CurrentPointType == PointLocationType.LB ? bRT : CurrentPointType == PointLocationType.RT ? bLB : bLT);
+                pointM = e.GetPosition(ifv.canvas);
                 //var p = e.GetPosition(bCC);
-                var cy = (p.Y - ltdM.Y);
-                var cx = (p.X - ltdM.X) ;
+                var cy = (pointM.Y - pointOrigin.Y);
+                var cx = (pointM.X - pointOrigin.X);
                 var h = this.Height;
                 var w = this.Width;
                 var l = Convert.ToDouble(this.GetValue(Canvas.LeftProperty));
@@ -119,11 +206,14 @@ namespace WisdomProjections.Views
                 //h = this.Height + cy;
                 //w = this.Width + cx;
 
-                //if (p.Y-ltdM.Y>0)
-                //{
+                var oc = Angle(pointOrigin, pointPassiveM, pointM);
+                var pl = GetDistance(pointM, pointOrigin);
 
-                //}
+                var ol = (pl * Math.Sin(Math.PI / (180 / oc))) / Math.Sin(Math.PI / 2);
+                var ml = Math.Sqrt(pl * pl - ol * ol);
 
+
+                Console.WriteLine($"angle:{oc},pl:{pl},ol:{ol},ml:{ml}");
 
 
 
@@ -146,7 +236,7 @@ namespace WisdomProjections.Views
                         w = this.Width - cx;
                         h = this.Height + cy;
                         l = Convert.ToDouble(this.GetValue(Canvas.LeftProperty)) + cx;
-                        ltdM = p;
+                        pointOrigin = pointM;
                         break;
                     case PointLocationType.CT:
                         e.MouseDevice.SetCursor(Cursors.SizeNS);
@@ -156,25 +246,41 @@ namespace WisdomProjections.Views
                     case PointLocationType.CB:
                         e.MouseDevice.SetCursor(Cursors.SizeNS);
                         h = this.Height + cy;
-                        ltdM = p;
+                        pointOrigin = pointM;
                         break;
                     case PointLocationType.RT:
                         e.MouseDevice.SetCursor(Cursors.SizeNESW);
-                        w = this.Width + cx;
-                        h = this.Height - cy;
-                        t = Convert.ToDouble(this.GetValue(Canvas.TopProperty)) + cy;
-                        ltdM = p;
+                        //w = this.Width + cx;
+                        //h = this.Height - cy;
+                        //t = Convert.ToDouble(this.GetValue(Canvas.TopProperty)) + cy;
+                        //pointOrigin = pointM;
+                        w = ml;
+                        h = ol;
+
+
+                        Point pointFour = new Point();
+                        pointFour.X = pointM.X + pointOrigin.X - pointPassiveM.X;
+                        pointFour.Y = pointM.Y + pointOrigin.Y - pointPassiveM.Y;
+
+                        //var pointFour = new Point(location.X+pointOrigin.X,location.Y+pointOrigin.Y);
+                        //pointO.X -= (pointM.X - pointOldM.X);
+                        pointO.Y += (pointM.Y - pointOldM.Y);
+
+                        t += (pointM.Y - pointOldM.Y);
+
+                        Console.WriteLine($"m:{pointM},p:{pointPassiveM},o:{pointOrigin},pointFour:{pointFour}");
+
                         break;
                     case PointLocationType.RC:
                         e.MouseDevice.SetCursor(Cursors.SizeWE);
                         w = this.Width + cx;
-                        ltdM = p;
+                        pointOrigin = pointM;
                         break;
                     case PointLocationType.RB:
                         e.MouseDevice.SetCursor(Cursors.SizeNWSE);
                         h = this.Height + cy;
                         w = this.Width + cx;
-                        ltdM = p;
+                        pointOrigin = pointM;
                         break;
                     case PointLocationType.CC:
                         e.MouseDevice.SetCursor(Cursors.SizeAll);
@@ -191,12 +297,77 @@ namespace WisdomProjections.Views
                     this.Width = w;
                     this.SetValue(Canvas.LeftProperty, l);
                     this.SetValue(Canvas.TopProperty, t);
+                //    var pd = bPLB.TranslatePoint(new Point(),ifv.canvas);
+                  
+                //this.SetValue(Canvas.LeftProperty, l - pd.X + pointOrigin.X);
+                //this.SetValue(Canvas.TopProperty, t -pd.Y + pointOrigin.Y);
                 }
 
             }
             else isEx = false;
             return isEx;
         }
+
+
+        Point Pointdinate(Point a, Point b, Point c)//a点为直角点，求第4个点的坐标.
+        {
+            Point po = new Point();
+            po.X = b.X + c.X - a.X;
+            po.Y = b.Y + c.Y - a.Y;
+            return po;
+        }
+
+        bool Judge(Point a, Point b, Point c)//判断向量数量积是否为0.
+        {
+            if (((b.X - a.X) * (c.X - a.X) + (b.Y - a.Y) * (c.Y - a.Y)) != 0)
+                return true;
+            return false;
+        }
+
+
+
+        void Seeking(Point[] a)
+        {
+            if (Judge(a[0], a[1], a[2]))//判断直角点.
+                a[3] = Pointdinate(a[0], a[1], a[2]);
+            else if (Judge(a[1], a[0], a[2]))
+                a[3] = Pointdinate(a[1], a[0], a[2]);
+            else a[3] = Pointdinate(a[2], a[0], a[1]);
+            //a[3]即为第4个点.
+        }
+
+
+
+
+
+
+
+
+        private Point CalcPoint(Point op, Point pointM, Point pointPassiveM)
+        {
+            var g = new Point();
+            if ((op.X - pointM.X) * (pointM.X - pointPassiveM.X) + (op.Y - pointM.Y) * (pointM.Y - pointPassiveM.Y) == 0)
+            {
+                g = GetPoint(op.X, op.Y, pointM.X, pointM.Y, pointPassiveM.X, pointPassiveM.Y);
+            }
+            if ((op.X - pointPassiveM.X) * (pointM.X - pointPassiveM.X) + (op.Y - pointPassiveM.Y) * (pointM.Y - pointPassiveM.Y) == 0)
+            {
+                g = GetPoint(op.X, op.Y, pointPassiveM.X, pointPassiveM.Y, pointM.X, pointM.Y);
+            }
+            if ((op.X - pointPassiveM.X) * (pointM.X - op.X) + (op.Y - pointPassiveM.Y) * (pointM.Y - op.Y) == 0)
+            {
+                g = GetPoint(pointPassiveM.X, pointPassiveM.Y, op.X, op.Y, pointM.X, pointM.Y);
+            }
+            return g;
+        }
+
+        private Point GetPoint(double x1, double y1, double x2, double y2, double x3, double y3)
+        {
+            Point g = new Point();
+            g.X = x1 + x3 - x2; g.Y = y1 + y3 - y2;
+            return g;
+        }
+
         internal void OnContainerMouseDown(object sender, MouseButtonEventArgs e)
         {
             StartMove(e);
@@ -208,13 +379,26 @@ namespace WisdomProjections.Views
             switch (CurrentPointType)
             {
                 case PointLocationType.LB:
-                    ltdM = e.GetPosition(bRT);
+                    pointOrigin = e.GetPosition(bRT);
+                    pointPassiveM = bRB.TranslatePoint(new Point(), bRT);
                     break;
                 case PointLocationType.RT:
-                    ltdM = e.GetPosition(bLB);
+                    pointOrigin = bPLB.TranslatePoint(new Point(), ifv.canvas);
+                    pointPassiveM = bPRB.TranslatePoint(new Point(), ifv.canvas);
+                    pointOldM = bPRT.TranslatePoint(new Point(), ifv.canvas);
+                    pointO = bPLT.TranslatePoint(new Point(), ifv.canvas);
                     break;
-                default:
-                    ltdM = e.GetPosition(bLT);
+                case PointLocationType.RB:
+                    pointOrigin = e.GetPosition(bLT);
+                    pointPassiveM = bLB.TranslatePoint(new Point(), bLT);
+                    break;
+                case PointLocationType.LT:
+                    pointOrigin = e.GetPosition(bRB);
+                    pointPassiveM = bLB.TranslatePoint(new Point(), bRB);
+                    break;
+                case PointLocationType.LC:
+                    pointOrigin = e.GetPosition(bRB);
+                    pointPassiveM = bLB.TranslatePoint(new Point(), bRB);
                     break;
             }
 
