@@ -98,6 +98,7 @@
     </ApplicationDefinition>
     <Compile Include="Data_Executor\SensorDataExecutor.cs" />
     <Compile Include="Extensions\ListIndexChangeExtension.cs" />
+    <Compile Include="Models\DeviceModel.cs" />
     <Compile Include="Models\MaterialModel.cs" />
     <Compile Include="Models\ModelItem.cs" />
     <Compile Include="Paints\AnchorPoint.cs" />
@@ -107,6 +108,11 @@
     <Compile Include="SplashWindow.xaml.cs">
       <DependentUpon>SplashWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\BaseRectangleView.xaml.cs">
+      <DependentUpon>BaseRectangleView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Convertors\BoolDisplayConvertor.cs" />
+    <Compile Include="Views\Convertors\DivideConvertor.cs" />
     <Compile Include="Views\Convertors\HalfNumConvertor.cs" />
     <Compile Include="Views\EffectsListViewItem.xaml.cs">
       <DependentUpon>EffectsListViewItem.xaml</DependentUpon>
@@ -157,6 +163,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="SplashWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BaseRectangleView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

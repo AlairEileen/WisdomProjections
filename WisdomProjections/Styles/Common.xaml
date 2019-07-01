@@ -44,7 +44,7 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="ComboBoxItem">
-                                <Border Name="Back" Background="Transparent"  BorderThickness="0">
+                                <Border Name="Back" Background="Transparent"  BorderThickness="0" Padding="5,0,5,0">
                                     <ContentPresenter ContentSource="{Binding Source}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0" ></ContentPresenter>
                                 </Border>
                                 <ControlTemplate.Triggers>
@@ -71,7 +71,7 @@
                             <ColumnDefinition Width="0.3*" MaxWidth="30"/>
                         </Grid.ColumnDefinitions>
                         <!--文字区域背景和边线样式-->
-                        <TextBox Background="#2B2635" x:Name="cbtb" VerticalAlignment="Center"  Grid.Column="0" Foreground="White"  BorderThickness="0" MaxLength="5" IsReadOnly="{TemplateBinding IsReadOnly}" Text="{TemplateBinding Text}"></TextBox>
+                        <TextBox Background="#2B2635" HorizontalContentAlignment="Center" x:Name="cbtb" VerticalAlignment="Center"  Grid.Column="0" Foreground="White"  BorderThickness="0" MaxLength="5" IsReadOnly="{TemplateBinding IsReadOnly}" Text="{TemplateBinding Text}"></TextBox>
                         <Border  Grid.Column="0" BorderThickness="0" BorderBrush="#03ffea" CornerRadius="6">
 
                         </Border>
@@ -80,16 +80,16 @@
                             <ToggleButton BorderThickness="0" Style="{StaticResource ComboxStyleBtn}" IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press"></ToggleButton>
                         </Border>
                         <!--弹出popup整体设置-->
-                        <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" x:Name="Popup" Focusable="False" AllowsTransparency="True" PopupAnimation="Slide" >
+                        <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" x:Name="Popup" Focusable="False" AllowsTransparency="True"   PopupAnimation="Slide" >
                             <!--弹出popup边框-->
                             <Border CornerRadius="6"  BorderBrush="Transparent"  BorderThickness="0" MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{TemplateBinding ActualWidth}" x:Name="DropDown" SnapsToDevicePixels="True">
                                 <Border.Effect>
                                     <DropShadowEffect Color="Transparent" BlurRadius="6"  ShadowDepth="0" Opacity="1"/>
                                 </Border.Effect>
                                 <!--下拉幕布边界背景设置 MaxHeight="{TemplateBinding MaxDropDownHeight}"-->
-                                <ScrollViewer Margin="0,0,0,0"   SnapsToDevicePixels="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" BorderThickness="0" >
+                                <ScrollViewer Margin="0,0,0,0"   SnapsToDevicePixels="True" HorizontalScrollBarVisibility="Auto"  VerticalScrollBarVisibility="Auto" BorderThickness="0" >
                                     <!-- StackPanel 用于显示子级，方法是将 IsItemsHost 设置为 True -->
-                                    <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"  Background="#2B2635"></StackPanel>
+                                    <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"   Background="#2B2635"></StackPanel>
 
                                 </ScrollViewer>
                             </Border>

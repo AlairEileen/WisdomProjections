@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WisdomProjections.Views"
              mc:Ignorable="d" 
-      Background="Green"
+      Background="Transparent"
              d:DesignHeight="450" d:DesignWidth="800" Focusable="True" >
 
     <Grid x:Name="gSelect" Panel.ZIndex="{Binding ZIndex}" RenderTransformOrigin="0.5,0.5">
@@ -42,7 +42,7 @@
         </Border>
 
         <!--<Border x:Name="bContent" BorderThickness="1" BorderBrush="Blue" Margin="15" MouseEnter="BContent_MouseEnter" MouseMove="BContent_MouseMove" MouseLeftButtonDown="BContent_MouseLeftButtonDown" MouseLeftButtonUp="BContent_MouseLeftButtonUp" />-->
-        
+
         <Border x:Name="bContent" BorderThickness="2" BorderBrush="Blue" Margin="15"  MouseEnter="BContent_MouseEnter" MouseLeftButtonDown="BContent_MouseLeftButtonDown" >
             <Grid x:Name="gData">
                 <Image x:Name="img" Stretch="UniformToFill"/>
@@ -50,7 +50,7 @@
                 <Canvas x:Name="canvas"  Width="{Binding ElementName=bContent, Path=ActualWidth}" Height="{Binding ElementName=bContent, Path=ActualHeight}"/>
             </Grid>
         </Border>
-        
+
         <Border x:Name="bCC" Visibility="Hidden" Background="Red" Height="1" Width="1" HorizontalAlignment="Center" VerticalAlignment="Center"></Border>
     </Grid>
 </Grid>

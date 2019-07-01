@@ -22,8 +22,10 @@ namespace WisdomProjections.Views
     {
         public PaintTypeSelect[] PaintTypeSelects { get; set; }
         public List<RectangleView> RectangleViews { get; } = new List<RectangleView>();
+
         public event Action<RectangleView> RectangleAdd;
         public event Action<RectangleView> RectangleDel;
+
         public ImageFactoryView()
         {
             InitializeComponent();
@@ -211,7 +213,7 @@ namespace WisdomProjections.Views
                     mouseCanvasXY = e.GetPosition(canvas);
                     RectangleViews.Add(new RectangleView(this, 0, 0));
                     RefreshRectangleZIndex();
-                    if (RectangleAdd!=null) RectangleAdd(RectangleViews[RectangleViews.Count-1]);
+                    if (RectangleAdd != null) RectangleAdd(RectangleViews[RectangleViews.Count - 1]);
                     RectangleViews[RectangleViews.Count - 1].SetValue(Canvas.LeftProperty, mouseCanvasXY.X);
                     RectangleViews[RectangleViews.Count - 1].SetValue(Canvas.TopProperty, mouseCanvasXY.Y);
                     canvas.Children.Add(RectangleViews[RectangleViews.Count - 1]);
@@ -272,6 +274,47 @@ namespace WisdomProjections.Views
                 Panel.SetZIndex(RectangleViews[j], RectangleViews.Count - j);
             }
         }
+
+        #region 投影区域框
+        private double bSDSize;
+        public double BSDSize
+        {
+            get => bSDSize; set
+            {
+                bSDSize = value;
+                var bw = gSD.ActualWidth - bSelectedDisplay.Margin.Left - bSelectedDisplay.Margin.Right;
+                var bh = gSD.ActualHeight - bSelectedDisplay.Margin.Top - bSelectedDisplay.Margin.Bottom;
+                if (bh < 0 || bw < 0) return;
+                var h = bw / BSDSize;
+                if (h > bh)
+                {
+                    bSelectedDisplay.Height = bh;
+                    bSelectedDisplay.Width = bh * BSDSize;
+                }
+                else
+                {
+                    bSelectedDisplay.Height = bsdW / BSDSize;
+                    bSelectedDisplay.Width = bw;
+                }
+
+            }
+        }
+
+        double bsdW = 0;
+        private void GSD_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (bsdW != bSelectedDisplay.ActualWidth)
+            {
+                bsdW = bSelectedDisplay.ActualWidth;
+                bSelectedDisplay.Height = bsdW / BSDSize;
+            }
+        }
+
+        private void BSelectedDisplay_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            //Console.WriteLine($"bsd= w:{bSelectedDisplay.ActualWidth},h:{bSelectedDisplay.ActualHeight}");
+        } 
+        #endregion
     }
     public class PaintTypeSelect
     {

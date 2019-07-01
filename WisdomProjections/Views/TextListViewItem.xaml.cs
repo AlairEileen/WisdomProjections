@@ -22,12 +22,10 @@ namespace WisdomProjections.Views
     public partial class TextListViewItem : ListViewItem
     {
         private bool isChecked;
-        public TextListViewItem(string text, Func<TextListViewItem, MouseButtonEventHandler> itemClick)
+        public TextListViewItem(string text)
         {
             InitializeComponent();
             lText.Content = text;
-            
-            lText.MouseLeftButtonDown += itemClick(this);
         }
        
         public bool IsChecked

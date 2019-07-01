@@ -57,10 +57,8 @@ namespace WisdomProjections
             if (btnGrdSplitter2 != null)
                 btnGrdSplitter2.Click += new RoutedEventHandler(BtnGrdSplitter2_Click);
             InitData();
-            deviceTimer = new Timer(o => { if (App.Current != null && App.Current.Dispatcher != null) App.Current.Dispatcher.Invoke(InitDevices); }, null, 500, 500);
+            InitDevices();
         }
-
-
 
         /// <summary>
         /// 初始化数据
@@ -78,9 +76,8 @@ namespace WisdomProjections
             InitModelItems();
 
             InitEffects();
+            InitDisplay();
         }
-
-
 
         /// <summary>
         /// 窗口关闭中
@@ -213,15 +210,6 @@ namespace WisdomProjections
                 var name = "矩形" + ++rectNameIndex;
                 d.ToolTip = name;
                 ModelItems.Add(new ModelItem { Name = name, View = d });
-                //modelTextList.Add(new TextListViewItem(ModelItems[ModelItems.Count - 1].Name, t => (s, e) =>
-                //    {
-                //        foreach (var item in modelTextList)
-                //        {
-                //            item.IsChecked = false;
-                //        }
-                //        t.IsChecked = true;
-
-                //    }));
                 lvModel.Items.Refresh();
             };
             imgContainer.RectangleDel += d =>
@@ -335,84 +323,7 @@ namespace WisdomProjections
 
 
 
-        #region 设备列表检测
-        Timer deviceTimer;
-        private OutEffectsView outEffectsView = new OutEffectsView();
-        private List<System.Windows.Forms.Screen> otherScreens = new List<System.Windows.Forms.Screen>();
-        private List<ScreenWindow> screenWindows = new List<ScreenWindow>();
-        private System.Windows.Forms.Screen primaryScreen;
-        private List<TextListViewItem> deviceNameList = new List<TextListViewItem>();
-        private Dictionary<string, Window> deviceWindow = new Dictionary<string, Window>();
-        /// <summary>
-        /// 初始化显示设备
-        /// </summary>
-        private void InitDevices()
-        {
-            deviceNameList.Clear();
-            otherScreens.Clear();
-            //otherScreens = System.Windows.Forms.Screen.AllScreens.Where(s => !s.Primary).ToList();
-            var ss = System.Windows.Forms.Screen.AllScreens.ToList();
-            ss.ForEach(x => { if (x.Primary) primaryScreen = x; else otherScreens.Add(x); });
-            //otherScreens = System.Windows.Forms.Screen.AllScreens.ToList();
-            for (int i = 0; i < otherScreens.Count; i++)
-            {
 
-                var si = otherScreens[i];
-                deviceNameList.Add(new TextListViewItem(si.DeviceName, t => (s, e) =>
-                {
-
-                    if (t.lText.Content.Equals(si.DeviceName))
-                    {
-                        var w = screenWindows.Find(x => x.Screen.Equals(si));
-                        if (w == null)
-                        {
-
-                            var workingArea = si.WorkingArea;
-                            //otw.Top = (primaryScreen.WorkingArea.Height - workingArea.Height) / 2;
-                            //Console.WriteLine($"Dpi:{ScreenTool.GetDpiFromVisual(this).X},{ScreenTool.GetDpiFromVisual(this).Y}");
-                            var otw = new OutEffectsWindow(new WinLocation(ScreenTool.GetRealSize(this, workingArea.Left), 0, workingArea.Width, workingArea.Height));
-                            w = new ScreenWindow { Screen = si, Window = otw };
-                            screenWindows.Add(w);
-                            otw.Show();
-                        }
-                        var oevList = new List<OutEffectsView>();
-                        foreach (UIElement item in imgContainer.canvas.Children)
-                        {
-                            var rv = item as RectangleView;
-                            if (rv == null) continue;
-                            var outEffectsView = new OutEffectsView();
-                            outEffectsView.gContainer.Width = rv.gData.ActualWidth;
-                            outEffectsView.gContainer.Height = rv.gData.ActualHeight;
-                            outEffectsView.img.Source = rv.img.Source;
-                            //outEffectsView.img.Width = rv.img.ActualWidth;
-                            //outEffectsView.img.Height = rv.img.Height;
-                            outEffectsView.IsVideo = rv.IsVideo;
-                            outEffectsView.video.Source = rv.video.Source;
-                            //outEffectsView.video.Width = rv.video.ActualWidth;
-                            //outEffectsView.video.Height = rv.video.Height;
-                            outEffectsView.SetValue(Canvas.LeftProperty, rv.GetValue(Canvas.LeftProperty));
-                            outEffectsView.SetValue(Canvas.TopProperty, rv.GetValue(Canvas.TopProperty));
-                            oevList.Add(outEffectsView);
-                        }
-                        //outEffectsView.canvas
-
-                        w.Window.Refresh(oevList);
-                        //if (otw.IsLoaded)
-                        //    otw.WindowState = WindowState.Maximized;
-                    }
-                }));
-            }
-            lvDevice.ItemsSource = deviceNameList;
-
-        }
-        private void MiCheckModelItem_Click(object sender, RoutedEventArgs e)
-        {
-            //var tlvi = lvDevice.SelectedValue as TextListViewItem;
-            var index = lvDevice.SelectedIndex;
-            if (screenWindows.Count > index)
-                screenWindows[index].Window.Background = new SolidColorBrush(Colors.Red);
-        }
-        #endregion
 
 
 
@@ -680,6 +591,10 @@ namespace WisdomProjections
             e.Handled = true;
         }
 
+
+
+
+
         /// <summary>
         /// 搜索框文字改变
         /// </summary>
@@ -693,6 +608,140 @@ namespace WisdomProjections
 
         }
         #endregion
+
+
+        #region 设备模块
+        Timer deviceTimer;
+        /// <summary>
+        /// 初始化显示设备
+        /// </summary>
+        private void InitDevices()
+        {
+            //otherScreens = System.Windows.Forms.Screen.AllScreens.Where(s => !s.Primary).ToList();
+            deviceTimer = new Timer(o =>
+            {
+                if (App.Current != null && App.Current.Dispatcher != null) App.Current.Dispatcher.Invoke(() =>
+                {
+                    var ss = System.Windows.Forms.Screen.AllScreens.ToList();
+                    ss.ForEach(x =>
+                    {
+                        if (!x.Primary && deviceModels.Find(y => y.Screen.Equals(x)) == null)
+                        {
+                            deviceModels.Add(new DeviceModel { Screen = x, Name = x.DeviceName });
+                        }
+                    });
+                    deviceModels.ForEach(y =>
+                    {
+                        if (ss.Find(x => x.Equals(y.Screen)) == null)
+                        {
+                            if (y.Window != null) y.Window.Close();
+                            deviceModels.Remove(y);
+                        }
+                    });
+                    lvDevice.Items.Refresh();
+                });
+            }, null, 50, 500);
+            lvDevice.ItemsSource = deviceModels;
+        }
+        private List<DeviceModel> deviceModels = new List<DeviceModel>();
+        private void LvDevice_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            RefreshWindow();
+           
+        }
+
+        public void RefreshWindow()
+        {
+            var dm = lvDevice.SelectedItem as DeviceModel;
+            dm.Window = dm.Window ?? CreateScreenWindowItem(dm.Screen);
+            var oevList = new List<OutEffectsView>();
+            foreach (UIElement item in imgContainer.canvas.Children)
+            {
+                var rv = item as RectangleView;
+                if (rv == null) continue;
+                var outEffectsView = new OutEffectsView();
+                outEffectsView.Width = rv.bContent.ActualWidth;
+                outEffectsView.Height = rv.bContent.ActualHeight;
+                outEffectsView.img.Source = rv.img.Source;
+                //outEffectsView.img.Width = rv.img.ActualWidth;
+                //outEffectsView.img.Height = rv.img.Height;
+                outEffectsView.IsVideo = rv.IsVideo;
+                outEffectsView.video.Source = rv.video.Source;
+                //outEffectsView.video.Width = rv.video.ActualWidth;
+                //outEffectsView.video.Height = rv.video.Height;
+                var p = rv.bContent.TranslatePoint(new System.Windows.Point(),imgContainer.canvas);
+                outEffectsView.SetValue(Canvas.LeftProperty,p.X);
+                outEffectsView.SetValue(Canvas.TopProperty, p.Y);
+                oevList.Add(outEffectsView);
+            }
+            //outEffectsView.canvas
+            dm.Window.Refresh(oevList, imgContainer.BSDSize, imgContainer.bSelectedDisplay.ActualWidth, imgContainer.bSelectedDisplay.ActualHeight);
+        }
+
+        private OutEffectsWindow CreateScreenWindowItem(System.Windows.Forms.Screen screen)
+        {
+            var workingArea = screen.WorkingArea;
+            //otw.Top = (primaryScreen.WorkingArea.Height - workingArea.Height) / 2;
+            //Console.WriteLine($"Dpi:{ScreenTool.GetDpiFromVisual(this).X},{ScreenTool.GetDpiFromVisual(this).Y}");
+            var otw = new OutEffectsWindow(new WinLocation(ScreenTool.GetRealSize(this, workingArea.Left), 0, workingArea.Width, workingArea.Height));
+            otw.Show();
+            return otw;
+        }
+        #endregion
+
+
+
+        #region 调校模块
+
+        private int[][] dpScale = { new[] { 16, 9 }, new[] { 16, 10 }, new[] { 4, 3 } };
+        private string[] launchModeList = { "正投", "背投", "地装", "吊装" };
+        /// <summary>
+        /// 初始化投影机分辨率
+        /// </summary>
+        private void InitDisplay()
+        {
+            var list = new List<string>();
+            foreach (var item in dpScale)
+            {
+                list.Add($"{item[0]} : {item[1]}");
+            }
+            cbDisplay.ItemsSource = list;
+            cbDisplay.SelectedIndex = 0;
+            cbLaunchMode.ItemsSource = launchModeList;
+            cbLaunchMode.SelectedIndex = 0;
+        }
+        /// <summary>
+        /// 投影仪分辨率改变事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CbDisplay_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var index = cbDisplay.SelectedIndex;
+            imgContainer.BSDSize = (double)dpScale[index][0] / dpScale[index][1];
+            //Console.WriteLine($"sd= w:{imgContainer.bSelectedDisplay.Width},h:{imgContainer.bSelectedDisplay.Height};gsd= w:{imgContainer.gSD.ActualWidth},h:{imgContainer.gSD.ActualHeight}");
+            //imgContainer.bSelectedDisplay.Height = imgContainer.bSelectedDisplay.Width / dpScale[index][0] * dpScale[index][1];
+        }
+        private void CbDebug_Checked(object sender, RoutedEventArgs e)
+        {
+            if (lvDevice.SelectedItem == null)
+            {
+                MessageBox.Show("请选择要调校的设备!");
+                cbDebug.IsChecked = false;
+            }
+            else
+            {
+                var dm = lvDevice.SelectedItem as DeviceModel;
+
+                if (dm.Window == null)
+                {
+                    dm.Window = CreateScreenWindowItem(dm.Screen);
+                }
+                dm.Window.Background = new SolidColorBrush(Colors.Red);
+            }
+        }
+        #endregion
+
 
 
         ///create by alair
