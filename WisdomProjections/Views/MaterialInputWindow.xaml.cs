@@ -199,7 +199,7 @@ namespace WisdomProjections.Views
 
         private void LCancel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-
+            this.Close();
         }
 
         private void CbTag1_TextInput(object sender, TextCompositionEventArgs e)

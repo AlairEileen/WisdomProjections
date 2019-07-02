@@ -4,82 +4,89 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:ComboboxHelper="clr-namespace:WisdomProjections.Views.Sys"
+        AllowsTransparency="True"
+        BorderThickness="10"
         mc:Ignorable="d"
-        Title="素材导入" Background="#19132B" Height="168.75" Width="383" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
-    <Grid>
+        Title="素材导入"  Height="164.75" Width="378.667" Background="Transparent" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="None">
+    <Window.Effect>
+        <DropShadowEffect BlurRadius="10"  ShadowDepth="3"></DropShadowEffect>
+    </Window.Effect>
+    <Border BorderThickness="0" CornerRadius="4" Background="#19132B">
+        <Grid>
 
-        <StackPanel VerticalAlignment="Center" Margin="5">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="88"/>
-                    <ColumnDefinition Width="10"/>
-                    <ColumnDefinition Width="35"/>
-                    <ColumnDefinition Width="5*"/>
-                    <ColumnDefinition Width="5*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="20"/>
-                    <RowDefinition Height="5"/>
-                    <RowDefinition Height="20"/>
-                    <RowDefinition Height="20"/>
-                    <RowDefinition Height="5"/>
-                    <RowDefinition Height="20"/>
-                    <RowDefinition Height="10"/>
-                </Grid.RowDefinitions>
-                <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="6">
-                    <Border  Width="88" Height="88" CornerRadius="6" BorderThickness="1" BorderBrush="#FF423B57" Background="#0D0918">
-                        <Grid>
-                            <Image x:Name="iIcon" Source="pack://siteoforigin:,,,/Resources/projector.png"/>
-                            <MediaElement Name="meIcon" Visibility="Hidden" LoadedBehavior="Pause" ScrubbingEnabled="True"/>
+            <StackPanel VerticalAlignment="Center" Margin="5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="88"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="35"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="10"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="6">
+                        <Border  Width="88" Height="88" CornerRadius="6" BorderThickness="1" BorderBrush="#FF423B57" Background="#0D0918">
+                            <Grid>
+                                <Image x:Name="iIcon" Source="pack://siteoforigin:,,,/Resources/projector.png"/>
+                                <MediaElement Name="meIcon" Visibility="Hidden" LoadedBehavior="Pause" ScrubbingEnabled="True"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+
+                    <Label Foreground="White" Grid.Column="2" Grid.Row="0" Padding="0" VerticalContentAlignment="Center" >标题</Label>
+                    <Border x:Name="bTitle" Grid.Column="3" Grid.Row="0" Grid.ColumnSpan="2"  Style="{StaticResource Round}"  Padding="6,0,0,0" >
+                        <Grid >
+                            <TextBox x:Name="tbTitle" VerticalAlignment="Center" Margin="0,0,20,0" VerticalContentAlignment="Center" FontSize="12" Background="Transparent" Height="{Binding ElementName=bTitle,Path=ActualHeight}" BorderThickness="0" Foreground="White" CaretBrush="White"  MaxLength="10"/>
+                            <Image Style="{StaticResource ImageButton}" x:Name="iCleanTitleText" HorizontalAlignment="Right" DockPanel.Dock="Right" Width="15" Height="15" Source="pack://siteoforigin:,,,/Resources/delete.png" Margin="0,0,2,0"/>
                         </Grid>
                     </Border>
+                    <Label Foreground="White" Grid.Column="2" Grid.Row="2" Padding="0" VerticalContentAlignment="Center" >简介</Label>
+                    <Border Grid.Column="3" x:Name="bContent" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="2" CornerRadius="6" Style="{StaticResource Round}" Padding="6,0,0,0" >
+                        <Grid >
+                            <TextBox x:Name="tbContent" MaxLines="2" Margin="0,0,20,0" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Hidden" Height="{Binding ElementName=bContent,Path=ActualHeight}" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="12" Background="Transparent"  BorderThickness="0" Foreground="White" CaretBrush="White"  MaxLength="40"/>
+                            <Image Style="{StaticResource ImageButton}" x:Name="iCleanContentText" HorizontalAlignment="Right" DockPanel.Dock="Right" Width="15" Height="15" Source="pack://siteoforigin:,,,/Resources/delete.png" Margin="0,0,2,0"/>
+                        </Grid>
+                    </Border>
+
+                    <Label Foreground="White" Grid.Column="2" Grid.Row="5" Padding="0" VerticalContentAlignment="Center" >标签</Label>
+                    <Border  Grid.Column="3" Grid.Row="5" Margin="0,0,1,0"  CornerRadius="6" Background="#FF2B2635" Padding="6,0,0,0" >
+                        <ComboBox FontSize="12"  x:Name="cbTag1"  Foreground="White" Background="#2B2635" Style="{StaticResource ComboBoxStyle}" BorderThickness="0" IsEditable="True" TextInput="CbTag1_TextInput" SelectionChanged="CbTag1_SelectionChanged" />
+
+                    </Border>
+                    <Border  Grid.Column="4" Grid.Row="5" Margin="1,0,0,0"  CornerRadius="6" Background="#FF2B2635" Padding="6,0,0,0">
+                        <ComboBox FontSize="12" x:Name="cbTag2"  Foreground="White" Background="#2B2635"  Style="{StaticResource ComboBoxStyle}" BorderThickness="0" IsEditable="True" SelectionChanged="CbTag2_SelectionChanged"/>
+                    </Border>
                 </Grid>
+                <Grid VerticalAlignment="Bottom">
+                    <StackPanel Orientation="Horizontal"  HorizontalAlignment="Right">
+                        <Border  x:Name="bLeftButton" Width="66" CornerRadius="4" >
+                            <Border.Background>
+                                <!--<ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button1.png"/>-->
+                                <SolidColorBrush Color="#FF423B57"/>
+                            </Border.Background>
+                            <Label Foreground="White" x:Name="lCancel" Padding="0" VerticalContentAlignment="Center" Style="{StaticResource LabelButton}" Height="20"  HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" MouseLeftButtonDown="LCancel_MouseLeftButtonDown">取消</Label>
+                        </Border>
+                        <Border  x:Name="bRightButton" Width="66" CornerRadius="4" Margin="10,0,0,0">
+                            <Border.Background>
+                                <!--<ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button2.png"/>-->
+                                <SolidColorBrush Color="#FF423B57"/>
+                            </Border.Background>
+                            <Label Foreground="White" x:Name="lOK" Padding="0"  Style="{StaticResource LabelButton}" Height="20" Grid.IsSharedSizeScope="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MouseLeftButtonDown="LOK_MouseLeftButtonDown">
+                                确认</Label>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
 
-
-                <Label Foreground="White" Grid.Column="2" Grid.Row="0" Padding="0" VerticalContentAlignment="Center" >标题</Label>
-                <Border x:Name="bTitle" Grid.Column="3" Grid.Row="0" Grid.ColumnSpan="2"  Style="{StaticResource Round}"  Padding="6,0,0,0" >
-                    <Grid >
-                        <TextBox x:Name="tbTitle" VerticalAlignment="Center" Margin="0,0,20,0" VerticalContentAlignment="Center" FontSize="12" Background="Transparent" Height="{Binding ElementName=bTitle,Path=ActualHeight}" BorderThickness="0" Foreground="White" CaretBrush="White"  MaxLength="10"/>
-                        <Image Style="{StaticResource ImageButton}" x:Name="iCleanTitleText" HorizontalAlignment="Right" DockPanel.Dock="Right" Width="15" Height="15" Source="pack://siteoforigin:,,,/Resources/delete.png" Margin="0,0,2,0"/>
-                    </Grid>
-                </Border>
-                <Label Foreground="White" Grid.Column="2" Grid.Row="2" Padding="0" VerticalContentAlignment="Center" >简介</Label>
-                <Border Grid.Column="3" x:Name="bContent" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="2" CornerRadius="6" Style="{StaticResource Round}" Padding="6,0,0,0" >
-                    <Grid >
-                        <TextBox x:Name="tbContent" MaxLines="2" Margin="0,0,20,0" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Hidden" Height="{Binding ElementName=bContent,Path=ActualHeight}" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="12" Background="Transparent"  BorderThickness="0" Foreground="White" CaretBrush="White"  MaxLength="40"/>
-                        <Image Style="{StaticResource ImageButton}" x:Name="iCleanContentText" HorizontalAlignment="Right" DockPanel.Dock="Right" Width="15" Height="15" Source="pack://siteoforigin:,,,/Resources/delete.png" Margin="0,0,2,0"/>
-                    </Grid>
-                </Border>
-
-                <Label Foreground="White" Grid.Column="2" Grid.Row="5" Padding="0" VerticalContentAlignment="Center" >标签</Label>
-                <Border  Grid.Column="3" Grid.Row="5" Margin="0,0,1,0"  CornerRadius="6" Background="#FF2B2635" Padding="6,0,0,0" >
-                    <ComboBox FontSize="12"  x:Name="cbTag1"  Foreground="White" Background="#2B2635" Style="{StaticResource ComboBoxStyle}" BorderThickness="0" IsEditable="True" TextInput="CbTag1_TextInput" SelectionChanged="CbTag1_SelectionChanged" />
-
-                </Border>
-                <Border  Grid.Column="4" Grid.Row="5" Margin="1,0,0,0"  CornerRadius="6" Background="#FF2B2635" Padding="6,0,0,0">
-                    <ComboBox FontSize="12" x:Name="cbTag2"  Foreground="White" Background="#2B2635"  Style="{StaticResource ComboBoxStyle}" BorderThickness="0" IsEditable="True" SelectionChanged="CbTag2_SelectionChanged"/>
-                </Border>
-            </Grid>
-            <Grid VerticalAlignment="Bottom">
-                <StackPanel Orientation="Horizontal"  HorizontalAlignment="Right">
-                    <Border  x:Name="bLeftButton" Width="66" CornerRadius="4" >
-                        <Border.Background>
-                            <!--<ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button1.png"/>-->
-                            <SolidColorBrush Color="#FF423B57"/>
-                        </Border.Background>
-                        <Label Foreground="White" x:Name="lCancel" Padding="0" VerticalContentAlignment="Center" Style="{StaticResource LabelButton}" Height="20"  HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" MouseLeftButtonDown="LCancel_MouseLeftButtonDown">取消</Label>
-                    </Border>
-                    <Border  x:Name="bRightButton" Width="66" CornerRadius="4" Margin="10,0,0,0">
-                        <Border.Background>
-                            <!--<ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/button2.png"/>-->
-                            <SolidColorBrush Color="#FF423B57"/>
-                        </Border.Background>
-                        <Label Foreground="White" x:Name="lOK" Padding="0"  Style="{StaticResource LabelButton}" Height="20" Grid.IsSharedSizeScope="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MouseLeftButtonDown="LOK_MouseLeftButtonDown">
-                            确认</Label>
-                    </Border>
-                </StackPanel>
-            </Grid>
-        </StackPanel>
-
-    </Grid>
+        </Grid>
+    </Border>
 </Window>

@@ -111,6 +111,7 @@
     <Compile Include="Views\BaseRectangleView.xaml.cs">
       <DependentUpon>BaseRectangleView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Convertors\BoolToIntConvertor.cs" />
     <Compile Include="Views\Convertors\BoolDisplayConvertor.cs" />
     <Compile Include="Views\Convertors\DivideConvertor.cs" />
     <Compile Include="Views\Convertors\HalfNumConvertor.cs" />
@@ -235,6 +236,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Themes\" />
+    <Folder Include="Views\Popups\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\loading_picture.jpg">

@@ -1,31 +1,20 @@
-﻿using Emgu.CV;
-using Emgu.CV.Structure;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
 using WisdomProjections.Data_Executor;
 using WisdomProjections.Models;
 using WisdomProjections.Views;
 using WisdomProjections.Views.Sys;
-using YDPeopleSensor.Net;
 
 namespace WisdomProjections
 {
@@ -233,7 +222,7 @@ namespace WisdomProjections
             item.View.Selected = true;
             //Keyboard.Focus(this);
             Keyboard.Focus(item.View);
-            Console.WriteLine("LvModel_SelectionChanged");
+            //Console.WriteLine("LvModel_SelectionChanged");
         }
         private void MiDelModelItem_Click(object sender, RoutedEventArgs e)
         {
@@ -245,14 +234,17 @@ namespace WisdomProjections
 
         private void lvModel_MouseMove(object sender, MouseEventArgs e)
         {
-            ListView listview = sender as ListView;
+            ListView listView = sender as ListView;
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                System.Collections.IList list = listview.SelectedItems as System.Collections.IList;
-                DataObject data = new DataObject(typeof(System.Collections.IList), list);
-                if (list.Count > 0)
+                if (listView != null)
                 {
-                    DragDrop.DoDragDrop(listview, data, DragDropEffects.Move);
+                    System.Collections.IList list = listView.SelectedItems;
+                    DataObject data = new DataObject(typeof(System.Collections.IList), list);
+                    if (list.Count > 0)
+                    {
+                        DragDrop.DoDragDrop(listView, data, DragDropEffects.Move);
+                    }
                 }
             }
         }
@@ -266,18 +258,23 @@ namespace WisdomProjections
                 int index = GetCurrentIndex(new GetPositionDelegate(e.GetPosition));
                 if (index > -1)
                 {
-                    ModelItem Logmess = peopleList[0] as ModelItem;
-                    //拖動元素集合的第一個元素索引
-                    int OldFirstIndex = ModelItems.IndexOf(Logmess);
-                    //下邊那個循環要求數據源必須為ObservableCollection<T>類型，T為對象
-                    for (int i = 0; i < peopleList.Count; i++)
+                    if (peopleList != null)
                     {
-                        ModelItems.RemoveAt(OldFirstIndex);
-                        ModelItems.Insert(index, Logmess);
-                        imgContainer.RectangleViews.RemoveAt(OldFirstIndex);
-                        imgContainer.RectangleViews.Insert(index, Logmess.View);
+                        ModelItem modelItem = peopleList[0] as ModelItem;
+                        if (modelItem == null) return;
+                        //拖動元素集合的第一個元素索引
+                        int oldFirstIndex = ModelItems.IndexOf(modelItem);
+                        //下邊那個循環要求數據源必須為ObservableCollection<T>類型，T為對象
+                        for (int i = 0; i < peopleList.Count; i++)
+                        {
+                            ModelItems.RemoveAt(oldFirstIndex);
+                            ModelItems.Insert(index, modelItem);
+                            imgContainer.RectangleViews.RemoveAt(oldFirstIndex);
+                            imgContainer.RectangleViews.Insert(index, modelItem.View);
 
+                        }
                     }
+
                     imgContainer.RefreshRectangleZIndex();
                     lvModel.SelectedItems.Clear();
                     lvModel.Items.Refresh();
@@ -331,16 +328,16 @@ namespace WisdomProjections
         /// <summary>
         /// Grid窗口属性
         /// </summary>
-        GridLength m_WidthCache1, m_WidthCache2;
+        GridLength mWidthCache1, mWidthCache2;
         int grid1Index = 0, grid2Index = 4;
 
         public void BtnGrdSplitter_Click(object sender, RoutedEventArgs e)
         {
-            GridSplitterClick(ref m_WidthCache1, grid1Index);
+            GridSplitterClick(ref mWidthCache1, grid1Index);
         }
         private void BtnGrdSplitter2_Click(object sender, RoutedEventArgs e)
         {
-            GridSplitterClick(ref m_WidthCache2, grid2Index);
+            GridSplitterClick(ref mWidthCache2, grid2Index);
         }
         /// <summary>
         /// Grid分割器点击
@@ -612,6 +609,7 @@ namespace WisdomProjections
 
         #region 设备模块
         Timer deviceTimer;
+        private int deviceFoundIndex;
         /// <summary>
         /// 初始化显示设备
         /// </summary>
@@ -627,7 +625,7 @@ namespace WisdomProjections
                     {
                         if (!x.Primary && deviceModels.Find(y => y.Screen.Equals(x)) == null)
                         {
-                            deviceModels.Add(new DeviceModel { Screen = x, Name = x.DeviceName });
+                            deviceModels.Add(new DeviceModel { Screen = x, Name = $"设备{++deviceFoundIndex}"});
                         }
                     });
                     deviceModels.ForEach(y =>
@@ -643,11 +641,11 @@ namespace WisdomProjections
             }, null, 50, 500);
             lvDevice.ItemsSource = deviceModels;
         }
-        private List<DeviceModel> deviceModels = new List<DeviceModel>();
+        private readonly List<DeviceModel> deviceModels = new List<DeviceModel>();
         private void LvDevice_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             RefreshWindow();
-           
+
         }
 
         public void RefreshWindow()
@@ -669,8 +667,8 @@ namespace WisdomProjections
                 outEffectsView.video.Source = rv.video.Source;
                 //outEffectsView.video.Width = rv.video.ActualWidth;
                 //outEffectsView.video.Height = rv.video.Height;
-                var p = rv.bContent.TranslatePoint(new System.Windows.Point(),imgContainer.canvas);
-                outEffectsView.SetValue(Canvas.LeftProperty,p.X);
+                var p = rv.bContent.TranslatePoint(new System.Windows.Point(), imgContainer.canvas);
+                outEffectsView.SetValue(Canvas.LeftProperty, p.X);
                 outEffectsView.SetValue(Canvas.TopProperty, p.Y);
                 oevList.Add(outEffectsView);
             }
@@ -693,8 +691,19 @@ namespace WisdomProjections
 
         #region 调校模块
 
-        private int[][] dpScale = { new[] { 16, 9 }, new[] { 16, 10 }, new[] { 4, 3 } };
+        private int[][] dpScale = { new[] { 16, 10 }, new[] { 16, 9 }, new[] { 4, 3 } };
         private string[] launchModeList = { "正投", "背投", "地装", "吊装" };
+        private SolidColorBrush selectedDisplayColor = new SolidColorBrush(Colors.Red);
+        protected SolidColorBrush SelectedDisplayColor
+        {
+            get => selectedDisplayColor;
+            private set
+            {
+                selectedDisplayColor = value;
+                RefreshDMWindow();
+            }
+        }
+
         /// <summary>
         /// 初始化投影机分辨率
         /// </summary>
@@ -724,21 +733,32 @@ namespace WisdomProjections
         }
         private void CbDebug_Checked(object sender, RoutedEventArgs e)
         {
-            if (lvDevice.SelectedItem == null)
-            {
-                MessageBox.Show("请选择要调校的设备!");
-                cbDebug.IsChecked = false;
-            }
-            else
-            {
-                var dm = lvDevice.SelectedItem as DeviceModel;
+            //if (lvDevice.SelectedItem == null)
+            //{
+            //    MessageBox.Show("请选择要调校的设备!");
+            //    cbDebug.IsChecked = false;
+            //}
+            //else
+            //{
+            //    RefreshDMWindow();
+            //}
+        }
 
-                if (dm.Window == null)
-                {
-                    dm.Window = CreateScreenWindowItem(dm.Screen);
-                }
-                dm.Window.Background = new SolidColorBrush(Colors.Red);
+        private void RefreshDMWindow()
+        {
+            var dm = lvDevice.SelectedItem as DeviceModel;
+            if (dm == null) return;
+            if (dm.Window == null)
+            {
+                dm.Window = CreateScreenWindowItem(dm.Screen);
             }
+            dm.Window.Background = SelectedDisplayColor;
+        }
+
+        private void CbDC1_OnChecked(object sender, RoutedEventArgs e)
+        {
+            var border = (Border)VisualTreeHelper.GetParent(sender as RadioButton);
+            SelectedDisplayColor = (SolidColorBrush)border.Background.Clone();
         }
         #endregion
 
@@ -829,6 +849,7 @@ namespace WisdomProjections
                 return null;
             }
         }
+
 
 
     }

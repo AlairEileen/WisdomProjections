@@ -45,20 +45,20 @@ namespace WisdomProjections.Views
             {
                 gContainer.Children.Clear();
             }
-            var w = this.ActualWidth;
-            var h = this.ActualHeight;
-            var gh = w / bSDSize;
-            if (gh > h)
-            {
-                gContainer.Height = h;
-                gContainer.Width = h * bSDSize;
-            }
-            else
-            {
-                gContainer.Height = gh;
-                gContainer.Width = w;
-            }
-            var viewScale = gContainer.Width / actualWidth;
+            //var w = this.ActualWidth;
+            //var h = this.ActualHeight;
+            //var gh = w / bSDSize;
+            //if (gh > h)
+            //{
+            //    gContainer.Height = h;
+            //    gContainer.Width = h * bSDSize;
+            //}
+            //else
+            //{
+            //    gContainer.Height = gh;
+            //    gContainer.Width = w;
+            //}
+            var viewScale = gContainer.ActualWidth / actualWidth;
             outEffectsView.ForEach(x =>
             {
                 var left = Convert.ToDouble(x.GetValue(Canvas.LeftProperty));
