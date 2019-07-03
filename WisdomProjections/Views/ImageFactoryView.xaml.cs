@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WisdomProjections.Data_Executor;
+using WisdomProjections.Views.Sys;
 
 namespace WisdomProjections.Views
 {
@@ -186,6 +188,8 @@ namespace WisdomProjections.Views
         private bool mouseDown;
         private Point mouseXY;
         private Point mouseCanvasXY;
+
+        
         /// <summary>
         /// 鼠标左键按下
         /// </summary>
@@ -209,6 +213,10 @@ namespace WisdomProjections.Views
                     break;
                 case PaintType.Move:
                     break;
+                case PaintType.Pen:
+                    ImageSelectView.Draw(this.img.Source);
+                    break;
+
                 case PaintType.Rectangle:
                     mouseCanvasXY = e.GetPosition(canvas);
                     RectangleViews.Add(new RectangleView(this, 0, 0));
@@ -229,6 +237,7 @@ namespace WisdomProjections.Views
                 item.OnContainerMouseDown(sender, e);
             }
         }
+      
 
         internal void DelRectangle(RectangleView view)
         {
@@ -313,7 +322,7 @@ namespace WisdomProjections.Views
         private void BSelectedDisplay_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             //Console.WriteLine($"bsd= w:{bSelectedDisplay.ActualWidth},h:{bSelectedDisplay.ActualHeight}");
-        } 
+        }
         #endregion
     }
     public class PaintTypeSelect

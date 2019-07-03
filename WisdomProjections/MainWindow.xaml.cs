@@ -155,7 +155,7 @@ namespace WisdomProjections
         /// <param name="e"></param>
         private void ImgPen_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-
+            SwitchPaintType(PaintType.Pen);
         }
         /// <summary>
         /// 缩小点击
