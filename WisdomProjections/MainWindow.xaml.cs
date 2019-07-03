@@ -733,15 +733,15 @@ namespace WisdomProjections
         }
         private void CbDebug_Checked(object sender, RoutedEventArgs e)
         {
-            //if (lvDevice.SelectedItem == null)
-            //{
-            //    MessageBox.Show("请选择要调校的设备!");
-            //    cbDebug.IsChecked = false;
-            //}
-            //else
-            //{
-            //    RefreshDMWindow();
-            //}
+            if (lvDevice.SelectedItem == null)
+            {
+                MessageBox.Show("请选择要调校的设备!");
+                cbDebug.IsChecked = false;
+            }
+            else
+            {
+                RefreshDMWindow();
+            }
         }
 
         private void RefreshDMWindow()
