@@ -39,8 +39,8 @@
                             <Canvas Width="{Binding ElementName=bSelectedDisplay, Path=ActualWidth}" Height="{Binding ElementName=bSelectedDisplay, Path=ActualHeight}" x:Name="canvas" RenderTransform="{StaticResource Imageview}"/>
 
                         </Border>
-                        <local:ImageSelectView x:Name="ImageSelectView" Width="{Binding ElementName=img, Path=ActualWidth}" Height="{Binding ElementName=img, Path=ActualHeight}"  RenderTransform="{StaticResource Imageview}"></local:ImageSelectView>
                     </Grid>
+                    <local:ImageSelectView x:Name="ImageSelectView" Width="{Binding ElementName=img, Path=ActualWidth}" Height="{Binding ElementName=img, Path=ActualHeight}"  RenderTransform="{StaticResource Imageview}"></local:ImageSelectView>
                 </Grid>
             </ContentControl>
         </ScrollViewer>

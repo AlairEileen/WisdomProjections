@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using WisdomProjections.Data_Executor;
 using WisdomProjections.Views.Sys;
 
@@ -189,7 +191,8 @@ namespace WisdomProjections.Views
         private Point mouseXY;
         private Point mouseCanvasXY;
 
-        
+        private Timer timer;
+
         /// <summary>
         /// 鼠标左键按下
         /// </summary>
@@ -214,7 +217,15 @@ namespace WisdomProjections.Views
                 case PaintType.Move:
                     break;
                 case PaintType.Pen:
-                    ImageSelectView.Draw(this.img.Source);
+                    if (timer == null)
+                    {
+                        timer = new Timer(new TimerCallback(t =>
+                        {
+
+                            ImageSelectView.Draw(this.img);
+
+                        }), null, 10, 100);
+                    }
                     break;
 
                 case PaintType.Rectangle:
@@ -237,7 +248,7 @@ namespace WisdomProjections.Views
                 item.OnContainerMouseDown(sender, e);
             }
         }
-      
+
 
         internal void DelRectangle(RectangleView view)
         {

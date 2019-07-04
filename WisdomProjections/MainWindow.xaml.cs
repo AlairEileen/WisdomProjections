@@ -578,7 +578,8 @@ namespace WisdomProjections
                     default:
                         break;
                 }
-                imgContainer.RectangleViews.Find(x => x.Selected).MoveWithKey(1, moveType);
+
+                imgContainer.RectangleViews.Find(x => x.Selected)?.MoveWithKey(1, moveType);
             }
         }
 

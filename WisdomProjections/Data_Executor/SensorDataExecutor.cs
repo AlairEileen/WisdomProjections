@@ -181,7 +181,6 @@ namespace WisdomProjections.Data_Executor
                     }
                     this.cbitmap.WritePixels(new Int32Rect(0, 0, this.cframe.Width, this.cframe.Height), this.cframe.Pixels, this.cframe.Width * 4, 0);
 
-
                 }
             }), DispatcherPriority.Render);
         }
