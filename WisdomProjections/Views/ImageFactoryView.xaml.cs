@@ -217,15 +217,15 @@ namespace WisdomProjections.Views
                 case PaintType.Move:
                     break;
                 case PaintType.Pen:
-                    if (timer == null)
-                    {
-                        timer = new Timer(new TimerCallback(t =>
-                        {
+                    //if (timer == null)
+                    //{
+                    //    timer = new Timer(new TimerCallback(t =>
+                    //    {
 
                             ImageSelectView.Draw(this.img);
 
-                        }), null, 10, 100);
-                    }
+                    //    }), null, 10, 100);
+                    //}
                     break;
 
                 case PaintType.Rectangle:

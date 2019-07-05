@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Text;
+using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
@@ -13,7 +16,9 @@ using Emgu.CV.Util;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
 using WisdomProjections.Views.Sys;
+using Color = System.Drawing.Color;
 using Mat = OpenCvSharp.Mat;
+using Pen = System.Drawing.Pen;
 using Point = OpenCvSharp.Point;
 using Rect = System.Windows.Rect;
 using VectorOfPoint = Emgu.CV.Util.VectorOfPoint;
@@ -96,17 +101,15 @@ namespace WisdomProjections.Data_Executor
             edges?.Dispose();
             hierarchyMat?.Dispose();
             imageFlipHorizontal?.Dispose();
-            bitmapFound?.Dispose();
 
         }
 
         private Image<Gray, byte> currentImage;
         private VectorOfVectorOfPoint contours;
         private Image<Bgra, byte> imageFound;
-        private Image<Bgra, byte> edges;
+        private Image<Gray, byte> edges;
         private Emgu.CV.Mat hierarchyMat;
         private Image<Bgra, byte> imageFlipHorizontal;
-        private Bitmap bitmapFound;
         private WriteableBitmap wBitmap;
 
 
@@ -116,100 +119,158 @@ namespace WisdomProjections.Data_Executor
             {
                 //ImageSource imageS;
                 currentImage = new Image<Gray, byte>(imageBitmap);
+
+
+                var t = new Thread(new ThreadStart(() =>
+                {
+                    var str = "";
+                    for (int i = 0; i < currentImage.Rows; i++)
+                    {
+                        for (int j = 0; j < currentImage.Cols; j++)
+                        {
+                            str += $"{i},{j},{currentImage[i, j].Dimension},{currentImage[i, j].Intensity}";
+                        }
+                        str += "\r\n";
+                    }
+                    File.WriteAllText(@"C:\Data\Desktop\currentImage.txt", str);
+                }));
+                t.IsBackground = true;
+                t.Start();
+
                 //currentImage = new Image<Gray, byte>();
-                
+
                 contours = new VectorOfVectorOfPoint();
                 imageFound = new Image<Bgra, byte>(currentImage.Width, currentImage.Height, new Bgra(255, 255, 255, 0));
 
-                edges = new Image<Bgra, byte>(currentImage.Width, currentImage.Height, new Bgra(0, 0, 0, 0));
+                edges = new Image<Gray, byte>(currentImage.Width, currentImage.Height);
+                var edges2 = new Image<Gray, byte>(currentImage.Width, currentImage.Height);
+
+                //var im = new Image<Bgra, byte>(imageBitmap);
+                //im.Data[im.Cols/
 
                 hierarchyMat = new Emgu.CV.Mat();
 
-                CvInvoke.Canny(currentImage, edges, 30, 60);
-                CvInvoke.FindContours(edges, contours, hierarchyMat, RetrType.External, ChainApproxMethod.ChainApproxNone);
+                CvInvoke.CvtColor(currentImage, edges, ColorConversion.BayerBg2Gray);
+                CvInvoke.Threshold(edges, edges2, 80, 100, ThresholdType.Binary);
+                //CvInvoke.Canny(currentImage, edges, 420, 500);
+                CvInvoke.FindContours(edges2, contours, hierarchyMat, RetrType.External, ChainApproxMethod.ChainApproxSimple);
+                Rectangle rectMax = Rectangle.Empty;
 
+                double len = 0;
+                int index = 0;
                 for (int i = 0; i < contours.Size; i++)
                 {
+                    //var rect = CvInvoke.BoundingRectangle(contours[i]);
+                    //var l = rect.Width * rect.Height;
+                    //if (len < l)
+                    //{
+
+
+                    //    len = l;
+                    //    index = i;
+                    //}
+
+
                     CvInvoke.DrawContours(imageFound, contours, i, new MCvScalar(255, 0, 0, 255), 1);
-                    VectorOfPoint contour = contours[i];
-                    Rectangle rect = CvInvoke.BoundingRectangle(contour);
-                    Console.WriteLine($"rectangle{i}:{rect}");
+
+                    //VectorOfPoint contour = contours[i];
+                    //Rectangle rect = CvInvoke.BoundingRectangle(contour);
+                    //if (rectMax==Rectangle.Empty)
+                    //{
+                    //    rectMax = rect;
+                    //}
+                    //else if (rectMax.Height*rectMax.Width<rect.Width*rect.Height)
+                    //{
+                    //    rectMax = rect;
+                    //}
                 }
 
-                imageFlipHorizontal = imageFound.Resize(with / imageFound.Width, Inter.Area).Flip(FlipType.Horizontal);
+                //CvInvoke.DrawContours(imageFound, contours, index, new MCvScalar(255, 0, 0, 255), 1);
+                var scaleNum = with / imageFound.Width;
+
+                //using (var ro=drawingVisual.RenderOpen())
+                //{
+                //    ro.DrawRectangle(new SolidColorBrush(Colors.Transparent), new System.Windows.Media.Pen(new SolidColorBrush(Colors.Red), 1), new Rect(rectMax.X*scaleNum,rectMax.Y * scaleNum, rectMax.Width * scaleNum, rectMax.Height * scaleNum) );
+                //}
+
+                imageFlipHorizontal = imageFound.Resize(scaleNum, Inter.Area).Flip(FlipType.Horizontal);
                 //bitmapFound = imageFlipHorizontal.ToBitmap();
-                
-              
+
+
                 //CvInvoke.ConvexHull()
                 if (wBitmap == null)
                 {
-                   wBitmap= new WriteableBitmap(imageFlipHorizontal.Width, imageFlipHorizontal.Height, 96, 96, PixelFormats.Bgra32, null);
-                   imagePreview.Source = wBitmap;
+                    wBitmap = new WriteableBitmap(imageFlipHorizontal.Width, imageFlipHorizontal.Height, 96, 96, PixelFormats.Bgra32, null);
+                    imagePreview.Source = wBitmap;
                 }
                 wBitmap.WritePixels(new Int32Rect(0, 0, imageFlipHorizontal.Width, imageFlipHorizontal.Height), imageFlipHorizontal.Bytes, imageFlipHorizontal.Width * 4, 0);
 
 
-                //ImageTool.BitmapToImageSource(bitmapFound, out var imageSource);
 
-
-
-
-                //imagePreview.Source = imageSource;
-
-
-
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                GC.Collect();
+                //GC.Collect();
+                //GC.WaitForPendingFinalizers();
+                //GC.Collect();
 
             }
         }
 
-      
+
 
         #endregion
 
 
         public void Draw3(double with, double height, Bitmap imageBitmap, System.Windows.Controls.Image imagePreview)
         {
-           
-                Mat mat1 = imageBitmap.ToMat();
 
-                //Mat mat1 = new Mat(@"C:\Data\Documents\Dev\WeChat Image_20190703112224.jpg", ImreadModes.AnyColor);
-                Mat mat2 = new Mat();
-                Mat mat3 = new Mat();
-                Cv2.CvtColor(mat1, mat3, ColorConversionCodes.BGR2GRAY, 0);
-                Cv2.Threshold(mat3, mat2, 50, 100, ThresholdTypes.Binary);
-                Cv2.Canny(mat2, mat3, 30, 60);
+            Mat mat1 = imageBitmap.ToMat();
 
-                Mat mat = mat1.EmptyClone();
-                //for (int i = 0; i < mat.Rows; ++i)
-                //{
-                //    for (int j = 0; j < mat.Cols; ++j)
-                //    {
-                //        Vec4b rgba = mat.At<Vec4b>(i, j);
-                //        rgba[0] = 0;
-                //        rgba[1] = 0;
-                //        rgba[2] = 0;
-                //        rgba[3] = 0;
-                //    }
-                //}
+            //Mat mat1 = new Mat(@"C:\Data\Documents\Dev\WeChat Image_20190703112224.jpg", ImreadModes.AnyColor);
+            Mat mat2 = new Mat();
+            Mat mat3 = new Mat();
+            Cv2.CvtColor(mat1, mat3, ColorConversionCodes.BGR2GRAY, 0);
+            Cv2.Threshold(mat3, mat2, 50, 100, ThresholdTypes.Binary);
+            Cv2.Canny(mat2, mat3, 30, 60);
+
+            Mat mat = mat1.EmptyClone();
+            //for (int i = 0; i < mat.Rows; ++i)
+            //{
+            //    for (int j = 0; j < mat.Cols; ++j)
+            //    {
+            //        Vec4b rgba = mat.At<Vec4b>(i, j);
+            //        rgba[0] = 0;
+            //        rgba[1] = 0;
+            //        rgba[2] = 0;
+            //        rgba[3] = 0;
+            //    }
+            //}
 
 
-                Point[][] contours;
-                HierarchyIndex[] hierarchy;
-                Cv2.FindContours(mat3, out contours, out hierarchy, RetrievalModes.External, ContourApproximationModes.ApproxNone);
+            Point[][] contours;
+            HierarchyIndex[] hierarchy;
+            Cv2.FindContours(mat3, out contours, out hierarchy, RetrievalModes.External, ContourApproximationModes.ApproxNone);
 
-                for (int i = 0; i < hierarchy.Length; i++)
-                {
-                    Cv2.DrawContours(mat, contours, i, Scalar.Red, 1, LineTypes.Link8, hierarchy, 4, new Point());
-                }
-                mat.Resize(new OpenCvSharp.Size(with, height));
+            for (int i = 0; i < hierarchy.Length; i++)
+            {
+                Cv2.DrawContours(mat, contours, i, Scalar.Red, 1, LineTypes.Link8, hierarchy, 4, new Point());
+            }
+            Mat matNew = mat.Resize(new OpenCvSharp.Size(with, height));
 
-                App.Current.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    imagePreview.Source = mat.ToBitmapSource();
-                }), DispatcherPriority.Render);
+            //App.Current.Dispatcher.BeginInvoke(new Action(() =>
+            //{
+            //    imagePreview.Source = mat.ToBitmapSource();
+            //}), DispatcherPriority.Render);
+
+            if (wBitmap == null)
+            {
+                wBitmap = new WriteableBitmap(matNew.Width, matNew.Height, 96, 96, PixelFormats.Bgra32, null);
+                imagePreview.Source = wBitmap;
+            }
+
+            var w = matNew.Width * 4;
+
+
+            wBitmap.WritePixels(new Int32Rect(0, 0, matNew.Width, matNew.Height), mat.Data, w, w);
+
         }
     }
 }

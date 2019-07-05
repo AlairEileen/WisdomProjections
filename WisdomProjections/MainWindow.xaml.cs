@@ -629,7 +629,7 @@ namespace WisdomProjections
                             deviceModels.Add(new DeviceModel { Screen = x, Name = $"设备{++deviceFoundIndex}"});
                         }
                     });
-                    deviceModels.ForEach(y =>
+                    deviceModels?.ForEach(y =>
                     {
                         if (ss.Find(x => x.Equals(y.Screen)) == null)
                         {

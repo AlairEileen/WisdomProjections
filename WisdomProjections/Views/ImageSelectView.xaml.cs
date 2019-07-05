@@ -51,15 +51,15 @@ namespace WisdomProjections.Views
             //    ImageTool.ImageSourceToBitmap(img.Source, out  bitmap);
             //}),  bitmap);
             //imageSelectData.Draw3(img.ActualWidth, img.ActualHeight, bitmap, ImagePreview);
-            App.Current.Dispatcher.BeginInvoke(new Action(() =>
+            App.Current?.Dispatcher?.BeginInvoke(new Action(() =>
             {
                 ImageTool.ImageSourceToBitmap(img.Source, out var bitmap);
                 imageSelectData.Draw2(img.ActualWidth, img.ActualHeight, bitmap, ImagePreview);
             }), DispatcherPriority.Render);
 
         }
-        //必须重载这两个方法，不然是画不出来的
-        // 重载自己的VisualTree的孩子的个数，由于只有一个DrawingVisual，返回1
+        ////必须重载这两个方法，不然是画不出来的
+        //// 重载自己的VisualTree的孩子的个数，由于只有一个DrawingVisual，返回1
         //protected override int VisualChildrenCount
         //{
         //    get { return 1; }
