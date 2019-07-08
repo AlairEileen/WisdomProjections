@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Drawing;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
@@ -13,13 +14,9 @@ using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using Emgu.CV.UI;
 using Emgu.CV.Util;
-using OpenCvSharp;
-using OpenCvSharp.Extensions;
 using WisdomProjections.Views.Sys;
 using Color = System.Drawing.Color;
-using Mat = OpenCvSharp.Mat;
 using Pen = System.Drawing.Pen;
-using Point = OpenCvSharp.Point;
 using Rect = System.Windows.Rect;
 using VectorOfPoint = Emgu.CV.Util.VectorOfPoint;
 
@@ -113,29 +110,37 @@ namespace WisdomProjections.Data_Executor
         private WriteableBitmap wBitmap;
 
 
-        public void Draw2(double with, double height, Bitmap imageBitmap, System.Windows.Controls.Image imagePreview)
+        public void Draw2(double with, double height,  System.Drawing.Bitmap imageBitmap,  Image imagePreview, Canvas canvas)
         {
             using (imageBitmap)
             {
+
                 //ImageSource imageS;
                 currentImage = new Image<Gray, byte>(imageBitmap);
+                //currentImage = new Image<Gray, byte>(@"C:\Data\Documents\Dev\WeChat Image_20190708104044.jpg");
 
+                //var cc =currentImage[currentImage.Rows / 2, currentImage.Cols / 2];
+                //var cc2 =currentImage[(currentImage.Rows / 2)+10, (currentImage.Cols / 2)+10];
 
-                var t = new Thread(new ThreadStart(() =>
-                {
-                    var str = "";
-                    for (int i = 0; i < currentImage.Rows; i++)
-                    {
-                        for (int j = 0; j < currentImage.Cols; j++)
-                        {
-                            str += $"{i},{j},{currentImage[i, j].Dimension},{currentImage[i, j].Intensity}";
-                        }
-                        str += "\r\n";
-                    }
-                    File.WriteAllText(@"C:\Data\Desktop\currentImage.txt", str);
-                }));
-                t.IsBackground = true;
-                t.Start();
+                //var result = currentImage.InRange(cc, cc);
+
+                //CvInvoke.Imshow("color-gray",result);
+
+                //var t = new Thread(new ThreadStart(() =>
+                //{
+                //    var str = "";
+                //    for (int i = 0; i < currentImage.Rows; i++)
+                //    {
+                //        for (int j = 0; j < currentImage.Cols; j++)
+                //        {
+                //            str += $"{i},{j},{currentImage[i, j].Dimension},{currentImage[i, j].Intensity}";
+                //        }
+                //        str += "\r\n";
+                //    }
+                //    File.WriteAllText(@"C:\Data\Desktop\currentImage.txt", str);
+                //}));
+                //t.IsBackground = true;
+                //t.Start();
 
                 //currentImage = new Image<Gray, byte>();
 
@@ -143,49 +148,45 @@ namespace WisdomProjections.Data_Executor
                 imageFound = new Image<Bgra, byte>(currentImage.Width, currentImage.Height, new Bgra(255, 255, 255, 0));
 
                 edges = new Image<Gray, byte>(currentImage.Width, currentImage.Height);
-                var edges2 = new Image<Gray, byte>(currentImage.Width, currentImage.Height);
+                //var edges2 = new Image<Gray, byte>(currentImage.Width, currentImage.Height);
 
                 //var im = new Image<Bgra, byte>(imageBitmap);
                 //im.Data[im.Cols/
 
                 hierarchyMat = new Emgu.CV.Mat();
 
-                CvInvoke.CvtColor(currentImage, edges, ColorConversion.BayerBg2Gray);
-                CvInvoke.Threshold(edges, edges2, 80, 100, ThresholdType.Binary);
-                //CvInvoke.Canny(currentImage, edges, 420, 500);
-                CvInvoke.FindContours(edges2, contours, hierarchyMat, RetrType.External, ChainApproxMethod.ChainApproxSimple);
-                Rectangle rectMax = Rectangle.Empty;
+                //CvInvoke.CvtColor(currentImage, edges, ColorConversion.BayerBg2Gray);
+                //CvInvoke.Threshold(edges, edges2, 80, 100, ThresholdType.Binary);
+                CvInvoke.Canny(currentImage, edges, 20, 100);
+                //CvInvoke.Watershed(currentImage,edges);
+                //CvInvoke.GrabCut(currentImage,edges);
+                CvInvoke.FindContours(edges, contours, hierarchyMat, RetrType.External, ChainApproxMethod.ChainApproxSimple);
+                //Rectangle rectMax = Rectangle.Empty;
 
-                double len = 0;
+                double area0 = 0;
+                double area01 = 0;
                 int index = 0;
                 for (int i = 0; i < contours.Size; i++)
                 {
-                    //var rect = CvInvoke.BoundingRectangle(contours[i]);
-                    //var l = rect.Width * rect.Height;
-                    //if (len < l)
+                    //var area = CvInvoke.ArcLength(contours[i],false);
+                    //var area2 = CvInvoke.ContourArea(contours[i]);
+                    //if (area0 < area&&area01<area2)
                     //{
-
-
-                    //    len = l;
+                    //    area0 = area;
+                    //    area01 = area2;
                     //    index = i;
                     //}
+                    //var img = new Image<Bgra, byte>(currentImage.Width, currentImage.Height, new Bgra(255, 255, 255, 0));
+                    //CvInvoke.DrawContours(img, contours, i, new MCvScalar(255, 0, 0, 255), 1);
+                    //CvInvoke.Imshow("img" + i, img);
 
 
                     CvInvoke.DrawContours(imageFound, contours, i, new MCvScalar(255, 0, 0, 255), 1);
-
-                    //VectorOfPoint contour = contours[i];
-                    //Rectangle rect = CvInvoke.BoundingRectangle(contour);
-                    //if (rectMax==Rectangle.Empty)
-                    //{
-                    //    rectMax = rect;
-                    //}
-                    //else if (rectMax.Height*rectMax.Width<rect.Width*rect.Height)
-                    //{
-                    //    rectMax = rect;
-                    //}
                 }
 
                 //CvInvoke.DrawContours(imageFound, contours, index, new MCvScalar(255, 0, 0, 255), 1);
+
+                //CvInvoke.Imshow("手机拍摄照片",imageFound);
                 var scaleNum = with / imageFound.Width;
 
                 //using (var ro=drawingVisual.RenderOpen())
@@ -219,59 +220,99 @@ namespace WisdomProjections.Data_Executor
         #endregion
 
 
-        public void Draw3(double with, double height, Bitmap imageBitmap, System.Windows.Controls.Image imagePreview)
-        {
 
-            Mat mat1 = imageBitmap.ToMat();
+        //public void Draw4(double with, double height, Bitmap imageBitmap, System.Windows.Controls.Image imagePreview, System.Windows.Controls. Canvas canvas)
+        //{
+        //    //var aii = AForge.Imaging.Image.Clone(imageBitmap);
 
-            //Mat mat1 = new Mat(@"C:\Data\Documents\Dev\WeChat Image_20190703112224.jpg", ImreadModes.AnyColor);
-            Mat mat2 = new Mat();
-            Mat mat3 = new Mat();
-            Cv2.CvtColor(mat1, mat3, ColorConversionCodes.BGR2GRAY, 0);
-            Cv2.Threshold(mat3, mat2, 50, 100, ThresholdTypes.Binary);
-            Cv2.Canny(mat2, mat3, 30, 60);
-
-            Mat mat = mat1.EmptyClone();
-            //for (int i = 0; i < mat.Rows; ++i)
-            //{
-            //    for (int j = 0; j < mat.Cols; ++j)
-            //    {
-            //        Vec4b rgba = mat.At<Vec4b>(i, j);
-            //        rgba[0] = 0;
-            //        rgba[1] = 0;
-            //        rgba[2] = 0;
-            //        rgba[3] = 0;
-            //    }
-            //}
+        //    var filtersSequence = new AForge.Imaging.Filters.FiltersSequence (AForge.Imaging.Filters.Grayscale.CommonAlgorithms.BT709);
+        //    var fib = filtersSequence.Apply(imageBitmap);
+        //    var aift=new AForge.Imaging.Filters.Threshold();
+        //     aift.ApplyInPlace(fib);
 
 
-            Point[][] contours;
-            HierarchyIndex[] hierarchy;
-            Cv2.FindContours(mat3, out contours, out hierarchy, RetrievalModes.External, ContourApproximationModes.ApproxNone);
-
-            for (int i = 0; i < hierarchy.Length; i++)
-            {
-                Cv2.DrawContours(mat, contours, i, Scalar.Red, 1, LineTypes.Link8, hierarchy, 4, new Point());
-            }
-            Mat matNew = mat.Resize(new OpenCvSharp.Size(with, height));
-
-            //App.Current.Dispatcher.BeginInvoke(new Action(() =>
-            //{
-            //    imagePreview.Source = mat.ToBitmapSource();
-            //}), DispatcherPriority.Render);
-
-            if (wBitmap == null)
-            {
-                wBitmap = new WriteableBitmap(matNew.Width, matNew.Height, 96, 96, PixelFormats.Bgra32, null);
-                imagePreview.Source = wBitmap;
-            }
-
-            var w = matNew.Width * 4;
 
 
-            wBitmap.WritePixels(new Int32Rect(0, 0, matNew.Width, matNew.Height), mat.Data, w, w);
+        //    var aibcb = new AForge.Imaging.BlobCounter(fib)
+        //    {
+        //        FilterBlobs = true, MinWidth = 10, MinHeight = 10, ObjectsOrder = AForge.Imaging.ObjectsOrder.Area
+        //    };
+        //    //aibcb.ProcessImage(imageBitmap);
+        //    AForge.Imaging.Blob[] blobs = aibcb.GetObjects(imageBitmap,false);
+        //    //List<Bitmap> bitmaps = new List<Bitmap>();
+        //    try
+        //    {
+        //        for (int i = 0; i < blobs.Length; i++)
+        //        {
+        //            CvInvoke.Imshow("blob"+i, new Image<Bgra, byte>(blobs[i].Image.ToManagedImage()));
 
-        }
+        //        }
+        //    }
+        //    catch (AccessViolationException)
+        //    {
+
+        //    }
+
+
+        //}
+
+
+
+
+
+        //public void Draw3(double with, double height, Bitmap imageBitmap, System.Windows.Controls.Image imagePreview, Canvas canvas)
+        //{
+
+        //    Mat mat1 = imageBitmap.ToMat();
+
+        //    //Mat mat1 = new Mat(@"C:\Data\Documents\Dev\WeChat Image_20190703112224.jpg", ImreadModes.AnyColor);
+        //    Mat mat2 = new Mat();
+        //    Mat mat3 = new Mat();
+        //    Cv2.CvtColor(mat1, mat3, ColorConversionCodes.BGR2GRAY, 0);
+        //    Cv2.Threshold(mat3, mat2, 50, 100, ThresholdTypes.Binary);
+        //    Cv2.Canny(mat2, mat3, 30, 60);
+
+        //    Mat mat = mat1.EmptyClone();
+        //    //for (int i = 0; i < mat.Rows; ++i)
+        //    //{
+        //    //    for (int j = 0; j < mat.Cols; ++j)
+        //    //    {
+        //    //        Vec4b rgba = mat.At<Vec4b>(i, j);
+        //    //        rgba[0] = 0;
+        //    //        rgba[1] = 0;
+        //    //        rgba[2] = 0;
+        //    //        rgba[3] = 0;
+        //    //    }
+        //    //}
+
+
+        //    Point[][] contours;
+        //    HierarchyIndex[] hierarchy;
+        //    Cv2.FindContours(mat3, out contours, out hierarchy, RetrievalModes.External, ContourApproximationModes.ApproxNone);
+
+        //    for (int i = 0; i < hierarchy.Length; i++)
+        //    {
+        //        Cv2.DrawContours(mat, contours, i, Scalar.Red, 1, LineTypes.Link8, hierarchy, 4, new Point());
+        //    }
+        //    Mat matNew = mat.Resize(new OpenCvSharp.Size(with, height));
+
+        //    //App.Current.Dispatcher.BeginInvoke(new Action(() =>
+        //    //{
+        //    //    imagePreview.Source = mat.ToBitmapSource();
+        //    //}), DispatcherPriority.Render);
+
+        //    if (wBitmap == null)
+        //    {
+        //        wBitmap = new WriteableBitmap(matNew.Width, matNew.Height, 96, 96, PixelFormats.Bgra32, null);
+        //        imagePreview.Source = wBitmap;
+        //    }
+
+        //    var w = matNew.Width * 4;
+
+
+        //    wBitmap.WritePixels(new Int32Rect(0, 0, matNew.Width, matNew.Height), mat.Data, w, w);
+
+        //}
     }
 }
 
