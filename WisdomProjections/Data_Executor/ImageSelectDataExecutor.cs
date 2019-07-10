@@ -116,8 +116,8 @@ namespace WisdomProjections.Data_Executor
             {
 
                 //ImageSource imageS;
-                //currentImage = new Image<Gray, byte>(imageBitmap);
-                currentImage = new Image<Gray, byte>(@"C:\Data\Documents\Dev\WeChat Image_20190708104044.jpg");
+                currentImage = new Image<Gray, byte>(imageBitmap);
+                //currentImage = new Image<Gray, byte>(@"C:\Data\Documents\Dev\WeChat Image_20190708104044.jpg");
 
                 //var cc =currentImage[currentImage.Rows / 2, currentImage.Cols / 2];
                 //var cc2 =currentImage[(currentImage.Rows / 2)+10, (currentImage.Cols / 2)+10];
@@ -157,31 +157,34 @@ namespace WisdomProjections.Data_Executor
 
                 //CvInvoke.CvtColor(currentImage, edges, ColorConversion.BayerBg2Gray);
                 //CvInvoke.Threshold(edges, edges2, 80, 100, ThresholdType.Binary);
-                CvInvoke.Canny(currentImage, edges, 20, 100);
+                CvInvoke.Canny(currentImage, edges, 20, 60);
                 //CvInvoke.Watershed(currentImage,edges);
                 //CvInvoke.GrabCut(currentImage,edges);
-                int[,] hierachy = CvInvoke.FindContourTree(edges, contours, ChainApproxMethod.ChainApproxSimple);
+
+                CvInvoke.FindContours(edges,contours,hierarchyMat,RetrType.External,ChainApproxMethod.ChainApproxSimple);
+                //int[,] hierachy = CvInvoke.FindContourTree(edges, contours, ChainApproxMethod.ChainApproxSimple);
                 //Rectangle rectMax = Rectangle.Empty;
 
-                double area0 = 0;
-                double area01 = 0;
-                int index = 0;
+
+                //double area0 = 0;
+                //double area01 = 0;
+                //int index = 0;
                 for (int i = 0; i < contours.Size; i++)
                 {
-                    var area = CvInvoke.ArcLength(contours[i], false);
-                    var area2 = CvInvoke.ContourArea(contours[i]);
-                    if (area0 < area && area01 < area2)
-                    {
-                        area0 = area;
-                        area01 = area2;
-                        index = i;
-                    }
-                    var img = new Image<Bgra, byte>(currentImage.Width, currentImage.Height, new Bgra(255, 255, 255, 0));
-                    CvInvoke.DrawContours(img, contours, i, new MCvScalar(255, 0, 0, 255), 1);
-                    CvInvoke.Imshow("img" + i, img);
+                    //var area = CvInvoke.ArcLength(contours[i], false);
+                    //var area2 = CvInvoke.ContourArea(contours[i]);
+                    //if (area0 < area && area01 < area2)
+                    //{
+                    //    area0 = area;
+                    //    area01 = area2;
+                    //    index = i;
+                    //}
+                    //var img = new Image<Bgra, byte>(currentImage.Width, currentImage.Height, new Bgra(255, 255, 255, 0));
+                    //CvInvoke.DrawContours(img, contours, i, new MCvScalar(255, 0, 0, 255), 1);
+                    //CvInvoke.Imshow("img" + i, img);
 
 
-                    //CvInvoke.DrawContours(imageFound, contours, i, new MCvScalar(255, 0, 0, 255), 1);
+                    CvInvoke.DrawContours(imageFound, contours, i, new MCvScalar(255, 0, 0, 255), 1);
                 }
 
                 //CvInvoke.DrawContours(imageFound, contours, index, new MCvScalar(255, 0, 0, 255), 1);
@@ -193,6 +196,7 @@ namespace WisdomProjections.Data_Executor
                 //{
                 //    ro.DrawRectangle(new SolidColorBrush(Colors.Transparent), new System.Windows.Media.Pen(new SolidColorBrush(Colors.Red), 1), new Rect(rectMax.X*scaleNum,rectMax.Y * scaleNum, rectMax.Width * scaleNum, rectMax.Height * scaleNum) );
                 //}
+
 
                 imageFlipHorizontal = imageFound.Resize(scaleNum, Inter.Area).Flip(FlipType.Horizontal);
                 //bitmapFound = imageFlipHorizontal.ToBitmap();

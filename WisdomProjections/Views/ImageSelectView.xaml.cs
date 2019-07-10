@@ -54,7 +54,7 @@ namespace WisdomProjections.Views
             App.Current?.Dispatcher?.BeginInvoke(new Action(() =>
             {
                 ImageTool.ImageSourceToBitmap(img.Source, out var bitmap);
-                imageSelectData.Draw1(img.ActualWidth, img.ActualHeight, bitmap, ImagePreview,canvas);
+                imageSelectData.Draw2(img.ActualWidth, img.ActualHeight, bitmap, ImagePreview,canvas);
             }), DispatcherPriority.Render);
 
         }

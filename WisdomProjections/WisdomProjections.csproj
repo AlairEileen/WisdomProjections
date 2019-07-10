@@ -150,9 +150,6 @@
     <Compile Include="SplashWindow.xaml.cs">
       <DependentUpon>SplashWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\BaseRectangleView.xaml.cs">
-      <DependentUpon>BaseRectangleView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Convertors\BoolToIntConvertor.cs" />
     <Compile Include="Views\Convertors\BoolDisplayConvertor.cs" />
     <Compile Include="Views\Convertors\DivideConvertor.cs" />
@@ -189,9 +186,6 @@
     <Compile Include="Views\Sys\ScreenTool.cs" />
     <Compile Include="Views\Sys\UIChildFinder.cs" />
     <Compile Include="Views\Sys\ViewTool.cs" />
-    <Compile Include="Views\TextListViewItem.xaml.cs">
-      <DependentUpon>TextListViewItem.xaml</DependentUpon>
-    </Compile>
     <Page Include="Styles\Common.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -210,10 +204,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="SplashWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\BaseRectangleView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -246,10 +236,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\RectangleView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\TextListViewItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
