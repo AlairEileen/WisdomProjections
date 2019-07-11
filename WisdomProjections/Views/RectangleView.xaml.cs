@@ -121,6 +121,9 @@ namespace WisdomProjections.Views
         /// </summary>
         private ImageFactoryView ifv;
 
+        private Point pointOriginInside;
+        private Point pointOriginInsideNew;
+
         internal bool OnContainerMouseMove(object sender, MouseEventArgs e)
         {
             return DoMove(sender, e);
@@ -194,13 +197,26 @@ namespace WisdomProjections.Views
             bool isEx = true;
             if (mouseIsDown)
             {
+                pointOriginInsideNew= (CurrentPointType == PointLocationType.LB ? bRT : CurrentPointType == PointLocationType.RT ? bPLB : bLT).TranslatePoint(new Point(), this);
                 //pointM = e.GetPosition(CurrentPointType == PointLocationType.LB ? bRT : CurrentPointType == PointLocationType.RT ? bLB : bLT);
-                pointM = e.GetPosition(ifv.canvas);
+                pointM = e.GetPosition(this);
+                
                 //var p = e.GetPosition(bCC);
                 var cy = (pointM.Y - pointOrigin.Y);
                 var cx = (pointM.X - pointOrigin.X);
+
+                var mX=(pointM.X-pointOldM.X);
+                var mY=(pointM.Y-pointOldM.Y);
+
+
                 var h = this.Height;
                 var w = this.Width;
+
+                double nX = 0, nY = 0;
+              
+
+
+
                 var l = Convert.ToDouble(this.GetValue(Canvas.LeftProperty));
                 var t = Convert.ToDouble(this.GetValue(Canvas.TopProperty));
                 //h = this.Height + cy;
@@ -213,7 +229,7 @@ namespace WisdomProjections.Views
                 var ml = Math.Sqrt(pl * pl - ol * ol);
 
 
-                Console.WriteLine($"angle:{oc},pl:{pl},ol:{ol},ml:{ml}");
+                //Console.WriteLine($"angle:{oc},pl:{pl},ol:{ol},ml:{ml}");
 
 
 
@@ -257,18 +273,22 @@ namespace WisdomProjections.Views
                         w = ml;
                         h = ol;
 
-
-                        Point pointFour = new Point();
-                        pointFour.X = pointM.X + pointOrigin.X - pointPassiveM.X;
-                        pointFour.Y = pointM.Y + pointOrigin.Y - pointPassiveM.Y;
+                       
+                        nX = pointOriginInsideNew.X - pointOriginInside.X;
+                        nY = pointOriginInsideNew.Y - pointOriginInside.Y;
+                        
+                        pointOriginInside = pointOriginInsideNew;
+                        //Point pointFour = new Point();
+                        //pointFour.X = pointM.X + pointOrigin.X - pointPassiveM.X;
+                        //pointFour.Y = pointM.Y + pointOrigin.Y - pointPassiveM.Y;
 
                         //var pointFour = new Point(location.X+pointOrigin.X,location.Y+pointOrigin.Y);
                         //pointO.X -= (pointM.X - pointOldM.X);
-                        pointO.Y += (pointM.Y - pointOldM.Y);
+                        //pointO.Y += (pointM.Y - pointOldM.Y);
 
-                        t += (pointM.Y - pointOldM.Y);
+                        //t += (pointM.Y - pointOldM.Y);
 
-                        Console.WriteLine($"m:{pointM},p:{pointPassiveM},o:{pointOrigin},pointFour:{pointFour}");
+                        //Console.WriteLine($"m:{pointM},p:{pointPassiveM},o:{pointOrigin},pointFour:{pointFour}");
 
                         break;
                     case PointLocationType.RC:
@@ -284,8 +304,8 @@ namespace WisdomProjections.Views
                         break;
                     case PointLocationType.CC:
                         e.MouseDevice.SetCursor(Cursors.SizeAll);
-                        l = Convert.ToDouble(this.GetValue(Canvas.LeftProperty)) + cx;
-                        t = Convert.ToDouble(this.GetValue(Canvas.TopProperty)) + cy;
+                        l = Convert.ToDouble(this.GetValue(Canvas.LeftProperty)) + mX;
+                        t = Convert.ToDouble(this.GetValue(Canvas.TopProperty)) + mY;
                         break;
                     default:
                         isEx = false;
@@ -293,14 +313,14 @@ namespace WisdomProjections.Views
                 }
                 if (h > 0 && w > 0)
                 {
+
+                    //    var pd = bPLB.TranslatePoint(new Point(),ifv.canvas);
                     this.Height = h;
                     this.Width = w;
-                    this.SetValue(Canvas.LeftProperty, l);
-                    this.SetValue(Canvas.TopProperty, t);
-                //    var pd = bPLB.TranslatePoint(new Point(),ifv.canvas);
-                  
-                //this.SetValue(Canvas.LeftProperty, l - pd.X + pointOrigin.X);
-                //this.SetValue(Canvas.TopProperty, t -pd.Y + pointOrigin.Y);
+                    this.SetValue(Canvas.LeftProperty, l - nX);
+                    this.SetValue(Canvas.TopProperty, t - nY);
+                    //this.SetValue(Canvas.LeftProperty, l - pd.X + pointOrigin.X);
+                    //this.SetValue(Canvas.TopProperty, t -pd.Y + pointOrigin.Y);
                 }
 
             }
@@ -373,6 +393,7 @@ namespace WisdomProjections.Views
             StartMove(e);
 
         }
+
         private void StartMove(MouseButtonEventArgs e)
         {
             mouseIsDown = true;
@@ -383,10 +404,12 @@ namespace WisdomProjections.Views
                     pointPassiveM = bRB.TranslatePoint(new Point(), bRT);
                     break;
                 case PointLocationType.RT:
-                    pointOrigin = bPLB.TranslatePoint(new Point(), ifv.canvas);
-                    pointPassiveM = bPRB.TranslatePoint(new Point(), ifv.canvas);
-                    pointOldM = bPRT.TranslatePoint(new Point(), ifv.canvas);
-                    pointO = bPLT.TranslatePoint(new Point(), ifv.canvas);
+                    pointOrigin = bPLB.TranslatePoint(new Point(), this);
+                    pointOriginInside = bPLB.TranslatePoint(new Point(), this);
+                    pointPassiveM = bPRB.TranslatePoint(new Point(), this);
+                    //pointOldM = bPRT.TranslatePoint(new Point(), ifv.canvas);
+                    pointOldM = e.GetPosition(this);
+                    pointO = bPLT.TranslatePoint(new Point(), this);
                     break;
                 case PointLocationType.RB:
                     pointOrigin = e.GetPosition(bLT);

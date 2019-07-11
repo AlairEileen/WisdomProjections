@@ -646,12 +646,12 @@ namespace WisdomProjections
                 var rotateType = RotateType.Clockwise;
                 if (e.KeyStates == Keyboard.GetKeyStates(Key.Right))
                 {
-                    imgContainer.RectangleViews.Find(x => x.Selected).RotateWithKey(1, rotateType);
+                    imgContainer?.RectangleViews?.Find(x => x.Selected)?.RotateWithKey(1, rotateType);
                 }
                 else if (e.KeyStates == Keyboard.GetKeyStates(Key.Left))
                 {
                     rotateType = RotateType.Anticlockwise;
-                    imgContainer.RectangleViews.Find(x => x.Selected).RotateWithKey(1, rotateType);
+                    imgContainer?.RectangleViews?.Find(x => x.Selected)?.RotateWithKey(1, rotateType);
                 }
             }
             else
@@ -670,7 +670,7 @@ namespace WisdomProjections
                     default:
                         break;
                 }
-                imgContainer.RectangleViews.Find(x => x.Selected).MoveWithKey(1, moveType);
+                imgContainer?.RectangleViews?.Find(x => x.Selected)?.MoveWithKey(1, moveType);
             }
         }
 
