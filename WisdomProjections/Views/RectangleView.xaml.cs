@@ -197,7 +197,7 @@ namespace WisdomProjections.Views
             bool isEx = true;
             if (mouseIsDown)
             {
-                pointOriginInsideNew= (CurrentPointType == PointLocationType.LB ? bRT : CurrentPointType == PointLocationType.RT ? bPLB : bLT).TranslatePoint(new Point(), this);
+               
                 //pointM = e.GetPosition(CurrentPointType == PointLocationType.LB ? bRT : CurrentPointType == PointLocationType.RT ? bLB : bLT);
                 pointM = e.GetPosition(this);
                 
@@ -272,12 +272,16 @@ namespace WisdomProjections.Views
                         //pointOrigin = pointM;
                         w = ml;
                         h = ol;
-
-                       
+                        this.Height = h;
+                        this.Width = w;
+                        pointOriginInsideNew = (CurrentPointType == PointLocationType.LB ? bRT : CurrentPointType == PointLocationType.RT ? bPLB : bLT).TranslatePoint(new Point(), this);
                         nX = pointOriginInsideNew.X - pointOriginInside.X;
                         nY = pointOriginInsideNew.Y - pointOriginInside.Y;
-                        
-                        pointOriginInside = pointOriginInsideNew;
+
+                        //pointOriginInside = pointOriginInsideNew;
+
+                        this.SetValue(Canvas.LeftProperty, l - nX);
+                        this.SetValue(Canvas.TopProperty, t - nY);
                         //Point pointFour = new Point();
                         //pointFour.X = pointM.X + pointOrigin.X - pointPassiveM.X;
                         //pointFour.Y = pointM.Y + pointOrigin.Y - pointPassiveM.Y;
@@ -315,10 +319,10 @@ namespace WisdomProjections.Views
                 {
 
                     //    var pd = bPLB.TranslatePoint(new Point(),ifv.canvas);
-                    this.Height = h;
-                    this.Width = w;
-                    this.SetValue(Canvas.LeftProperty, l - nX);
-                    this.SetValue(Canvas.TopProperty, t - nY);
+                    //this.Height = h;
+                    //this.Width = w;
+                    //this.SetValue(Canvas.LeftProperty, l +nX);
+                    //this.SetValue(Canvas.TopProperty, t +nY);
                     //this.SetValue(Canvas.LeftProperty, l - pd.X + pointOrigin.X);
                     //this.SetValue(Canvas.TopProperty, t -pd.Y + pointOrigin.Y);
                 }
