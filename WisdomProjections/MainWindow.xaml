@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WisdomProjections"
         xmlns:views="clr-namespace:WisdomProjections.Views"
+        xmlns:convertor="clr-namespace:WisdomProjections.Views.Convertors"
         mc:Ignorable="d"
         Title="智慧投影" Width="1600" Height="900"  Background="#0D0918" MinWidth="1066" MinHeight="600" Loaded="Window_Loaded" Closing="Window_Closing" SnapsToDevicePixels="True" WindowState="Maximized" PreviewKeyDown="Window_PreviewKeyDown_1">
     <Window.InputBindings>
@@ -14,6 +15,8 @@
         <KeyBinding Key="Right" Command="ApplicationCommands.NotACommand"/>
     </Window.InputBindings>
     <Window.Resources>
+        <convertor:BoolDisplayConvertor x:Key="BoolDisplayConvertor"/>
+        <convertor:BoolToIntConvertor x:Key="BoolToIntConvertor"/>
         <!--GridSplitter样式-->
         <Style x:Key="GridSplitterPreviewStyle">
             <Setter Property="Control.Template">
@@ -42,29 +45,29 @@
     </Window.Resources>
     <DockPanel >
         <StackPanel DockPanel.Dock="Top" VerticalAlignment="Top" Background="#19132B">
-            <Menu Margin="15,0,0,0"  Background="#19132B"  FontFamily="PingFangSC-Regular" BorderThickness="0" Padding="0" Foreground="White" FontSize="18" >
-                <MenuItem Header="文件"  Background="#19132B" Style="{StaticResource TranslateMenuItem}" >
-                    <MenuItem Header="导入素材" Background="#19132B" Foreground="White" Style="{StaticResource TranslateMenuItem}" Click="MenuItem_Click" />
-                    <MenuItem Header="导出"  Background="#19132B" Foreground="White" Style="{StaticResource TranslateMenuItem}" />
+            <Menu Margin="0,0,0,0"  Background="#0D0918"  FontFamily="PingFangSC-Regular" BorderThickness="0" Padding="15,0,0,0" Foreground="White" FontSize="18" >
+                <MenuItem Header="文件"  Background="#0D0918" Style="{StaticResource TranslateMenuItem}" >
+                    <MenuItem Header="导入素材" Background="#0D0918" Foreground="White" Style="{StaticResource TranslateMenuItem}" Click="MenuItem_Click" />
+                    <MenuItem Header="导出"  Background="#0D0918" Foreground="White" Style="{StaticResource TranslateMenuItem}" />
                 </MenuItem>
-                <MenuItem Header="编辑"  Background="#19132B"  Style="{StaticResource TranslateMenuItem}" >
-                    <MenuItem Header="导入" Background="#19132B" Foreground="White" Style="{StaticResource TranslateMenuItem}" />
-                    <MenuItem Header="导出" Background="#19132B" Foreground="White" Style="{StaticResource TranslateMenuItem}" />
+                <MenuItem Header="编辑"  Background="#0D0918"  Style="{StaticResource TranslateMenuItem}" >
+                    <MenuItem Header="导入" Background="#0D0918" Foreground="White" Style="{StaticResource TranslateMenuItem}" />
+                    <MenuItem Header="导出" Background="#0D0918" Foreground="White" Style="{StaticResource TranslateMenuItem}" />
                 </MenuItem>
-                <MenuItem Header="查看" Background="#19132B" Style="{StaticResource TranslateMenuItem}" >
-                    <MenuItem Header="导入" Background="#19132B" Foreground="White" Style="{StaticResource TranslateMenuItem}" />
-                    <MenuItem Header="导出" Background="#19132B" Foreground="White" Style="{StaticResource TranslateMenuItem}" />
+                <MenuItem Header="查看" Background="#0D0918" Style="{StaticResource TranslateMenuItem}" >
+                    <MenuItem Header="导入" Background="#0D0918" Foreground="White" Style="{StaticResource TranslateMenuItem}" />
+                    <MenuItem Header="导出" Background="#0D0918" Foreground="White" Style="{StaticResource TranslateMenuItem}" />
                 </MenuItem>
-                <MenuItem Header="特效" Background="#19132B" Style="{StaticResource TranslateMenuItem}" >
-                    <MenuItem Header="导入" Foreground="White" Background="#19132B" Style="{StaticResource TranslateMenuItem}" />
-                    <MenuItem Header="导出" Background="#19132B" Foreground="White" Style="{StaticResource TranslateMenuItem}" />
+                <MenuItem Header="特效" Background="#0D0918" Style="{StaticResource TranslateMenuItem}" >
+                    <MenuItem Header="导入" Foreground="White" Background="#0D0918" Style="{StaticResource TranslateMenuItem}" />
+                    <MenuItem Header="导出" Background="#0D0918" Foreground="White" Style="{StaticResource TranslateMenuItem}" />
                 </MenuItem>
-                <MenuItem Header="帮助" Background="#19132B" Style="{StaticResource TranslateMenuItem}" >
-                    <MenuItem Header="导入" Background="#19132B" Foreground="White" BorderThickness="0" Style="{StaticResource TranslateMenuItem}" />
-                    <MenuItem Header="导出" Background="#19132B" Foreground="White" Style="{StaticResource TranslateMenuItem}" />
+                <MenuItem Header="帮助" Background="#0D0918" Style="{StaticResource TranslateMenuItem}" >
+                    <MenuItem Header="导入" Background="#0D0918" Foreground="White" BorderThickness="0" Style="{StaticResource TranslateMenuItem}" />
+                    <MenuItem Header="导出" Background="#0D0918" Foreground="White" Style="{StaticResource TranslateMenuItem}" />
                 </MenuItem>
             </Menu>
-            <StackPanel DockPanel.Dock="Top"  VerticalAlignment="Top" Height="46" Orientation="Horizontal"  HorizontalAlignment="Left" Margin="15,0,0,0">
+            <StackPanel DockPanel.Dock="Top"  VerticalAlignment="Top" Height="46" Orientation="Horizontal"  HorizontalAlignment="Left" Margin="20,0,0,0">
                 <Image Width="22" Name="imgBack" Height="22" Source="pack://siteoforigin:,,,/Resources/back.png" MouseLeftButtonDown="ImgBack_MouseLeftButtonDown" Style="{StaticResource ImageButton}"/>
                 <Image Width="22" Name="imgNext" Height="22" Source="pack://siteoforigin:,,,/Resources/next.png" Margin="32,0,0,0" MouseLeftButtonDown="ImgNext_MouseLeftButtonDown" Style="{StaticResource ImageButton}"/>
                 <Image Width="22" Name="imgSlect" Height="22" Source="pack://siteoforigin:,,,/Resources/slect.png" Margin="32,0,0,0" MouseLeftButtonDown="ImgSlect_MouseLeftButtonDown" Style="{StaticResource ImageButton}"/>
@@ -73,6 +76,99 @@
                 <Image Width="22" Name="imgPen" Height="22" Source="pack://siteoforigin:,,,/Resources/pen.png" Margin="32,0,0,0" MouseLeftButtonDown="ImgPen_MouseLeftButtonDown" Style="{StaticResource ImageButton}"/>
                 <Image Width="22" Name="imgShrink" Height="22" Source="pack://siteoforigin:,,,/Resources/shrink.png" Margin="32,0,0,0" MouseLeftButtonDown="ImgShrink_MouseLeftButtonDown" Style="{StaticResource ImageButton}"/>
                 <Image Width="22" Name="imgMagnify" Height="22" Source="pack://siteoforigin:,,,/Resources/magnify.png" Margin="32,0,0,0" MouseLeftButtonDown="ImgMagnify_MouseLeftButtonDown" Style="{StaticResource ImageButton}"/>
+                <CheckBox Height="22" x:Name="cbDebug" Content="调校模式" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Foreground="White" Checked="CbDebug_Checked">
+                    <CheckBox.Resources>
+                        <Style TargetType="CheckBox">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="CheckBox">
+                                        <Border VerticalAlignment="Center">
+                                            <Grid>
+                                                <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                                <Border>
+                                                    <Border.Background>
+                                                        <VisualBrush Opacity="1.0" Stretch="None">
+                                                            <VisualBrush.Visual>
+                                                                <Path Name="path" Opacity="0.1" 
+											  Data="M 0 5 L 3 10 10 0" 
+											  StrokeThickness="1.5" />
+                                                            </VisualBrush.Visual>
+                                                        </VisualBrush>
+                                                    </Border.Background>
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsChecked" Value="True">
+                                                <Setter Property="Opacity" Value="0.6"/>
+                                            </Trigger>
+                                            <Trigger Property="IsChecked" Value="False">
+                                                <Setter Property="Opacity" Value="1"/>
+                                            </Trigger>
+
+                                        </ControlTemplate.Triggers>
+
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </CheckBox.Resources>
+                </CheckBox>
+                <!--<Label  Name="lDebug" Height="22" Content="调校模式" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Foreground="White" >
+                  
+                </Label>-->
+                <StackPanel Orientation="Horizontal" x:Name="spDebug" Visibility="{Binding ElementName=cbDebug, Path=IsChecked, Converter={StaticResource BoolDisplayConvertor}}">
+
+                    <CheckBox Height="22" x:Name="cbDebugColor" Content="投影颜色" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Foreground="White">
+                        <CheckBox.Resources>
+                            <Style TargetType="CheckBox">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="CheckBox">
+                                            <Border VerticalAlignment="Center">
+                                                <Grid>
+                                                    <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                                    <Border>
+                                                        <Border.Background>
+                                                            <VisualBrush Opacity="1.0" Stretch="None">
+                                                                <VisualBrush.Visual>
+                                                                    <Path Name="path" Opacity="0.1" 
+											  Data="M 0 5 L 3 10 10 0" 
+											  StrokeThickness="1.5" />
+                                                                </VisualBrush.Visual>
+                                                            </VisualBrush>
+                                                        </Border.Background>
+                                                    </Border>
+                                                </Grid>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsChecked" Value="True">
+                                                    <Setter Property="Opacity" Value="0.6"/>
+                                                </Trigger>
+                                                <Trigger Property="IsChecked" Value="False">
+                                                    <Setter Property="Opacity" Value="1"/>
+                                                </Trigger>
+
+                                            </ControlTemplate.Triggers>
+
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </CheckBox.Resources>
+                    </CheckBox>
+
+                    <Label  Name="lDisplay" Height="22" Content="投影仪显示比例" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Foreground="White" />
+                    <Border  Grid.Column="1" Height="28" Margin="10,0,0,0" Width="80" CornerRadius="6" Background="#FF2B2635">
+                        <ComboBox FontSize="12" x:Name="cbDisplay"  Foreground="White" HorizontalContentAlignment="Center"  Background="#2B2635" Style="{StaticResource ComboBoxStyle}" BorderThickness="0" IsReadOnly="True" SelectionChanged="CbDisplay_SelectionChanged" />
+                    </Border>
+                    <Label  Name="lLaunchMode" Height="22" Content="投放模式" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Foreground="White" />
+                    <Border  Grid.Column="1" Height="28" Margin="10,0,0,0" Width="80" CornerRadius="6" Background="#FF2B2635">
+                        <ComboBox FontSize="12" x:Name="cbLaunchMode" Foreground="White"  Background="#2B2635" Style="{StaticResource ComboBoxStyle}" BorderThickness="0" IsReadOnly="True" />
+                    </Border>
+                    <Label  Name="lStartProjector" Height="22" Content="开启投影仪" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Foreground="White" />
+                    <Label  Name="lStopProjector" Height="22" Content="关闭投影仪" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Foreground="White" />
+                </StackPanel>
             </StackPanel>
         </StackPanel>
         <Grid Name="grdWorkbench">
@@ -95,17 +191,17 @@
                     <Label Background="#FF201A33" Grid.Row="0" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="46" FontSize="18">模型操作台</Label>
 
                     <ListView Grid.Row="1" x:Name="lvModel"  Background="Transparent" ItemContainerStyle="{StaticResource ListViewItemStyle}" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Hidden" MouseMove="lvModel_MouseMove" Drop="lvModel_Drop"  ScrollViewer.HorizontalScrollBarVisibility="Hidden" AllowDrop="True" SelectionMode="Extended" Style="{StaticResource ListViewStyle}"  >
-                     
+
                         <ListView.View>
-                        
-                        <GridView>
-                                
-                                
+
+                            <GridView>
+
+
                                 <GridView.Columns>
                                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
                                 </GridView.Columns>
                             </GridView>
-                           
+
                         </ListView.View>
 
 
@@ -119,26 +215,11 @@
                         </ListView.ContextMenu>
 
                     </ListView>
-                 
+
                     <Label Background="#FF201A33" Grid.Row="2" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="46" FontSize="18">设备推送</Label>
-                    <ListView Grid.Row="3" x:Name="lvDevice" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden"  >
-
-                        <ListView.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem x:Name="miCheckModelItem" Header="校对模式" Click="MiCheckModelItem_Click">
-
-                                </MenuItem>
-
-                            </ContextMenu>
-                        </ListView.ContextMenu>
-
-
+                    <ListView Grid.Row="3" x:Name="lvDevice" Background="Transparent" ItemContainerStyle="{StaticResource ListViewItemStyle}" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ItemsSource="{Binding Path=View}" SelectionChanged="LvDevice_SelectionChanged" Style="{StaticResource ListViewStyle}" >
                     </ListView>
-
-                 
                 </Grid>
-
-
             </Grid>
             <GridSplitter x:Name="gsSplitterr" Grid.Column="1"   Style="{DynamicResource GridSplitterStyle1}"  HorizontalAlignment="Stretch" Margin="0" Background="Black" >
 
@@ -165,10 +246,10 @@
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" Foreground="White" FontSize="18" HorizontalContentAlignment="Left" BorderThickness="0">类别</Label>
                         <Border  Grid.Column="1" Height="28"  CornerRadius="6" Background="#FF2B2635">
-                            <ComboBox FontSize="18" x:Name="cbEffectsType1" Margin="10,0,0,0" Foreground="White"  Background="#2B2635" Style="{StaticResource ComboBoxStyle}" BorderThickness="0" IsReadOnly="True" SelectionChanged="CbEffectsType1_SelectionChanged"/>
+                            <ComboBox FontSize="18" x:Name="cbEffectsType1"  Foreground="White"  Background="#2B2635" Style="{StaticResource ComboBoxStyle}" BorderThickness="0" IsReadOnly="True" SelectionChanged="CbEffectsType1_SelectionChanged"/>
                         </Border>
                         <Border  Grid.Column="3" Height="28"  CornerRadius="6" Background="#FF2B2635">
-                            <ComboBox FontSize="18" x:Name="cbEffectsType2" Margin="10,0,0,0" Foreground="White"  Background="#2B2635" Style="{StaticResource ComboBoxStyle}" BorderThickness="0" SelectionChanged="CbEffectsType2_SelectionChanged" IsReadOnly="True"></ComboBox>
+                            <ComboBox FontSize="18" x:Name="cbEffectsType2"  Foreground="White"  Background="#2B2635" Style="{StaticResource ComboBoxStyle}" BorderThickness="0" SelectionChanged="CbEffectsType2_SelectionChanged" IsReadOnly="True"></ComboBox>
                         </Border>
                     </Grid>
                     <Grid  Margin="10,8,10,0">
@@ -185,7 +266,51 @@
 
 
             </Grid>
+            <Popup x:Name="debugColorPopup"  IsOpen="{Binding ElementName=cbDebugColor,Path=IsChecked}" PlacementTarget="{Binding ElementName=cbDebugColor}" AllowsTransparency="True"  StaysOpen="False" PopupAnimation="Slide" HorizontalOffset="18" VerticalOffset="10">
+               
+                <StackPanel >
+                   
+                    <Path Stroke="DarkCyan" StrokeThickness="0" Margin="10,0,0,-10" VerticalAlignment="Bottom">
+                        <Path.Fill>
+                            <LinearGradientBrush>
+                                <GradientStop Color="#FF423B57"/>
+                            </LinearGradientBrush>
+                        </Path.Fill>
+                        <Path.Data>
+                            <PathGeometry>
+                                <!-- 指明是闭线条并且指定起始位置-->
+                                <PathFigure IsClosed="True" StartPoint="5,0">
+                                    <LineSegment Point="0,5" />
+                                    <LineSegment Point="10,5" />
+                                </PathFigure>
+                            </PathGeometry>
+                        </Path.Data>
+                    </Path>
+                    <Border CornerRadius="0,4,4,4" Background="Transparent"  BorderThickness="10">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="10" Color="#FF201A33" ShadowDepth="3" Opacity="0.8"></DropShadowEffect>
+                        </Border.Effect>
+                        <Border  Background="#FF423B57" CornerRadius="0,4,4,4" Padding="10,5" BorderThickness="0">
+                        <StackPanel Orientation="Horizontal" >
+                            <Label Foreground="White">请选择颜色:</Label>
+                            <Border Background="Red" Margin="5,0,0,0" Height="15" Width="15" VerticalAlignment="Center" BorderBrush="AliceBlue" BorderThickness="{Binding ElementName=cbDC1, Path=IsChecked, Converter={StaticResource BoolToIntConvertor}}" >
+                                <RadioButton GroupName="dcpi"  x:Name="cbDC1" Content="" Width="15"    VerticalAlignment="Center"  Style="{StaticResource NoBorderRadioButton}" IsChecked="True" Checked="CbDC1_OnChecked"/>
+                            </Border>
+                            <Border Background="Green" Margin="16,0,0,0"  Height="15" Width="15" VerticalAlignment="Center" BorderBrush="AliceBlue" BorderThickness="{Binding ElementName=cbDC2,Path=IsChecked, Converter={StaticResource BoolToIntConvertor}}" >
+                                <RadioButton  GroupName="dcpi" x:Name="cbDC2" Content="" Width="15"    VerticalAlignment="Center"  Style="{StaticResource NoBorderRadioButton}" Checked="CbDC1_OnChecked"/>
+                            </Border>
+                            <Border Background="Blue" Margin="16,0,0,0" Height="15" Width="15" VerticalAlignment="Center" BorderBrush="AliceBlue" BorderThickness="{Binding ElementName=cbDC3,Path=IsChecked, Converter={StaticResource BoolToIntConvertor}}" >
+                                <RadioButton GroupName="dcpi" x:Name="cbDC3" Content="" Width="15"    VerticalAlignment="Center"  Style="{StaticResource NoBorderRadioButton}" Checked="CbDC1_OnChecked"/>
+                            </Border>
+                            <Border Background="Yellow" Margin="16,0,0,0" Height="15" Width="15" VerticalAlignment="Center" BorderBrush="AliceBlue" BorderThickness="{Binding ElementName=cbDC4,Path=IsChecked, Converter={StaticResource BoolToIntConvertor}}" >
+                                <RadioButton GroupName="dcpi" x:Name="cbDC4" Content="" Width="15"    VerticalAlignment="Center"  Style="{StaticResource NoBorderRadioButton}" Checked="CbDC1_OnChecked"/>
+                            </Border>
+                        </StackPanel>
+                        </Border>
+                    </Border>
+                </StackPanel>
 
+            </Popup>
         </Grid>
     </DockPanel>
 

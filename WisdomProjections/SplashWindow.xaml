@@ -7,10 +7,13 @@
       mc:Ignorable="d" 
         Loaded="Window_Loaded"
         WindowStyle="None"
+      BorderThickness="10"
         WindowStartupLocation="CenterScreen"
       Height="640" Width="1066"
       Title="SplashWindow" AllowsTransparency="True" >
-
+    <Window.Effect>
+        <DropShadowEffect BlurRadius="10"  ShadowDepth="3"></DropShadowEffect>
+    </Window.Effect>
 
     <Window.Background>
         <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/loading_picture.jpg"/>

@@ -44,16 +44,16 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="ComboBoxItem">
-                                <Border Name="Back" Background="Transparent"  BorderThickness="0">
+                                <Border Name="Back" Background="Transparent" CornerRadius="6" BorderThickness="1" Padding="5,0,5,0">
                                     <ContentPresenter ContentSource="{Binding Source}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0" ></ContentPresenter>
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter TargetName="Back" Property="Background" Value="LightGray"></Setter>
+                                        <Setter TargetName="Back" Property="Background" Value="#FF423B57"></Setter>
                                     </Trigger>
                                     <!--下拉框背景色-->
                                     <Trigger Property="IsHighlighted" Value="True">
-                                        <Setter TargetName="Back" Property="Background" Value="#2B2635"></Setter>
+                                        <Setter TargetName="Back" Property="Background" Value="#FF423B57"></Setter>
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
@@ -71,7 +71,7 @@
                             <ColumnDefinition Width="0.3*" MaxWidth="30"/>
                         </Grid.ColumnDefinitions>
                         <!--文字区域背景和边线样式-->
-                        <TextBox Background="#2B2635" x:Name="cbtb" VerticalAlignment="Center"  Grid.Column="0" Foreground="White"  BorderThickness="0" MaxLength="5" IsReadOnly="{TemplateBinding IsReadOnly}" Text="{TemplateBinding Text}"></TextBox>
+                        <TextBox Background="#2B2635" HorizontalContentAlignment="Center" x:Name="cbtb" VerticalAlignment="Center"  Grid.Column="0" Foreground="White"  BorderThickness="0" MaxLength="5" IsReadOnly="{TemplateBinding IsReadOnly}" Text="{TemplateBinding Text}"></TextBox>
                         <Border  Grid.Column="0" BorderThickness="0" BorderBrush="#03ffea" CornerRadius="6">
 
                         </Border>
@@ -80,20 +80,21 @@
                             <ToggleButton BorderThickness="0" Style="{StaticResource ComboxStyleBtn}" IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press"></ToggleButton>
                         </Border>
                         <!--弹出popup整体设置-->
-                        <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" x:Name="Popup" Focusable="False" AllowsTransparency="True" PopupAnimation="Slide" >
+                        <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" x:Name="Popup" Focusable="False" AllowsTransparency="True"  HorizontalOffset="-10"  PopupAnimation="Slide" >
                             <!--弹出popup边框-->
-                            <Border CornerRadius="6"  BorderBrush="Transparent"  BorderThickness="0" MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{TemplateBinding ActualWidth}" x:Name="DropDown" SnapsToDevicePixels="True">
+                            <Border CornerRadius="6"  BorderBrush="Transparent"  BorderThickness="10" Background="Transparent">
                                 <Border.Effect>
-                                    <DropShadowEffect Color="Transparent" BlurRadius="6"  ShadowDepth="0" Opacity="1"/>
+                                    <DropShadowEffect BlurRadius="10" ShadowDepth="3"></DropShadowEffect>
                                 </Border.Effect>
-                                <!--下拉幕布边界背景设置 MaxHeight="{TemplateBinding MaxDropDownHeight}"-->
-                                <ScrollViewer Margin="0,0,0,0"   SnapsToDevicePixels="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" BorderThickness="0" >
-                                    <!-- StackPanel 用于显示子级，方法是将 IsItemsHost 设置为 True -->
-                                    <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"  Background="#2B2635"></StackPanel>
+                                <Border CornerRadius="6" MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{TemplateBinding ActualWidth}" x:Name="DropDown" SnapsToDevicePixels="True" Background="{TemplateBinding Background}">
 
-                                </ScrollViewer>
+                                    <!--下拉幕布边界背景设置 MaxHeight="{TemplateBinding MaxDropDownHeight}"-->
+                                    <ScrollViewer Margin="0,0,0,0"   SnapsToDevicePixels="True" HorizontalScrollBarVisibility="Hidden"  VerticalScrollBarVisibility="Hidden" BorderThickness="0" >
+                                        <!-- StackPanel 用于显示子级，方法是将 IsItemsHost 设置为 True -->
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"></StackPanel>
+                                    </ScrollViewer>
+                                </Border>
                             </Border>
-
                         </Popup>
                     </Grid>
                 </ControlTemplate>
@@ -168,8 +169,8 @@
 
             <Setter.Value>
                 <ControlTemplate TargetType="MenuItem">
-                    <Border x:Name="Border"
-                                Background="#0D0918"
+                    <Border x:Name="Border" CornerRadius="6"
+                                Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}">
                         <Grid>
@@ -220,7 +221,7 @@
                                        PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}">
                                 <Border x:Name="SubMenuBorder" BorderBrush="{Binding Path=Foreground, 
                                         RelativeSource={RelativeSource AncestorType={x:Type Menu}}}" 
-                                        BorderThickness="0" Padding="10" Background="#0D0918">
+                                        BorderThickness="0" CornerRadius="6" Padding="15,10" Background="{TemplateBinding Background}">
                                     <Grid x:Name="SubMenu" Grid.IsSharedSizeScope="True">
                                         <!-- StackPanel holds children of the menu. This is set by IsItemsHost=True  KeyboardNavigationMode = "Cycle" -->
                                         <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle"/>
@@ -298,14 +299,14 @@
     <Style x:Key="ListViewStyle" TargetType="{x:Type ListView}">
         <Setter Property="Template">
             <Setter.Value>
-                
+
                 <ControlTemplate TargetType="{x:Type ListView}">
                     <ScrollViewer Padding="{TemplateBinding Padding}" Style="{DynamicResource ScrollViewerStyle}">
                         <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                     </ScrollViewer>
                 </ControlTemplate>
             </Setter.Value>
-            
+
         </Setter>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="Background" Value="Transparent"/>
@@ -330,7 +331,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListViewItem">
-                    
+
                     <Border Name="BD_Collector" CornerRadius="0" BorderThickness="1" BorderBrush="Transparent" Background="Transparent" Width="auto" Height="60" >
                         <Label Content="{Binding Name}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="18" Foreground="White" />
                     </Border>
@@ -338,7 +339,7 @@
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="BD_Collector" Property="BorderBrush" Value="Blue" />
                         </Trigger>
-                       
+
                         <Trigger Property="Selector.IsSelected" Value="True">
                             <Setter TargetName="BD_Collector" Property="BorderBrush" Value="Blue" />
                         </Trigger>
@@ -348,4 +349,55 @@
         </Setter>
     </Style>
 
+
+    <Style TargetType="CheckBox" x:Key="NoBorderCheckBox">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <Border VerticalAlignment="Center">
+                        <Grid>
+                            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" />
+                            <Border>
+                                <Border.Background>
+                                    <VisualBrush Opacity="1.0" Stretch="None">
+                                        <VisualBrush.Visual>
+                                            <Path Name="path" Opacity="0.1" 
+											  Data="M 0 5 L 3 10 10 0" 
+											  StrokeThickness="1.5" />
+                                        </VisualBrush.Visual>
+                                    </VisualBrush>
+                                </Border.Background>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="RadioButton" x:Key="NoBorderRadioButton">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border VerticalAlignment="Center">
+                        <Grid>
+                            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" />
+                            <Border>
+                                <Border.Background>
+                                    <VisualBrush Opacity="1.0" Stretch="None">
+                                        <VisualBrush.Visual>
+                                            <Path Name="path" Opacity="0.1" 
+                                                  Data="M 0 5 L 3 10 10 0" 
+                                                  StrokeThickness="1.5" />
+                                        </VisualBrush.Visual>
+                                    </VisualBrush>
+                                </Border.Background>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

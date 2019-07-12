@@ -26,7 +26,7 @@ namespace WisdomProjections.Views
         public string Resource { get; set; }
         public bool IsVideo { get; set; }
         private MainWindow mainWindow;
-        public EffectsListViewItem(MainWindow mainWindow,string id,string tag1,string tag2,string title, string content, string resource)
+        public EffectsListViewItem(MainWindow mainWindow, string id, string tag1, string tag2, string title, string content, string resource)
         {
             InitializeComponent();
             Resource = resource;
@@ -43,9 +43,9 @@ namespace WisdomProjections.Views
             var ex = System.IO.Path.GetExtension(resource);
 
 
-            for (int i = 0; i <MaterialInputWindow. FileExtension.Length; i++)
+            for (int i = 0; i < MaterialInputWindow.FileExtension.Length; i++)
             {
-                if (MaterialInputWindow.FileExtension[i].Equals(ex) && i >=MaterialInputWindow. VStart)
+                if (MaterialInputWindow.FileExtension[i].Equals(ex) && i >= MaterialInputWindow.VStart)
                 {
                     IsVideo = true;
                     break;
@@ -56,17 +56,17 @@ namespace WisdomProjections.Views
             {
                 iIcon.Visibility = Visibility.Hidden;
                 meIcon.Visibility = Visibility.Visible;
-                meIcon.Source = new Uri(MaterialInputWindow.ResourcesFilePath+ resource);
+                meIcon.Source = new Uri(MaterialInputWindow.ResourcesFilePath + resource);
             }
             else iIcon.Source = (ImageSource)new BitmapImage(new Uri(MaterialInputWindow.ResourcesFilePath + resource));
 
-          
+
         }
 
         private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var rv = mainWindow.imgContainer.RectangleViews.Find(x => x.Selected);
-            if (rv!=null)
+            if (rv != null)
             {
                 rv.IsVideo = IsVideo;
 
@@ -82,6 +82,7 @@ namespace WisdomProjections.Views
                     rv.video.Visibility = Visibility.Hidden;
                     rv.img.Source = iIcon.Source;
                 }
+                mainWindow.RefreshWindow();
             }
         }
     }

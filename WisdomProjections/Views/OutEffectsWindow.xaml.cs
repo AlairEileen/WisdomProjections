@@ -38,14 +38,37 @@ namespace WisdomProjections.Views
 
         }
 
-        internal void Refresh(List<OutEffectsView> outEffectsView)
+        internal void Refresh(List<OutEffectsView> outEffectsView, double bSDSize, double actualWidth, double actualHeight)
         {
             this.Background = new SolidColorBrush(Colors.Black);
-            if (gContainer.Children!=null)
+            if (gContainer.Children != null)
             {
                 gContainer.Children.Clear();
             }
-            outEffectsView.ForEach(x=>gContainer.Children.Add(x));
+            //var w = this.ActualWidth;
+            //var h = this.ActualHeight;
+            //var gh = w / bSDSize;
+            //if (gh > h)
+            //{
+            //    gContainer.Height = h;
+            //    gContainer.Width = h * bSDSize;
+            //}
+            //else
+            //{
+            //    gContainer.Height = gh;
+            //    gContainer.Width = w;
+            //}
+            var viewScale = gContainer.ActualWidth / actualWidth;
+            outEffectsView.ForEach(x =>
+            {
+                var left = Convert.ToDouble(x.GetValue(Canvas.LeftProperty));
+                var top = Convert.ToDouble(x.GetValue(Canvas.TopProperty));
+                x.SetValue(Canvas.LeftProperty,left * viewScale);
+                x.SetValue(Canvas.TopProperty, top * viewScale);
+                x.Width = x.Width * viewScale;
+                x.Height = x.Height * viewScale;
+                gContainer.Children.Add(x);
+            });
         }
     }
     public class WinLocation

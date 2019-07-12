@@ -181,16 +181,23 @@ namespace WisdomProjections.Data_Executor
                     }
                     this.cbitmap.WritePixels(new Int32Rect(0, 0, this.cframe.Width, this.cframe.Height), this.cframe.Pixels, this.cframe.Width * 4, 0);
 
-
                 }
             }), DispatcherPriority.Render);
         }
 
 
-
+        //private short[] pp = null;
         private void OnDepthFrameAndPublishDataReady(Sensor sensor, DepthFrame depthFrame, PublishData publishData, ErrorCode error)
         {
-
+            //if (pp==null)
+            //{
+            //    pp = depthFrame.Pixels;
+            //    Console.Write("深度返回的点\r\n");
+            //    foreach (var p in pp)
+            //    {
+            //        Console.WriteLine(p+",");
+            //    }
+            //}
             if (!showDpImg)
             {
                 return;
@@ -219,7 +226,6 @@ namespace WisdomProjections.Data_Executor
             {
                 this.dw = depthFrame.Width;
                 this.dh = depthFrame.Height;
-                //Console.Write("深度返回的点");
                 for (var i = 0; i < depthFrame.Pixels.Length; i++)
                 {
                     var d = depthFrame.Pixels[i];
