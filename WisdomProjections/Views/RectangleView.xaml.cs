@@ -57,22 +57,18 @@ namespace WisdomProjections.Views
         private void BLT_MouseEnter(object sender, MouseEventArgs e)
         {
             if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.LT; this.Cursor = Cursors.SizeNWSE; }
-
         }
         private void BLB_MouseEnter(object sender, MouseEventArgs e)
         {
             if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.LB; this.Cursor = Cursors.SizeNESW; }
-
         }
         private void BLC_MouseEnter(object sender, MouseEventArgs e)
         {
             if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.LC; this.Cursor = Cursors.SizeWE; }
-
         }
         private void BCT_MouseEnter(object sender, MouseEventArgs e)
         {
             if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.CT; this.Cursor = Cursors.SizeNS; }
-
         }
         private void BCB_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -81,12 +77,10 @@ namespace WisdomProjections.Views
         private void BRT_MouseEnter(object sender, MouseEventArgs e)
         {
             if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.RT; this.Cursor = Cursors.SizeNESW; }
-
         }
         private void BRC_MouseEnter(object sender, MouseEventArgs e)
         {
             if (!mouseIsDown) { ifv.RectangleViews.ForEach(x => x.CurrentPointType = PointLocationType.NO); CurrentPointType = PointLocationType.RC; this.Cursor = Cursors.SizeWE; }
-
         }
         private void BRB_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -138,7 +132,7 @@ namespace WisdomProjections.Views
         /// <param name="s">start点</param>
         /// <param name="e">end点</param>
         /// <returns></returns>
-        double Angle(Point o, Point s, Point e)
+        double Angle(Point o, Point s, Point e) 
         {
             double cosfi = 0, fi = 0, norm = 0;
             double dsx = s.X - o.X;
