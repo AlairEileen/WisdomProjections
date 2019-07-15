@@ -650,7 +650,9 @@ namespace WisdomProjections
 
         public void RefreshWindow()
         {
+          
             var dm = lvDevice.SelectedItem as DeviceModel;
+            if (dm == null) return;
             dm.Window = dm.Window ?? CreateScreenWindowItem(dm.Screen);
             var oevList = new List<OutEffectsView>();
             foreach (UIElement item in imgContainer.canvas.Children)

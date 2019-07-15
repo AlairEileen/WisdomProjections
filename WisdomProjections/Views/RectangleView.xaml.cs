@@ -94,10 +94,10 @@ namespace WisdomProjections.Views
         /// 原点
         /// </summary>
         Point pointOrigin;
-        /// <summary>
-        /// 矩形原点
-        /// </summary>
-        Point pointO;
+        ///// <summary>
+        ///// 矩形原点
+        ///// </summary>
+        //Point pointO;
         /// <summary>
         /// 被动点
         /// </summary>
@@ -106,6 +106,14 @@ namespace WisdomProjections.Views
         /// 动点
         /// </summary>
         Point pointM;
+        /// <summary>
+        /// 移动用到的点
+        /// </summary>
+        Point pointMove;
+        /// <summary>
+        /// 旧的移动用到的点
+        /// </summary>
+        Point pointMoveOld;
         /// <summary>
         /// 移动前的点
         /// </summary>
@@ -192,15 +200,15 @@ namespace WisdomProjections.Views
             if (mouseIsDown)
             {
                
-                //pointM = e.GetPosition(CurrentPointType == PointLocationType.LB ? bRT : CurrentPointType == PointLocationType.RT ? bLB : bLT);
-                pointM = e.GetPosition(this);
-                
-                //var p = e.GetPosition(bCC);
+                pointM = e.GetPosition(ifv.canvas);
+
+                pointMove = e.GetPosition(this);
+
                 var cy = (pointM.Y - pointOrigin.Y);
                 var cx = (pointM.X - pointOrigin.X);
 
-                var mX=(pointM.X-pointOldM.X);
-                var mY=(pointM.Y-pointOldM.Y);
+                var mX=(pointMove.X- pointMoveOld.X);
+                var mY=(pointMove.Y- pointMoveOld.Y);
 
 
                 var h = this.Height;
@@ -213,8 +221,6 @@ namespace WisdomProjections.Views
 
                 var l = Convert.ToDouble(this.GetValue(Canvas.LeftProperty));
                 var t = Convert.ToDouble(this.GetValue(Canvas.TopProperty));
-                //h = this.Height + cy;
-                //w = this.Width + cx;
 
                 var oc = Angle(pointOrigin, pointPassiveM, pointM);
                 var pl = GetDistance(pointM, pointOrigin);
@@ -222,101 +228,152 @@ namespace WisdomProjections.Views
                 var ol = (pl * Math.Sin(Math.PI / (180 / oc))) / Math.Sin(Math.PI / 2);
                 var ml = Math.Sqrt(pl * pl - ol * ol);
 
-
-                //Console.WriteLine($"angle:{oc},pl:{pl},ol:{ol},ml:{ml}");
-
-
+                var resizeType = ResizeType.None;
 
                 switch (CurrentPointType)
                 {
                     case PointLocationType.LT:
                         e.MouseDevice.SetCursor(Cursors.SizeNWSE);
-                        h = this.Height - cy;
-                        w = this.Width - cx;
-                        l = Convert.ToDouble(this.GetValue(Canvas.LeftProperty)) + cx;
-                        t = Convert.ToDouble(this.GetValue(Canvas.TopProperty)) + cy;
+                        //h = this.Height - cy;
+                        //w = this.Width - cx;
+                        //l = Convert.ToDouble(this.GetValue(Canvas.LeftProperty)) + cx;
+                        //t = Convert.ToDouble(this.GetValue(Canvas.TopProperty)) + cy;
+                        resizeType = ResizeType.All;
                         break;
                     case PointLocationType.LC:
                         e.MouseDevice.SetCursor(Cursors.SizeWE);
-                        w = this.Width - cx;
-                        l = Convert.ToDouble(this.GetValue(Canvas.LeftProperty)) + cx;
+                        //w = this.Width - cx;
+                        //l = Convert.ToDouble(this.GetValue(Canvas.LeftProperty)) + cx;
+                        resizeType = ResizeType.With;
                         break;
                     case PointLocationType.LB:
                         e.MouseDevice.SetCursor(Cursors.SizeNESW);
-                        w = this.Width - cx;
-                        h = this.Height + cy;
-                        l = Convert.ToDouble(this.GetValue(Canvas.LeftProperty)) + cx;
-                        pointOrigin = pointM;
+                        //w = this.Width - cx;
+                        //h = this.Height + cy;
+                        //l = Convert.ToDouble(this.GetValue(Canvas.LeftProperty)) + cx;
+                        //pointOrigin = pointM;
+                        resizeType = ResizeType.All;
                         break;
                     case PointLocationType.CT:
                         e.MouseDevice.SetCursor(Cursors.SizeNS);
-                        h = this.Height - cy;
-                        t = Convert.ToDouble(this.GetValue(Canvas.TopProperty)) + cy;
+                        //h = this.Height - cy;
+                        //t = Convert.ToDouble(this.GetValue(Canvas.TopProperty)) + cy;
+
+                        resizeType = ResizeType.Height;
                         break;
                     case PointLocationType.CB:
                         e.MouseDevice.SetCursor(Cursors.SizeNS);
-                        h = this.Height + cy;
-                        pointOrigin = pointM;
+                        //h = this.Height + cy;
+                        //pointOrigin = pointM;
+                        resizeType = ResizeType.Height;
+
                         break;
                     case PointLocationType.RT:
                         e.MouseDevice.SetCursor(Cursors.SizeNESW);
-                        //w = this.Width + cx;
-                        //h = this.Height - cy;
-                        //t = Convert.ToDouble(this.GetValue(Canvas.TopProperty)) + cy;
-                        //pointOrigin = pointM;
-                        w = ml;
-                        h = ol;
-                        this.Height = h;
-                        this.Width = w;
-                        pointOriginInsideNew = (CurrentPointType == PointLocationType.LB ? bRT : CurrentPointType == PointLocationType.RT ? bPLB : bLT).TranslatePoint(new Point(), this);
-                        nX = pointOriginInsideNew.X - pointOriginInside.X;
-                        nY = pointOriginInsideNew.Y - pointOriginInside.Y;
-
+                        //w = ml;
+                        //h = ol;
+                        //this.Height = h + 30;
+                        //this.Width = w + 30;
+                        //pointOriginInsideNew = CurrentDptb.TranslatePoint(new Point(), this);
+                        //nX = -pointOriginInsideNew.X + pointOriginInside.X;
+                        //nY = -pointOriginInsideNew.Y + pointOriginInside.Y;
                         //pointOriginInside = pointOriginInsideNew;
-
-                        this.SetValue(Canvas.LeftProperty, l - nX);
-                        this.SetValue(Canvas.TopProperty, t - nY);
-                        //Point pointFour = new Point();
-                        //pointFour.X = pointM.X + pointOrigin.X - pointPassiveM.X;
-                        //pointFour.Y = pointM.Y + pointOrigin.Y - pointPassiveM.Y;
-
-                        //var pointFour = new Point(location.X+pointOrigin.X,location.Y+pointOrigin.Y);
-                        //pointO.X -= (pointM.X - pointOldM.X);
-                        //pointO.Y += (pointM.Y - pointOldM.Y);
-
-                        //t += (pointM.Y - pointOldM.Y);
-
-                        //Console.WriteLine($"m:{pointM},p:{pointPassiveM},o:{pointOrigin},pointFour:{pointFour}");
-
+                        //pointOrigin = pointM;
+                        resizeType = ResizeType.All;
                         break;
                     case PointLocationType.RC:
                         e.MouseDevice.SetCursor(Cursors.SizeWE);
-                        w = this.Width + cx;
-                        pointOrigin = pointM;
+                        //w = this.Width + cx;
+                        //pointOrigin = pointM;
+                        resizeType = ResizeType.With;
                         break;
                     case PointLocationType.RB:
                         e.MouseDevice.SetCursor(Cursors.SizeNWSE);
-                        h = this.Height + cy;
-                        w = this.Width + cx;
-                        pointOrigin = pointM;
+                        //w = ml;
+                        //h = ol;
+                        //this.Height = h + 30;
+                        //this.Width = w + 30;
+                        //pointOriginInsideNew = CurrentDptb.TranslatePoint(new Point(), this);
+                        //nX = -pointOriginInsideNew.X + pointOriginInside.X;
+                        //nY = -pointOriginInsideNew.Y + pointOriginInside.Y;
+                        //pointOriginInside = pointOriginInsideNew;
+                        resizeType = ResizeType.All;
+
                         break;
                     case PointLocationType.CC:
                         e.MouseDevice.SetCursor(Cursors.SizeAll);
-                        l = Convert.ToDouble(this.GetValue(Canvas.LeftProperty)) + mX;
-                        t = Convert.ToDouble(this.GetValue(Canvas.TopProperty)) + mY;
+                        l += mX;
+                        t += mY;
+                        //pointMoveOld = pointMove;
                         break;
                     default:
                         isEx = false;
                         break;
                 }
+
+
+                switch (resizeType)
+                {
+                    case ResizeType.All:
+                        w = ml;
+                        h = ol;
+                        this.Height = h + 50;
+                        this.Width = w + 50;
+                        pointOriginInsideNew = CurrentDptb.TranslatePoint(new Point(), this);
+                        nX = -pointOriginInsideNew.X + pointOriginInside.X;
+                        nY = -pointOriginInsideNew.Y + pointOriginInside.Y;
+                        pointOriginInside = pointOriginInsideNew;
+                        break;
+                    case ResizeType.Height:
+                        //w = ml;
+                        h = ol;
+                        this.Height = h + 100;
+                        //this.Width = w + 30;
+                        pointOriginInsideNew = CurrentDptb.TranslatePoint(new Point(), this);
+                        nX = -pointOriginInsideNew.X + pointOriginInside.X;
+                        nY = -pointOriginInsideNew.Y + pointOriginInside.Y;
+                        pointOriginInside = pointOriginInsideNew;
+                        break;
+                    case ResizeType.With:
+                        w = ml;
+                        //h = ol;
+                        //this.Height = h + 30;
+                        this.Width = w + 100;
+                        pointOriginInsideNew = CurrentDptb.TranslatePoint(new Point(), this);
+                        nX = -pointOriginInsideNew.X + pointOriginInside.X;
+                        nY = -pointOriginInsideNew.Y + pointOriginInside.Y;
+                        pointOriginInside = pointOriginInsideNew;
+                        break;
+                    case ResizeType.None:
+                        break;
+                }
+
+
+                //if (CurrentPointType==PointLocationType.CC)
+                //{
+                //    e.MouseDevice.SetCursor(Cursors.SizeAll);
+                //    l += mX;
+                //    t += mY;
+                //}
+                //else
+                //{
+                //    w = ml;
+                //    h = ol;
+                //    this.Height = h + 30;
+                //    this.Width = w + 30;
+                //    pointOriginInsideNew = CurrentDptb.TranslatePoint(new Point(), this);
+                //    nX = -pointOriginInsideNew.X + pointOriginInside.X;
+                //    nY = -pointOriginInsideNew.Y + pointOriginInside.Y;
+                //    pointOriginInside = pointOriginInsideNew;
+                //}
                 if (h > 0 && w > 0)
                 {
 
                     //    var pd = bPLB.TranslatePoint(new Point(),ifv.canvas);
                     //this.Height = h;
                     //this.Width = w;
-                    //this.SetValue(Canvas.LeftProperty, l +nX);
-                    //this.SetValue(Canvas.TopProperty, t +nY);
+                    this.SetValue(Canvas.LeftProperty, l + nX);
+                    this.SetValue(Canvas.TopProperty, t + nY);
                     //this.SetValue(Canvas.LeftProperty, l - pd.X + pointOrigin.X);
                     //this.SetValue(Canvas.TopProperty, t -pd.Y + pointOrigin.Y);
                 }
@@ -325,6 +382,40 @@ namespace WisdomProjections.Views
             else isEx = false;
             return isEx;
         }
+
+        private Dictionary<PointLocationType, Border> dptb;
+        private Dictionary<PointLocationType, Border> dptbM;
+
+        public Border CurrentDptb =>
+            (dptb ?? (dptb = new Dictionary<PointLocationType, Border>
+            {
+                {PointLocationType.RT, bPLB},
+                {PointLocationType.RB, bPLT},
+                {PointLocationType.RC, bPLC},
+                {PointLocationType.LT, bPRB},
+                {PointLocationType.LC, bPRC},
+                {PointLocationType.LB, bPRT},
+                {PointLocationType.CT, bPCB},
+                {PointLocationType.CB, bPCT},
+                {PointLocationType.NO, bPCT},
+                {PointLocationType.CC, bPCT},
+            }))[CurrentPointType];
+        public Border CurrentDptbM =>
+            (dptbM ?? (dptbM = new Dictionary<PointLocationType, Border>
+            {
+                {PointLocationType.RT, bPRB},
+                {PointLocationType.RB, bPRT},
+                {PointLocationType.RC, bPRB},
+                {PointLocationType.LT, bPLB},
+                {PointLocationType.LC, bPLB},
+                {PointLocationType.LB, bPLT},
+                {PointLocationType.CT, bPLT},
+                {PointLocationType.CB, bPLB},
+                {PointLocationType.NO, bPLB},
+                {PointLocationType.CC, bPLB},
+            }))[CurrentPointType];
+
+
 
 
         Point Pointdinate(Point a, Point b, Point c)//a点为直角点，求第4个点的坐标.
@@ -397,31 +488,41 @@ namespace WisdomProjections.Views
             mouseIsDown = true;
             switch (CurrentPointType)
             {
-                case PointLocationType.LB:
-                    pointOrigin = e.GetPosition(bRT);
-                    pointPassiveM = bRB.TranslatePoint(new Point(), bRT);
-                    break;
-                case PointLocationType.RT:
-                    pointOrigin = bPLB.TranslatePoint(new Point(), this);
-                    pointOriginInside = bPLB.TranslatePoint(new Point(), this);
-                    pointPassiveM = bPRB.TranslatePoint(new Point(), this);
-                    //pointOldM = bPRT.TranslatePoint(new Point(), ifv.canvas);
-                    pointOldM = e.GetPosition(this);
-                    pointO = bPLT.TranslatePoint(new Point(), this);
-                    break;
-                case PointLocationType.RB:
-                    pointOrigin = e.GetPosition(bLT);
-                    pointPassiveM = bLB.TranslatePoint(new Point(), bLT);
-                    break;
-                case PointLocationType.LT:
-                    pointOrigin = e.GetPosition(bRB);
-                    pointPassiveM = bLB.TranslatePoint(new Point(), bRB);
-                    break;
-                case PointLocationType.LC:
-                    pointOrigin = e.GetPosition(bRB);
-                    pointPassiveM = bLB.TranslatePoint(new Point(), bRB);
+                //case PointLocationType.LB:
+                //    pointOrigin = e.GetPosition(bRT);
+                //    pointPassiveM = bRB.TranslatePoint(new Point(), bRT);
+                //    break;
+                //case PointLocationType.RT:
+                //    pointOrigin = bPLB.TranslatePoint(new Point(), ifv.canvas);
+                //    pointOriginInside = bPLB.TranslatePoint(new Point(), this);
+                //    pointPassiveM = bPRB.TranslatePoint(new Point(), ifv.canvas);
+                //    pointOldM = e.GetPosition(ifv.canvas);
+                //    //pointO = bPLT.TranslatePoint(new Point(), ifv.canvas);
+                //    break;
+                //case PointLocationType.RB:
+                //    pointOrigin = bPLT.TranslatePoint(new Point(), ifv.canvas);
+                //    pointOriginInside = bPLT.TranslatePoint(new Point(), this);
+                //    pointPassiveM = bPRT.TranslatePoint(new Point(), ifv.canvas);
+                //    pointOldM = e.GetPosition(ifv.canvas);
+                //    //pointO = bPLT.TranslatePoint(new Point(), ifv.canvas);
+                //    break;
+                //case PointLocationType.LT:
+                //    pointOrigin = e.GetPosition(bRB);
+                //    pointPassiveM = bLB.TranslatePoint(new Point(), bRB);
+                //    break;
+                //case PointLocationType.LC:
+                //    pointOrigin = e.GetPosition(bRB);
+                //    pointPassiveM = bLB.TranslatePoint(new Point(), bRB);
+                //    break;
+                case PointLocationType.CC:
+                    pointMoveOld = e.GetPosition( this);
                     break;
             }
+            pointOrigin = CurrentDptb.TranslatePoint(new Point(), ifv.canvas);
+            pointOriginInside = CurrentDptb.TranslatePoint(new Point(), this);
+            pointPassiveM = CurrentDptbM.TranslatePoint(new Point(), ifv.canvas);
+            pointOldM = e.GetPosition(ifv.canvas);
+
 
         }
         internal void OnContainerMouseUp(object sender, MouseButtonEventArgs e)
@@ -479,7 +580,10 @@ namespace WisdomProjections.Views
     }
 
 
-
+    public enum ResizeType
+    {
+        With,Height,All,None
+    }
 
     public enum MoveType
     {
