@@ -222,7 +222,7 @@ namespace WisdomProjections.Data_Executor
         public void Draw1(double with, double height, System.Drawing.Bitmap imageBitmap,
             System.Windows.Controls.Image imagePreview, System.Windows.Controls.Canvas canvas)
         {
-            int bigarea=5000000,  smallarea=250;
+            int smallarea=250;
             //Mat frame = new Image<Bgr, byte>(@"C:\Data\Documents\Dev\WeChat Image_20190703112224.jpg").Mat;
             Mat frame = new Image<Bgr, byte>(imageBitmap).Mat;
 
@@ -243,7 +243,7 @@ namespace WisdomProjections.Data_Executor
             //mask1.SetTo(new MCvScalar(255));
             //canny.CopyTo(mask1);
             int[,] hierachy = CvInvoke.FindContourTree(canny, contours, ChainApproxMethod.ChainApproxSimple);//最后一个参数表示一个矩形只要4个点的参数   
-            int indexshow = 0;
+            //int indexshow = 0;
             for (int i = 0; i < contours.Size; i++)
             {
                 var img = new Image<Bgra, byte>(frame.Width, frame.Height, new Bgra(255, 255, 255, 0));
@@ -313,43 +313,6 @@ namespace WisdomProjections.Data_Executor
 
 
 
-        public void Draw4(double with, double height, System.Drawing.Bitmap imageBitmap, System.Windows.Controls.Image imagePreview, System.Windows.Controls.Canvas canvas)
-        {
-            //var aii = AForge.Imaging.Image.Clone(imageBitmap);
-            var bm = new System.Drawing.Bitmap(@"C:\Data\Documents\Dev\WeChat Image_20190703113133.jpg");
-            var filtersSequence = new AForge.Imaging.Filters.FiltersSequence(AForge.Imaging.Filters.Grayscale.CommonAlgorithms.BT709);
-            var fib = filtersSequence.Apply(bm);
-            var aift = new AForge.Imaging.Filters.Threshold();
-            aift.ApplyInPlace(fib);
-
-
-
-
-            var aibcb = new AForge.Imaging.BlobCounter(fib)
-            {
-                FilterBlobs = true,
-                MinWidth = 20,
-                MinHeight = 20,
-                ObjectsOrder = AForge.Imaging.ObjectsOrder.Size
-            };
-            //aibcb.ProcessImage(imageBitmap);
-            AForge.Imaging.Blob[] blobs = aibcb.GetObjects(bm, true);
-            //List<Bitmap> bitmaps = new List<Bitmap>();
-            try
-            {
-                for (int i = 0; i < blobs.Length; i++)
-                {
-
-                    CvInvoke.Imshow("blob" + i, new Image<Bgra, byte>(blobs[i].Image.ToManagedImage()));
-                }
-            }
-            catch (AccessViolationException)
-            {
-
-            }
-
-
-        }
 
 
 

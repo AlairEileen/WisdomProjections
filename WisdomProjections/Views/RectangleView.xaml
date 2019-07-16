@@ -4,50 +4,36 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WisdomProjections.Views"
+             xmlns:convertor="clr-namespace:WisdomProjections.Views.Convertors"
+             x:Name="root"
              mc:Ignorable="d" 
       Background="Transparent"
       
              d:DesignHeight="450" d:DesignWidth="800" Focusable="True">
-
-    <Grid x:Name="gSelect" Panel.ZIndex="{Binding ZIndex}"  RenderTransformOrigin="0.5,0.5">
-
+    <Grid.Resources>
+        <convertor:HalfNumConvertor x:Key="HalfNumConvertor"/>
+    </Grid.Resources>
+    
+    <Grid x:Name="gSelect" Panel.ZIndex="{Binding ZIndex}"  >
         <Grid.RenderTransform>
+           
             <TransformGroup x:Name="gTG">
-                <RotateTransform x:Name="gRT"/>
+                <RotateTransform x:Name="gRT" CenterX="{Binding ElementName=root,Path=ActualWidth,Converter={StaticResource HalfNumConvertor},ConverterParameter=2 }" CenterY="{Binding ElementName=root,Path=ActualHeight,Converter={StaticResource HalfNumConvertor},ConverterParameter=2 }"/>
             </TransformGroup>
         </Grid.RenderTransform>
-        <Border Width="50" x:Name="bLT" Height="50"   HorizontalAlignment="Left" VerticalAlignment="Top"  MouseEnter="BLT_MouseEnter" >
-            <Border Width="10"  Height="10" Background="white"  BorderThickness="1" BorderBrush="Blue" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
-        </Border>
-        <Border Width="50" x:Name="bLB" Height="50"   HorizontalAlignment="Left" VerticalAlignment="Bottom" MouseEnter="BLB_MouseEnter" >
-            <Border Width="10" Height="10" Background="white" BorderThickness="1" BorderBrush="Blue" HorizontalAlignment="Center" VerticalAlignment="Center" />
-        </Border>
-        <Border Width="50" x:Name="bLC" Height="50" HorizontalAlignment="Left" VerticalAlignment="Center" MouseEnter="BLC_MouseEnter">
-            <Border Width="10" Height="10" Background="white" BorderThickness="1" BorderBrush="Blue" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        </Border>
-        <Path HorizontalAlignment="Center" VerticalAlignment="Top" Width="20" Height="20" Stroke="Blue" StrokeThickness="1"  Data="M 18,10 A 8.5,8.5 45 1 1 10,2 L 8,1  ">
-          
-        </Path>
-        <Border Width="50" x:Name="bCT" Height="50" HorizontalAlignment="Center" VerticalAlignment="Top" MouseEnter="BCT_MouseEnter" >
-            <Border Width="10" Height="10" Background="white" BorderThickness="1" BorderBrush="Blue" HorizontalAlignment="Center" VerticalAlignment="Center" />
-        </Border>
-        <Border Width="50" x:Name="bCB" Height="50" HorizontalAlignment="Center" VerticalAlignment="Bottom" MouseEnter="BCB_MouseEnter">
-            <Border Width="10"  Height="10" Background="white" BorderThickness="1" BorderBrush="Blue" HorizontalAlignment="Center" VerticalAlignment="Center" />
-        </Border>
-
-        <Border Width="50" x:Name="bRT" Height="50" HorizontalAlignment="Right" VerticalAlignment="Top" MouseEnter="BRT_MouseEnter">
-            <Border Width="10" Height="10" Background="white" BorderThickness="1" BorderBrush="Blue" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        </Border>
-        <Border Width="50" x:Name="bRC" Height="50" HorizontalAlignment="Right" VerticalAlignment="Center" MouseEnter="BRC_MouseEnter" >
-            <Border Width="10" Height="10" Background="white" BorderThickness="1" BorderBrush="Blue" HorizontalAlignment="Center" VerticalAlignment="Center" />
-        </Border>
-        <Border Width="50" x:Name="bRB" Height="50" HorizontalAlignment="Right" VerticalAlignment="Bottom" MouseEnter="BRB_MouseEnter">
-            <Border Width="10" Height="10" Background="white" BorderThickness="1" BorderBrush="Blue" HorizontalAlignment="Center" VerticalAlignment="Center" />
-        </Border>
+        <Border Width="10"  Height="10" x:Name="bLT" Background="white" Margin="20"  BorderThickness="1" BorderBrush="Blue" Padding="0" HorizontalAlignment="Left" VerticalAlignment="Top" MouseEnter="UIElement_MouseEnter"/>
+        <Border Width="10" x:Name="bLB" Margin="20" Height="10" Background="white" BorderThickness="1" BorderBrush="Blue" HorizontalAlignment="Left" VerticalAlignment="Bottom" MouseEnter="UIElement_MouseEnter" />
+        <Border x:Name="bLC" Margin="20" Width="10" Height="10" Background="white" BorderThickness="1" BorderBrush="Blue" HorizontalAlignment="Left" VerticalAlignment="Center" MouseEnter="UIElement_MouseEnter"/>
+        <Path HorizontalAlignment="Center" x:Name="pRotate" VerticalAlignment="Top" Width="15"  Height="15" Stroke="Blue" StrokeThickness="2"  Data="M 13.5,7.5 A 6,6 4 1 1 7.5,1.5 L 3,-1  " MouseEnter="UIElement_MouseEnter"/>
+        <Border x:Name="bCT" Margin="20" Width="10" Height="10" Background="white" BorderThickness="1" BorderBrush="Blue" HorizontalAlignment="Center" VerticalAlignment="Top" MouseEnter="UIElement_MouseEnter"/>
+        <Border x:Name="bCB" Margin="20" Width="10"  Height="10" Background="white" BorderThickness="1" BorderBrush="Blue"  HorizontalAlignment="Center" VerticalAlignment="Bottom" MouseEnter="UIElement_MouseEnter" />
+        <Border x:Name="bRT" Margin="20" Width="10" Height="10" Background="white" BorderThickness="1" BorderBrush="Blue" HorizontalAlignment="Right" VerticalAlignment="Top" MouseEnter="UIElement_MouseEnter"/>
+        <Border x:Name="bRC" Margin="20" Width="10" Height="10" Background="white" BorderThickness="1" BorderBrush="Blue" HorizontalAlignment="Right" VerticalAlignment="Center" MouseEnter="UIElement_MouseEnter"/>
+        <Border x:Name="bRB" Margin="20" Width="10" Height="10" Background="white" BorderThickness="1" BorderBrush="Blue" HorizontalAlignment="Right" VerticalAlignment="Bottom" MouseEnter="UIElement_MouseEnter" />
 
         <!--<Border x:Name="bContent" BorderThickness="1" BorderBrush="Blue" Margin="15" MouseEnter="BContent_MouseEnter" MouseMove="BContent_MouseMove" MouseLeftButtonDown="BContent_MouseLeftButtonDown" MouseLeftButtonUp="BContent_MouseLeftButtonUp" />-->
 
-        <Border x:Name="bContent" BorderThickness="2" BorderBrush="Blue" Margin="25"  MouseEnter="BContent_MouseEnter" MouseLeftButtonDown="BContent_MouseLeftButtonDown" >
+        <Border x:Name="bContent" BorderThickness="2" BorderBrush="Blue" Margin="25"   MouseLeftButtonDown="BContent_MouseLeftButtonDown" MouseEnter="UIElement_MouseEnter" >
             <Grid x:Name="gData">
                 <Image x:Name="img" Stretch="UniformToFill"/>
                 <MediaElement x:Name="video" Visibility="Hidden" Stretch="UniformToFill"/>

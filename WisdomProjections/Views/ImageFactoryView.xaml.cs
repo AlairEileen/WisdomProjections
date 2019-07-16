@@ -191,7 +191,6 @@ namespace WisdomProjections.Views
         private Point mouseXY;
         private Point mouseCanvasXY;
 
-        private Timer timer;
 
         /// <summary>
         /// 鼠标左键按下

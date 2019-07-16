@@ -227,7 +227,7 @@ namespace WisdomProjections
         private void MiDelModelItem_Click(object sender, RoutedEventArgs e)
         {
             var item = lvModel.SelectedValue as ModelItem;
-            imgContainer.DelRectangle(item.View);
+            imgContainer.DelRectangle(item?.View);
         }
 
 
@@ -551,15 +551,13 @@ namespace WisdomProjections
             var moveType = MoveType.Left;
             if (Keyboard.Modifiers == ModifierKeys.Alt)
             {
-                var rotateType = RotateType.Clockwise;
                 if (e.KeyStates == Keyboard.GetKeyStates(Key.Right))
                 {
-                    imgContainer?.RectangleViews?.Find(x => x.Selected)?.RotateWithKey(1, rotateType);
+                    imgContainer?.RectangleViews?.Find(x => x.Selected)?.RotateWithKey(1);
                 }
                 else if (e.KeyStates == Keyboard.GetKeyStates(Key.Left))
                 {
-                    rotateType = RotateType.Anticlockwise;
-                    imgContainer?.RectangleViews?.Find(x => x.Selected)?.RotateWithKey(1, rotateType);
+                    imgContainer?.RectangleViews?.Find(x => x.Selected)?.RotateWithKey(-1);
                 }
             }
             else

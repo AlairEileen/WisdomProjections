@@ -51,13 +51,12 @@ namespace WisdomProjections.Views
                 {
                     str0 += "*" + x + ","; str1 += "*" + x + ";";
                 }
-                str0.Substring(0, str0.Length - 1);
-                str1.Substring(0, str1.Length - 1);
+                //str0= str0.Substring(0, str0.Length - 1);
                 str = str0 + str1;
                 return str;
             }
         }
-        private string fileName;
+        private readonly string fileName;
         private MaterialJsonModel materialJsonModel;
 
         public MaterialInputWindow(string fileName)
@@ -179,7 +178,7 @@ namespace WisdomProjections.Views
                 var realName = System.IO.Path.GetFileNameWithoutExtension(fileName);
                 var mmId = Guid.NewGuid().ToString("N");
                 var resouceFileName = mmId + System.IO.Path.GetExtension(fileName);
-                var resourceName = ResourcesFilePath +resouceFileName;
+                var resourceName = ResourcesFilePath + resouceFileName;
                 File.Copy(fileName, resourceName);
 
 

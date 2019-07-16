@@ -12,14 +12,23 @@ namespace WisdomProjections.Views.Convertors
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var w = double.Parse(value.ToString());
-            return w / double.Parse(parameter.ToString());
+            if (value != null)
+            {
+                var w = double.Parse(value.ToString());
+                if (parameter != null) return w / double.Parse(parameter.ToString());
+            }
+
+            return null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var w = double.Parse(value.ToString());
-            return w * double.Parse(parameter.ToString());
+            if (value != null)
+            {
+                var w = double.Parse(value.ToString());
+                if (parameter != null) return w * double.Parse(parameter.ToString());
+            }
+            return null;
         }
     }
 }
