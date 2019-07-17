@@ -50,27 +50,27 @@ namespace WisdomProjections.Views
             elementWithPointTypes ?? (elementWithPointTypes = new List<ElementWithPointType>()
             {
                 new ElementWithPointType
-                    {Element = bLT, Cursor = Cursors.SizeNWSE, PointLocationType = PointLocationType.LT,RelativeBorder = bPRB,AdjacentBorder = bPLB},
+                    {Element = bLT, Cursor = Cursors.SizeNWSE, PointLocationType = PointLocationType.LT,RelativeBorder = bPRB,AdjacentBorder = bPLB,ResizeType = ResizeType.All},
                 new ElementWithPointType
-                    {Element = bLB, Cursor = Cursors.SizeNESW, PointLocationType = PointLocationType.LB,RelativeBorder = bPRT,AdjacentBorder = bPLT},
+                    {Element = bLB, Cursor = Cursors.SizeNESW, PointLocationType = PointLocationType.LB,RelativeBorder = bPRT,AdjacentBorder = bPLT,ResizeType = ResizeType.All},
                 new ElementWithPointType
-                    {Element = bLC, Cursor = Cursors.SizeWE, PointLocationType = PointLocationType.LC,RelativeBorder = bPRC,AdjacentBorder = bPLB},
+                    {Element = bLC, Cursor = Cursors.SizeWE, PointLocationType = PointLocationType.LC,RelativeBorder = bPRB,AdjacentBorder = bPLB,ResizeType = ResizeType.With},
                 new ElementWithPointType
-                    {Element = bCT, Cursor = Cursors.SizeNS, PointLocationType = PointLocationType.CT,RelativeBorder = bPCB,AdjacentBorder = bPRT},
+                    {Element = bCT, Cursor = Cursors.SizeNS, PointLocationType = PointLocationType.CT,RelativeBorder = bPRB,AdjacentBorder = bPRT,ResizeType = ResizeType.Height},
                 new ElementWithPointType
-                    {Element = bCB, Cursor = Cursors.SizeNS, PointLocationType = PointLocationType.CB,RelativeBorder = bPCT,AdjacentBorder = bPRB},
+                    {Element = bCB, Cursor = Cursors.SizeNS, PointLocationType = PointLocationType.CB,RelativeBorder = bPRT,AdjacentBorder = bPRB,ResizeType = ResizeType.Height},
                 new ElementWithPointType
-                    {Element = bRT, Cursor = Cursors.SizeNESW, PointLocationType = PointLocationType.RT,RelativeBorder = bPLB,AdjacentBorder = bPRB},
+                    {Element = bRT, Cursor = Cursors.SizeNESW, PointLocationType = PointLocationType.RT,RelativeBorder = bPLB,AdjacentBorder = bPRB,ResizeType = ResizeType.All},
                 new ElementWithPointType
-                    {Element = bRC, Cursor = Cursors.SizeWE, PointLocationType = PointLocationType.RC,RelativeBorder = bPLC,AdjacentBorder = bPRB},
+                    {Element = bRC, Cursor = Cursors.SizeWE, PointLocationType = PointLocationType.RC,RelativeBorder = bPLB,AdjacentBorder = bPRB,ResizeType = ResizeType.With},
                 new ElementWithPointType
-                    {Element = bRB, Cursor = Cursors.SizeNWSE, PointLocationType = PointLocationType.RB,RelativeBorder = bPLT,AdjacentBorder = bPRT},
+                    {Element = bRB, Cursor = Cursors.SizeNWSE, PointLocationType = PointLocationType.RB,RelativeBorder = bPLT,AdjacentBorder = bPRT,ResizeType = ResizeType.All},
                 new ElementWithPointType
-                    {Element = pRotate, Cursor = Cursors.Hand, PointLocationType = PointLocationType.Rotate,RelativeBorder = bPCT,AdjacentBorder = bPLB},
+                    {Element = pRotate, Cursor = Cursors.Hand, PointLocationType = PointLocationType.Rotate,RelativeBorder = bPCT,AdjacentBorder = bPLB,ResizeType = ResizeType.None},
                 new ElementWithPointType
-                    {Element = bContent, Cursor = Cursors.SizeAll, PointLocationType = PointLocationType.CC,RelativeBorder = bPCT,AdjacentBorder = bPLB},
+                    {Element = bContent, Cursor = Cursors.SizeAll, PointLocationType = PointLocationType.CC,RelativeBorder = bPCT,AdjacentBorder = bPLB,ResizeType = ResizeType.None},
                 new ElementWithPointType
-                    {Element = bContent, Cursor = Cursors.SizeAll, PointLocationType = PointLocationType.NO,RelativeBorder = bPCT,AdjacentBorder = bPLB},
+                    {Element = bContent, Cursor = Cursors.SizeAll, PointLocationType = PointLocationType.NO,RelativeBorder = bPCT,AdjacentBorder = bPLB,ResizeType = ResizeType.None},
             });
 
         private void UIElement_MouseEnter(object sender, MouseEventArgs e)
@@ -113,7 +113,7 @@ namespace WisdomProjections.Views
         /// <summary>
         /// image工厂画布
         /// </summary>
-        private ImageFactoryView ifv;
+        private readonly ImageFactoryView ifv;
 
         private Point pointOriginInside;
         private Point pointOriginInsideNew;
@@ -176,9 +176,9 @@ namespace WisdomProjections.Views
         private bool DoMove(object sender, MouseEventArgs e)
         {
             bool isEx = true;
-            if (mouseIsDown && Equals(Mouse.Captured, this))
+            if (mouseIsDown)
             {
-
+                isEx = CurrentOperate.PointLocationType != PointLocationType.NO;
                 pointM = e.GetPosition(ifv.canvas);
                 pointMove = e.GetPosition(this);
                 var mX = (pointMove.X - pointMoveOld.X);
@@ -192,43 +192,10 @@ namespace WisdomProjections.Views
                 var pl = GetDistance(pointM, pointOrigin);
                 var ol = (pl * Math.Sin(Math.PI / (180 / oc))) / Math.Sin(Math.PI / 2);
                 var ml = Math.Sqrt(pl * pl - ol * ol);
-                var resizeType = ResizeType.None;
+                e.MouseDevice.SetCursor(CurrentOperate.Cursor);
                 switch (CurrentPointType)
                 {
-                    case PointLocationType.LT:
-                        e.MouseDevice.SetCursor(Cursors.SizeNWSE);
-                        resizeType = ResizeType.All;
-                        break;
-                    case PointLocationType.LC:
-                        e.MouseDevice.SetCursor(Cursors.SizeWE);
-                        resizeType = ResizeType.With;
-                        break;
-                    case PointLocationType.LB:
-                        e.MouseDevice.SetCursor(Cursors.SizeNESW);
-                        resizeType = ResizeType.All;
-                        break;
-                    case PointLocationType.CT:
-                        e.MouseDevice.SetCursor(Cursors.SizeNS);
-                        resizeType = ResizeType.Height;
-                        break;
-                    case PointLocationType.CB:
-                        e.MouseDevice.SetCursor(Cursors.SizeNS);
-                        resizeType = ResizeType.Height;
-                        break;
-                    case PointLocationType.RT:
-                        e.MouseDevice.SetCursor(Cursors.SizeNESW);
-                        resizeType = ResizeType.All;
-                        break;
-                    case PointLocationType.RC:
-                        e.MouseDevice.SetCursor(Cursors.SizeWE);
-                        resizeType = ResizeType.With;
-                        break;
-                    case PointLocationType.RB:
-                        e.MouseDevice.SetCursor(Cursors.SizeNWSE);
-                        resizeType = ResizeType.All;
-                        break;
                     case PointLocationType.CC:
-                        e.MouseDevice.SetCursor(Cursors.SizeAll);
                         l += mX;
                         t += mY;
                         break;
@@ -237,19 +204,14 @@ namespace WisdomProjections.Views
                         Point knobCenter = new Point(this.ActualHeight / 2, this.ActualWidth / 2);
                         double radians = Math.Atan((currentLocation.Y - knobCenter.Y) /
                                                    (currentLocation.X - knobCenter.X));
-                        gRT.Angle = radians * 180 / Math.PI+90;
+                        gRT.Angle = radians * 180 / Math.PI + 90;
                         if (currentLocation.X - knobCenter.X < 0)
                         {
                             gRT.Angle += 180;
                         }
                         break;
-                    default:
-                        isEx = false;
-                        break;
                 }
-
-
-                switch (resizeType)
+                switch (CurrentOperate.ResizeType)
                 {
                     case ResizeType.All:
                         w = ml;
@@ -258,26 +220,24 @@ namespace WisdomProjections.Views
                         this.Width = w + 50;
                         break;
                     case ResizeType.Height:
-                        h = ol;
+                        h = ml;
                         this.Height = h + 50;
                         break;
                     case ResizeType.With:
-                        w = ml;
-                        this.Width = w + 80;
+                        w= ml;
+                        this.Width = w + 50;
                         break;
                     case ResizeType.None:
                         break;
                 }
 
-                if (resizeType!=ResizeType.None)
+                if (CurrentOperate.ResizeType != ResizeType.None)
                 {
-                    pointOriginInsideNew = CurrentDptb.TranslatePoint(new Point(), this);
+                    pointOriginInsideNew = CurrentOperate.RelativeBorder.TranslatePoint(new Point(), this);
                     nX = -pointOriginInsideNew.X + pointOriginInside.X;
                     nY = -pointOriginInsideNew.Y + pointOriginInside.Y;
                     pointOriginInside = pointOriginInsideNew;
                 }
-
-             
 
                 if (h > 0 && w > 0)
                 {
@@ -291,10 +251,9 @@ namespace WisdomProjections.Views
         }
 
 
-        public Border CurrentDptb =>
-            ElementWithPointTypes.FirstOrDefault(x => x.PointLocationType == CurrentPointType)?.RelativeBorder;
-        public Border CurrentDptbM =>
-            ElementWithPointTypes.FirstOrDefault(x => x.PointLocationType == CurrentPointType)?.AdjacentBorder;
+
+        private ElementWithPointType CurrentOperate =>
+            ElementWithPointTypes.FirstOrDefault(x => x.PointLocationType == CurrentPointType);
 
 
 
@@ -309,10 +268,9 @@ namespace WisdomProjections.Views
             mouseIsDown = true;
             if (CurrentPointType == PointLocationType.CC)
                 pointMoveOld = e.GetPosition(this);
-            pointOrigin = CurrentDptb.TranslatePoint(new Point(), ifv.canvas);
-            pointOriginInside = CurrentDptb.TranslatePoint(new Point(), this);
-            pointPassiveM = CurrentDptbM.TranslatePoint(new Point(), ifv.canvas);
-            Mouse.Capture(this);
+            pointOrigin = CurrentOperate.RelativeBorder.TranslatePoint(new Point(), ifv.canvas);
+            pointOriginInside = CurrentOperate.RelativeBorder.TranslatePoint(new Point(), this);
+            pointPassiveM = CurrentOperate.AdjacentBorder.TranslatePoint(new Point(), ifv.canvas);
 
 
         }
@@ -322,7 +280,6 @@ namespace WisdomProjections.Views
         }
         private void EndMove()
         {
-            Mouse.Capture(null);
             mouseIsDown = false;
             CurrentPointType = PointLocationType.NO;
         }
@@ -401,6 +358,9 @@ namespace WisdomProjections.Views
         /// 相邻的点
         /// </summary>
         public Border AdjacentBorder { get; set; }
+
+        public ResizeType ResizeType { get; set; }
+
 
     }
 }
