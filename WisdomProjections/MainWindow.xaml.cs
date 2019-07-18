@@ -512,7 +512,7 @@ namespace WisdomProjections
                 var t2 = cbEffectsType2.SelectedValue.ToString();
                 var index1 = cbEffectsType1.SelectedIndex;
                 var index2 = cbEffectsType2.SelectedIndex;
-                if (materialJsonModel != null && materialJsonModel.MaterialModels != null)
+                if (materialJsonModel?.MaterialModels != null)
                 {
                     if (index1 == 0)
                     {
@@ -616,7 +616,7 @@ namespace WisdomProjections
             //otherScreens = System.Windows.Forms.Screen.AllScreens.Where(s => !s.Primary).ToList();
             deviceTimer = new Timer(o =>
             {
-                if (App.Current != null && App.Current.Dispatcher != null) App.Current.Dispatcher.Invoke(() =>
+                Application.Current ?.Dispatcher ?.Invoke(() =>
                 {
                     var ss = System.Windows.Forms.Screen.AllScreens.ToList();
                     ss.ForEach(x =>
@@ -630,7 +630,7 @@ namespace WisdomProjections
                     {
                         if (ss.Find(x => x.Equals(y.Screen)) == null)
                         {
-                            if (y.Window != null) y.Window.Close();
+                            y.Window?.Close();
                             deviceModels.Remove(y);
                         }
                     });

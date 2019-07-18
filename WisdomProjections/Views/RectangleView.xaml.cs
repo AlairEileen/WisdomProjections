@@ -224,7 +224,7 @@ namespace WisdomProjections.Views
                         this.Height = h + 50;
                         break;
                     case ResizeType.With:
-                        w= ml;
+                        w = ml;
                         this.Width = w + 50;
                         break;
                     case ResizeType.None:
