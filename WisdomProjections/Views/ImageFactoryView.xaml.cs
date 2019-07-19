@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using WisdomProjections.Data_Executor;
+using WisdomProjections.Models;
 using WisdomProjections.Views.Sys;
 
 namespace WisdomProjections.Views
@@ -216,15 +217,9 @@ namespace WisdomProjections.Views
                 case PaintType.Move:
                     break;
                 case PaintType.Pen:
-                    //if (timer == null)
-                    //{
-                    //    timer = new Timer(new TimerCallback(t =>
-                    //    {
+                    var point = e.GetPosition(this.img);
+                    CreatePathAreaPoint(point);
 
-                            ImageSelectView.Draw(this.img);
-
-                    //    }), null, 10, 100);
-                    //}
                     break;
 
                 case PaintType.Rectangle:
@@ -246,6 +241,64 @@ namespace WisdomProjections.Views
 
                 item.OnContainerMouseDown(sender, e);
             }
+        }
+        /// <summary>
+        /// 创建路径从当前鼠标的桌标下
+        /// </summary>
+        /// <param name="point"></param>
+        private void CreatePathAreaPoint(Point point)
+        {
+            var rpm = GetPointRpm(point);
+            var linePoint = ConvertToLinePoint(rpm.Points);
+            var p = new Path();
+            var g = Geometry.Parse("M 0,0 L "+linePoint);
+            p.Width = rpm.Width;
+            p.Height = rpm.Height;
+            p.Data = g;
+
+            //添加素材代码
+            //var vb = new VisualBrush();
+            //var me = new MediaElement
+            //{
+            //    Source = new Uri(
+            //        $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\Dev\太空素材\531907_VJshi_f36559119cd0a74db2a9a09f7bb816f6.mp4"),
+            //    LoadedBehavior = MediaState.Play
+            //};
+
+            //vb.Visual = me;
+            //p.Fill = vb;
+
+
+            p.Stroke=new SolidColorBrush(Colors.Blue);
+            canvas.Children.Add(p);
+            Canvas.SetLeft(p, rpm.Location.X);
+            Canvas.SetTop(p, rpm.Location.Y);
+        }
+        /// <summary>
+        /// 将数组转换为直线
+        /// </summary>
+        /// <param name="rpmPoints"></param>
+        /// <returns></returns>
+        private string ConvertToLinePoint(Point[] rpmPoints)
+        {
+            StringBuilder sb = new StringBuilder();
+            
+            foreach (var p in rpmPoints)
+            {
+                sb.Append($"{p.X},{p.Y} ");
+            }
+
+            sb.Append($"{rpmPoints[0].X},{rpmPoints[0].Y} z");
+            return sb.ToString();
+        }
+        /// <summary>
+        /// 从鼠标获取轮廓点的集合
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        private RectPathModel GetPointRpm(Point point)
+        {
+            throw new NotImplementedException();
         }
 
 

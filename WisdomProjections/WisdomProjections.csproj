@@ -143,6 +143,7 @@
     <Compile Include="Models\DeviceModel.cs" />
     <Compile Include="Models\MaterialModel.cs" />
     <Compile Include="Models\ModelItem.cs" />
+    <Compile Include="Models\RectPathModel.cs" />
     <Compile Include="Paints\AnchorPoint.cs" />
     <Compile Include="Paints\AnchorPointType.cs" />
     <Compile Include="Paints\RectangleDraw.cs" />
