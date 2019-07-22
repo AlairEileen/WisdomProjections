@@ -10,6 +10,6 @@ namespace WisdomProjections.Models
    public class ModelItem
     {
         public string Name { get; set; }
-        public RectangleView View { get; set; }
+        public BaseBlob View { get; set; }
     }
 }

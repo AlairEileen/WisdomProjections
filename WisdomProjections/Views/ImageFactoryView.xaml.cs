@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,10 +27,10 @@ namespace WisdomProjections.Views
     public partial class ImageFactoryView : Grid
     {
         public PaintTypeSelect[] PaintTypeSelects { get; set; }
-        public List<RectangleView> RectangleViews { get; } = new List<RectangleView>();
+        public List<BaseBlob> RectangleViews { get; } = new List<BaseBlob>();
 
-        public event Action<RectangleView> RectangleAdd;
-        public event Action<RectangleView> RectangleDel;
+        public event Action<BaseBlob> RectangleAdd;
+        public event Action<BaseBlob> RectangleDel;
 
         public ImageFactoryView()
         {
@@ -42,7 +43,7 @@ namespace WisdomProjections.Views
         }
         public void SetImageSource(ImageSource imageSource)
         {
-            App.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.Invoke(() =>
             {
                 img.Source = imageSource;
             });
@@ -101,15 +102,15 @@ namespace WisdomProjections.Views
 
         }
 
-        private void changeOtherSize(double ch, double cw, double nh, double nw)
-        {
+        //private void changeOtherSize(double ch, double cw, double nh, double nw)
+        //{
 
-            foreach (var item in RectangleViews)
-            {
-                item.SetValue(Canvas.LeftProperty, Convert.ToDouble(item.GetValue(Canvas.LeftProperty)) * nw / cw);
-                item.SetValue(Canvas.TopProperty, Convert.ToDouble(item.GetValue(Canvas.TopProperty)) * nh / ch);
-            }
-        }
+        //    foreach (var item in RectangleViews)
+        //    {
+        //        item.SetValue(Canvas.LeftProperty, Convert.ToDouble(item.GetValue(Canvas.LeftProperty)) * nw / cw);
+        //        item.SetValue(Canvas.TopProperty, Convert.ToDouble(item.GetValue(Canvas.TopProperty)) * nh / ch);
+        //    }
+        //}
 
         /// <summary>
         /// 鼠标拖动
@@ -224,12 +225,12 @@ namespace WisdomProjections.Views
 
                 case PaintType.Rectangle:
                     mouseCanvasXY = e.GetPosition(canvas);
-                    RectangleViews.Add(new RectangleView(this, 0, 0));
+                    RectangleViews.Add(new BaseBlob{Data =new RectangleView(this, 0, 0)});
                     RefreshRectangleZIndex();
-                    if (RectangleAdd != null) RectangleAdd(RectangleViews[RectangleViews.Count - 1]);
-                    RectangleViews[RectangleViews.Count - 1].SetValue(Canvas.LeftProperty, mouseCanvasXY.X);
-                    RectangleViews[RectangleViews.Count - 1].SetValue(Canvas.TopProperty, mouseCanvasXY.Y);
-                    canvas.Children.Add(RectangleViews[RectangleViews.Count - 1]);
+                    RectangleAdd?.Invoke(RectangleViews[RectangleViews.Count - 1]);
+                    RectangleViews[RectangleViews.Count - 1].Data.SetValue(Canvas.LeftProperty, mouseCanvasXY.X);
+                    RectangleViews[RectangleViews.Count - 1].Data.SetValue(Canvas.TopProperty, mouseCanvasXY.Y);
+                    canvas.Children.Add(RectangleViews[RectangleViews.Count - 1].Data);
                     break;
                 default:
                     break;
@@ -251,7 +252,7 @@ namespace WisdomProjections.Views
             var rpm = GetPointRpm(point);
             var linePoint = ConvertToLinePoint(rpm.Points);
             var p = new Path();
-            var g = Geometry.Parse("M 0,0 L "+linePoint);
+            var g = Geometry.Parse("M 0,0 L " + linePoint);
             p.Width = rpm.Width;
             p.Height = rpm.Height;
             p.Data = g;
@@ -269,7 +270,7 @@ namespace WisdomProjections.Views
             //p.Fill = vb;
 
 
-            p.Stroke=new SolidColorBrush(Colors.Blue);
+            p.Stroke = new SolidColorBrush(Colors.Blue);
             canvas.Children.Add(p);
             Canvas.SetLeft(p, rpm.Location.X);
             Canvas.SetTop(p, rpm.Location.Y);
@@ -282,7 +283,7 @@ namespace WisdomProjections.Views
         private string ConvertToLinePoint(Point[] rpmPoints)
         {
             StringBuilder sb = new StringBuilder();
-            
+
             foreach (var p in rpmPoints)
             {
                 sb.Append($"{p.X},{p.Y} ");
@@ -302,10 +303,10 @@ namespace WisdomProjections.Views
         }
 
 
-        internal void DelRectangle(RectangleView view)
+        internal void DelRectangle(BaseBlob view)
         {
-            if (RectangleDel != null) RectangleDel(view);
-            canvas.Children.Remove(view);
+            RectangleDel?.Invoke(view);
+            canvas.Children.Remove(view.Data);
             RectangleViews.Remove(view);
         }
 
@@ -343,7 +344,7 @@ namespace WisdomProjections.Views
         {
             for (int j = 0; j < RectangleViews.Count; j++)
             {
-                Panel.SetZIndex(RectangleViews[j], RectangleViews.Count - j);
+                Panel.SetZIndex(RectangleViews[j].Data, RectangleViews.Count - j);
             }
         }
 
@@ -387,6 +388,25 @@ namespace WisdomProjections.Views
             //Console.WriteLine($"bsd= w:{bSelectedDisplay.ActualWidth},h:{bSelectedDisplay.ActualHeight}");
         }
         #endregion
+        /// <summary>
+        /// 拍照
+        /// </summary>
+        public void TakePhotos()
+        {
+            BmpBitmapEncoder encoder = new BmpBitmapEncoder();
+
+            var bf = BitmapFrame.Create((BitmapSource)img.Source);
+            encoder.Frames.Add(bf);
+            string folder = @"C:\wp_photos\";
+            if (!System.IO.Directory.Exists(folder))
+            {
+                System.IO.Directory.CreateDirectory(folder);
+            }
+            using (var fileStream = new System.IO.FileStream($@"{folder}{DateTime.Now.Ticks}.bmp", System.IO.FileMode.Create))
+            {
+                encoder.Save(fileStream);
+            }
+        }
     }
     public class PaintTypeSelect
     {

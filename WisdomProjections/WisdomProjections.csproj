@@ -151,6 +151,7 @@
     <Compile Include="SplashWindow.xaml.cs">
       <DependentUpon>SplashWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\BaseBlob.cs" />
     <Compile Include="Views\Convertors\BoolToIntConvertor.cs" />
     <Compile Include="Views\Convertors\BoolDisplayConvertor.cs" />
     <Compile Include="Views\Convertors\DivideConvertor.cs" />

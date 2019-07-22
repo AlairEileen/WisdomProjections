@@ -69,19 +69,8 @@ namespace WisdomProjections.Views
             if (rv != null)
             {
                 rv.IsVideo = IsVideo;
-
-                if (IsVideo)
-                {
-                    rv.video.Visibility = Visibility.Visible;
-                    rv.img.Visibility = Visibility.Hidden;
-                    rv.video.Source = meIcon.Source;
-                }
-                else
-                {
-                    rv.img.Visibility = Visibility.Visible;
-                    rv.video.Visibility = Visibility.Hidden;
-                    rv.img.Source = iIcon.Source;
-                }
+                rv.SetMedia(meIcon.Source,iIcon.Source);
+               
                 mainWindow.RefreshWindow();
             }
         }

@@ -221,7 +221,7 @@ namespace WisdomProjections
             imgContainer.RectangleViews.ForEach(x => x.Selected = false);
             item.View.Selected = true;
             //Keyboard.Focus(this);
-            Keyboard.Focus(item.View);
+            Keyboard.Focus(item.View.Data);
             //Console.WriteLine("LvModel_SelectionChanged");
         }
         private void MiDelModelItem_Click(object sender, RoutedEventArgs e)
@@ -537,6 +537,7 @@ namespace WisdomProjections
             }
             catch (Exception)
             {
+                // ignored
             }
         }
 
@@ -558,6 +559,10 @@ namespace WisdomProjections
                 else if (e.KeyStates == Keyboard.GetKeyStates(Key.Left))
                 {
                     imgContainer?.RectangleViews?.Find(x => x.Selected)?.RotateWithKey(-1);
+                }
+                else if (e.KeyStates == Keyboard.GetKeyStates(Key.P))
+                {
+                    imgContainer?.TakePhotos();
                 }
             }
             else
