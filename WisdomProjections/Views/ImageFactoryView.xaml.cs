@@ -218,7 +218,7 @@ namespace WisdomProjections.Views
                 case PaintType.Move:
                     break;
                 case PaintType.Pen:
-                    var point = e.GetPosition(this.img);
+                    var point = e.GetPosition(canvas);
                     CreatePathAreaPoint(point);
 
                     break;
