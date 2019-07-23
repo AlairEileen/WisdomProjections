@@ -225,7 +225,7 @@ namespace WisdomProjections.Views
 
                 case PaintType.Rectangle:
                     mouseCanvasXY = e.GetPosition(canvas);
-                    RectangleViews.Add(new BaseBlob{Data =new RectangleView(this, 0, 0)});
+                    RectangleViews.Add(new BaseBlob { Data = new RectangleView(this, 0, 0) });
                     RefreshRectangleZIndex();
                     RectangleAdd?.Invoke(RectangleViews[RectangleViews.Count - 1]);
                     RectangleViews[RectangleViews.Count - 1].Data.SetValue(Canvas.LeftProperty, mouseCanvasXY.X);
@@ -268,7 +268,10 @@ namespace WisdomProjections.Views
 
             //vb.Visual = me;
             //p.Fill = vb;
-
+            var bb = new BaseBlob { Data = p };
+            //添加到模型列表
+            RectangleViews.Add(bb);
+            RectangleAdd?.Invoke(bb);
 
             p.Stroke = new SolidColorBrush(Colors.Blue);
             canvas.Children.Add(p);
@@ -299,7 +302,28 @@ namespace WisdomProjections.Views
         /// <returns></returns>
         private RectPathModel GetPointRpm(Point point)
         {
-            throw new NotImplementedException();
+            return new RectPathModel
+            {
+                Location = point,
+                Points = new[]
+                {
+                    new Point(1,2),
+                    new Point(2,5),
+                    new Point(8,9),
+                    new Point(8,10),
+                    new Point(10,2),
+                    new Point(18,6),
+                    new Point(17,10),
+                    new Point(16,11),
+                    new Point(10,15),
+                    new Point(8,17),
+                    new Point(5,12),
+                    new Point(0,5),
+                    new Point(0,0)
+                },
+                Width = 20,
+                Height = 20
+            };
         }
 
 

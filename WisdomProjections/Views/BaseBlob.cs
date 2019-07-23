@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 
 namespace WisdomProjections.Views
@@ -39,6 +35,10 @@ namespace WisdomProjections.Views
                 {
                     rv.Selected = selected;
                 }
+                else if (Data is Path p)
+                {
+                    p.Stroke = new SolidColorBrush(selected ? Colors.Red : Colors.Blue);
+                }
             }
         }
         /// <summary>
@@ -55,6 +55,10 @@ namespace WisdomProjections.Views
                 if (Data is RectangleView rv)
                 {
                     rv.ToolTip = value;
+                }
+                else if (Data is Path p)
+                {
+                    p.ToolTip = value;
                 }
             }
         }
@@ -79,7 +83,9 @@ namespace WisdomProjections.Views
                 }
             }
         }
-
+        /// <summary>
+        /// 设置矩形高度
+        /// </summary>
         public double Height
         {
             get
@@ -99,7 +105,9 @@ namespace WisdomProjections.Views
                 }
             }
         }
-
+        /// <summary>
+        /// 设置矩形宽度
+        /// </summary>
         public double Width
         {
             get
@@ -120,7 +128,10 @@ namespace WisdomProjections.Views
             }
         }
 
-
+        /// <summary>
+        /// 矩形旋转
+        /// </summary>
+        /// <param name="size"></param>
         public void RotateWithKey(int size)
         {
             if (Data is RectangleView rv)
@@ -129,7 +140,11 @@ namespace WisdomProjections.Views
             }
         }
 
-
+        /// <summary>
+        /// 矩形移动
+        /// </summary>
+        /// <param name="size"></param>
+        /// <param name="moveType"></param>
         internal void MoveWithKey(int size, MoveType moveType)
         {
             if (Data is RectangleView rv)
@@ -137,7 +152,11 @@ namespace WisdomProjections.Views
                 rv.MoveWithKey(size, moveType);
             }
         }
-
+        /// <summary>
+        /// 设置特效
+        /// </summary>
+        /// <param name="meIconSource"></param>
+        /// <param name="iIconSource"></param>
         public void SetMedia(Uri meIconSource, ImageSource iIconSource)
         {
             if (Data is RectangleView rv)
@@ -155,8 +174,35 @@ namespace WisdomProjections.Views
                     rv.img.Source = iIconSource;
                 }
             }
+            else if (Data is Path p)
+            {
+                //添加素材代码
+                var vb = new VisualBrush();
+                if (IsVideo)
+                {
+                    var me = new MediaElement
+                    {
+                        Source = meIconSource,
+                        LoadedBehavior = MediaState.Play,
+                        Stretch = Stretch.UniformToFill
+                    };
+                    vb.Visual = me;
+                }
+                else
+                {
+                    var img = new Image { Source = iIconSource, Stretch = Stretch.UniformToFill };
+                    vb.Visual = img;
+                }
+                p.Fill = vb;
+                p.Stroke = null;
+            }
         }
-
+        /// <summary>
+        /// 父容器鼠标移动
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseEventArgs"></param>
+        /// <returns></returns>
         public bool OnContainerMouseMove(object sender, MouseEventArgs mouseEventArgs)
         {
             if (Data is RectangleView rv)
@@ -166,7 +212,11 @@ namespace WisdomProjections.Views
 
             return false;
         }
-
+        /// <summary>
+        /// 父容器鼠标左键按下
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseButtonEventArgs"></param>
         public void OnContainerMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
             if (Data is RectangleView rv)
@@ -174,7 +224,11 @@ namespace WisdomProjections.Views
                 rv.OnContainerMouseDown(sender, mouseButtonEventArgs);
             }
         }
-
+        /// <summary>
+        /// 父容器鼠标抬起
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseButtonEventArgs"></param>
         public void OnContainerMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
             if (Data is RectangleView rv)
