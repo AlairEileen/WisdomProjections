@@ -856,7 +856,10 @@ namespace WisdomProjections
         }
 
 
-
+        private void LSetPosition_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            imgContainer.RefreshPosition();
+        }
     }
 
 

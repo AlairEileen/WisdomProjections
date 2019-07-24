@@ -168,6 +168,7 @@
                     </Border>
                     <Label  Name="lStartProjector" Height="22" Content="开启投影仪" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Foreground="White" />
                     <Label  Name="lStopProjector" Height="22" Content="关闭投影仪" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Foreground="White" />
+                    <Label  Name="lSetPostion" Height="22" Content="对位" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Foreground="White" MouseLeftButtonDown="LSetPosition_OnMouseLeftButtonDown"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>

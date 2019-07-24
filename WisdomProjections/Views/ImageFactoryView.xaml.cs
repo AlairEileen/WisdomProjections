@@ -431,13 +431,21 @@ namespace WisdomProjections.Views
                 encoder.Save(fileStream);
             }
         }
+        /// <summary>
+        /// 刷新投影位置
+        /// </summary>
+        public void RefreshPosition()
+        {
+            
+
+        }
     }
     public class PaintTypeSelect
     {
         private bool isSelected;
         public bool IsSelected
         {
-            get { return isSelected; }
+            get => isSelected;
             set
             {
                 isSelected = value;
