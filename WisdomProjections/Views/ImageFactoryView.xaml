@@ -34,10 +34,8 @@
                         </Image>
                     </Grid>
                     <Grid x:Name="gSD" Width="{Binding ElementName=img, Path=ActualWidth}" Height="{Binding ElementName=img, Path=ActualHeight}"  RenderTransform="{StaticResource Imageview}" SizeChanged="GSD_SizeChanged">
-                        <Border x:Name="bSelectedDisplay"  BorderBrush="Black" BorderThickness="1" Margin="10" VerticalAlignment="Center" SizeChanged="BSelectedDisplay_SizeChanged"  >
-
-                            <Canvas Background="Aqua" Width="{Binding ElementName=bSelectedDisplay, Path=ActualWidth}" Height="{Binding ElementName=bSelectedDisplay, Path=ActualHeight}" x:Name="canvas" />
-
+                        <Border x:Name="bSelectedDisplay"  BorderBrush="White" BorderThickness="1"   SizeChanged="BSelectedDisplay_SizeChanged" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <Canvas  Width="{Binding ElementName=bSelectedDisplay, Path=ActualWidth}" Height="{Binding ElementName=bSelectedDisplay, Path=ActualHeight}" x:Name="canvas" />
                         </Border>
                     </Grid>
                     <local:ImageSelectView x:Name="ImageSelectView" Width="{Binding ElementName=img, Path=ActualWidth}" Height="{Binding ElementName=img, Path=ActualHeight}"  RenderTransform="{StaticResource Imageview}"></local:ImageSelectView>

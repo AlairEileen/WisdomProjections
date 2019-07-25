@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -15,9 +16,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using Emgu.CV.Util;
 using WisdomProjections.Data_Executor;
 using WisdomProjections.Models;
 using WisdomProjections.Views.Sys;
+using Point = System.Windows.Point;
 
 namespace WisdomProjections.Views
 {
@@ -359,10 +362,7 @@ namespace WisdomProjections.Views
 
 
 
-        public PaintTypeSelect GetPaintTypeSelect()
-        {
-            return PaintTypeSelects.Where(x => x.IsSelected).FirstOrDefault();
-        }
+        public PaintTypeSelect GetPaintTypeSelect() => PaintTypeSelects.FirstOrDefault(x => x.IsSelected);
 
         internal void RefreshRectangleZIndex()
         {
@@ -378,21 +378,21 @@ namespace WisdomProjections.Views
         {
             get => bSDSize; set
             {
-                bSDSize = value;
-                var bw = gSD.ActualWidth - bSelectedDisplay.Margin.Left - bSelectedDisplay.Margin.Right;
-                var bh = gSD.ActualHeight - bSelectedDisplay.Margin.Top - bSelectedDisplay.Margin.Bottom;
-                if (bh < 0 || bw < 0) return;
-                var h = bw / BSDSize;
-                if (h > bh)
-                {
-                    bSelectedDisplay.Height = bh;
-                    bSelectedDisplay.Width = bh * BSDSize;
-                }
-                else
-                {
-                    bSelectedDisplay.Height = bsdW / BSDSize;
-                    bSelectedDisplay.Width = bw;
-                }
+                //bSDSize = value;
+                //var bw = gSD.ActualWidth - bSelectedDisplay.Margin.Left - bSelectedDisplay.Margin.Right;
+                //var bh = gSD.ActualHeight - bSelectedDisplay.Margin.Top - bSelectedDisplay.Margin.Bottom;
+                //if (bh < 0 || bw < 0) return;
+                //var h = bw / BSDSize;
+                //if (h > bh)
+                //{
+                //    bSelectedDisplay.Height = bh;
+                //    bSelectedDisplay.Width = bh * BSDSize;
+                //}
+                //else
+                //{
+                //    bSelectedDisplay.Height = bsdW / BSDSize;
+                //    bSelectedDisplay.Width = bw;
+                //}
 
             }
         }
@@ -400,11 +400,11 @@ namespace WisdomProjections.Views
         double bsdW = 0;
         private void GSD_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (bsdW != bSelectedDisplay.ActualWidth)
-            {
-                bsdW = bSelectedDisplay.ActualWidth;
-                bSelectedDisplay.Height = bsdW / BSDSize;
-            }
+            //if (bsdW != bSelectedDisplay.ActualWidth)
+            //{
+            //    bsdW = bSelectedDisplay.ActualWidth;
+            //    bSelectedDisplay.Height = bsdW / BSDSize;
+            //}
         }
 
         private void BSelectedDisplay_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -434,12 +434,50 @@ namespace WisdomProjections.Views
         /// <summary>
         /// 刷新投影位置
         /// </summary>
-        public void RefreshPosition()
+        public void RefreshPosition(double x, double y, double w, double h)
         {
-            
+            if (img?.Source == null)
+            {
+                return;
+            }
+            ImageTool.ImageSourceToBitmap(img.Source, out var bitmap);
+            new Thread(() =>
+            {
+                bitmap.RotateFlip(RotateFlipType.Rotate180FlipY);
+                var pointF = Image_Emgu.GetScreen(bitmap, x, y, w, h);
+                Application.Current?.Dispatcher?.Invoke(() =>
+                {
+                    var param = img.ActualWidth / bitmap.Width;
+                    var bw = pointF[1].X - pointF[0].X;
+                    var bh = pointF[2].Y - pointF[0].Y;
+                    bSelectedDisplay.Width = bw * param;
+                    bSelectedDisplay.Height = bh * param;
+                    //bSelectedDisplay.SetValue(Canvas.LeftProperty, x * param);
+                    //bSelectedDisplay.SetValue(Canvas.TopProperty, pointF[0].Y * param);
+
+                    var margin = new Thickness { Left = pointF[0].X * param, Top = pointF[0].Y * param };
+                    bSelectedDisplay.Margin = margin;
+                });
+
+            }).Start();
+
 
         }
+
+        private string ToStringPointF(VectorOfPointF pointF)
+        {
+            string a = "";
+            for (int i = 0; i < pointF.Size; i++)
+            {
+                a += pointF[i].X + "," + pointF[i].Y + ";";
+            }
+            return a;
+        }
+
+
     }
+
+
     public class PaintTypeSelect
     {
         private bool isSelected;
@@ -485,7 +523,7 @@ namespace WisdomProjections.Views
             }
         }
         public PaintType PaintType { get; set; }
-        public Image TypeView { get; set; }
+        public System.Windows.Controls.Image TypeView { get; set; }
     }
 
 

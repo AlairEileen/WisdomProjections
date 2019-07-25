@@ -25,17 +25,12 @@ namespace WisdomProjections.Views
     {
 
 
-        private static string rootPath;
+        private static string _rootPath;
 
-        public static string ResourcesRootPath
-        {
-            get
-            {
-                if (rootPath == null)
-                    rootPath = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Wisdom\";
-                return rootPath;
-            }
-        }
+        public static string ResourcesRootPath =>
+            _rootPath ?? (_rootPath = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
+                                    @"\Wisdom\");
+
         public static string ResourcesFilePath = ResourcesRootPath + @"Resources\";
         public static string ResourcesMaterialPath = ResourcesRootPath + @"Material.json";
         public static string[] FileExtension = { ".jpg", ".png", ".jpeg", ".bmp", ".gif", ".mp4", ".avi" };

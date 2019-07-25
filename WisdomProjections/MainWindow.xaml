@@ -168,7 +168,46 @@
                     </Border>
                     <Label  Name="lStartProjector" Height="22" Content="开启投影仪" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Foreground="White" />
                     <Label  Name="lStopProjector" Height="22" Content="关闭投影仪" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Foreground="White" />
-                    <Label  Name="lSetPostion" Height="22" Content="对位" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Foreground="White" MouseLeftButtonDown="LSetPosition_OnMouseLeftButtonDown"/>
+
+                    <CheckBox Height="22" x:Name="cbSetPosition" Content="对位" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Foreground="White">
+                        <CheckBox.Resources>
+                            <Style TargetType="CheckBox">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="CheckBox">
+                                            <Border VerticalAlignment="Center">
+                                                <Grid>
+                                                    <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                                    <Border>
+                                                        <Border.Background>
+                                                            <VisualBrush Opacity="1.0" Stretch="None">
+                                                                <VisualBrush.Visual>
+                                                                    <Path Name="path" Opacity="0.1" 
+											  Data="M 0 5 L 3 10 10 0" 
+											  StrokeThickness="1.5" />
+                                                                </VisualBrush.Visual>
+                                                            </VisualBrush>
+                                                        </Border.Background>
+                                                    </Border>
+                                                </Grid>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsChecked" Value="True">
+                                                    <Setter Property="Opacity" Value="0.6"/>
+                                                </Trigger>
+                                                <Trigger Property="IsChecked" Value="False">
+                                                    <Setter Property="Opacity" Value="1"/>
+                                                </Trigger>
+
+                                            </ControlTemplate.Triggers>
+
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </CheckBox.Resources>
+                    </CheckBox>
+
                 </StackPanel>
             </StackPanel>
         </StackPanel>
@@ -268,9 +307,9 @@
 
             </Grid>
             <Popup x:Name="debugColorPopup"  IsOpen="{Binding ElementName=cbDebugColor,Path=IsChecked}" PlacementTarget="{Binding ElementName=cbDebugColor}" AllowsTransparency="True"  StaysOpen="False" PopupAnimation="Slide" HorizontalOffset="18" VerticalOffset="10">
-               
+
                 <StackPanel >
-                   
+
                     <Path Stroke="DarkCyan" StrokeThickness="0" Margin="10,0,0,-10" VerticalAlignment="Bottom">
                         <Path.Fill>
                             <LinearGradientBrush>
@@ -292,26 +331,79 @@
                             <DropShadowEffect BlurRadius="10" Color="#FF201A33" ShadowDepth="3" Opacity="0.8"></DropShadowEffect>
                         </Border.Effect>
                         <Border  Background="#FF423B57" CornerRadius="0,4,4,4" Padding="10,5" BorderThickness="0">
-                        <StackPanel Orientation="Horizontal" >
-                            <Label Foreground="White">请选择颜色:</Label>
-                            <Border Background="Red" Margin="5,0,0,0" Height="15" Width="15" VerticalAlignment="Center" BorderBrush="AliceBlue" BorderThickness="{Binding ElementName=cbDC1, Path=IsChecked, Converter={StaticResource BoolToIntConvertor}}" >
-                                <RadioButton GroupName="dcpi"  x:Name="cbDC1" Content="" Width="15"    VerticalAlignment="Center"  Style="{StaticResource NoBorderRadioButton}" IsChecked="True" Checked="CbDC1_OnChecked"/>
-                            </Border>
-                            <Border Background="Green" Margin="16,0,0,0"  Height="15" Width="15" VerticalAlignment="Center" BorderBrush="AliceBlue" BorderThickness="{Binding ElementName=cbDC2,Path=IsChecked, Converter={StaticResource BoolToIntConvertor}}" >
-                                <RadioButton  GroupName="dcpi" x:Name="cbDC2" Content="" Width="15"    VerticalAlignment="Center"  Style="{StaticResource NoBorderRadioButton}" Checked="CbDC1_OnChecked"/>
-                            </Border>
-                            <Border Background="Blue" Margin="16,0,0,0" Height="15" Width="15" VerticalAlignment="Center" BorderBrush="AliceBlue" BorderThickness="{Binding ElementName=cbDC3,Path=IsChecked, Converter={StaticResource BoolToIntConvertor}}" >
-                                <RadioButton GroupName="dcpi" x:Name="cbDC3" Content="" Width="15"    VerticalAlignment="Center"  Style="{StaticResource NoBorderRadioButton}" Checked="CbDC1_OnChecked"/>
-                            </Border>
-                            <Border Background="Yellow" Margin="16,0,0,0" Height="15" Width="15" VerticalAlignment="Center" BorderBrush="AliceBlue" BorderThickness="{Binding ElementName=cbDC4,Path=IsChecked, Converter={StaticResource BoolToIntConvertor}}" >
-                                <RadioButton GroupName="dcpi" x:Name="cbDC4" Content="" Width="15"    VerticalAlignment="Center"  Style="{StaticResource NoBorderRadioButton}" Checked="CbDC1_OnChecked"/>
-                            </Border>
-                        </StackPanel>
+                            <StackPanel Orientation="Horizontal" >
+                                <Label Foreground="White">请选择颜色:</Label>
+                                <Border Background="Red" Margin="5,0,0,0" Height="15" Width="15" VerticalAlignment="Center" BorderBrush="AliceBlue" BorderThickness="{Binding ElementName=cbDC1, Path=IsChecked, Converter={StaticResource BoolToIntConvertor}}" >
+                                    <RadioButton GroupName="dcpi"  x:Name="cbDC1" Content="" Width="15"    VerticalAlignment="Center"  Style="{StaticResource NoBorderRadioButton}" IsChecked="True" Checked="CbDC1_OnChecked"/>
+                                </Border>
+                                <Border Background="Green" Margin="16,0,0,0"  Height="15" Width="15" VerticalAlignment="Center" BorderBrush="AliceBlue" BorderThickness="{Binding ElementName=cbDC2,Path=IsChecked, Converter={StaticResource BoolToIntConvertor}}" >
+                                    <RadioButton  GroupName="dcpi" x:Name="cbDC2" Content="" Width="15"    VerticalAlignment="Center"  Style="{StaticResource NoBorderRadioButton}" Checked="CbDC1_OnChecked"/>
+                                </Border>
+                                <Border Background="Blue" Margin="16,0,0,0" Height="15" Width="15" VerticalAlignment="Center" BorderBrush="AliceBlue" BorderThickness="{Binding ElementName=cbDC3,Path=IsChecked, Converter={StaticResource BoolToIntConvertor}}" >
+                                    <RadioButton GroupName="dcpi" x:Name="cbDC3" Content="" Width="15"    VerticalAlignment="Center"  Style="{StaticResource NoBorderRadioButton}" Checked="CbDC1_OnChecked"/>
+                                </Border>
+                                <Border Background="Yellow" Margin="16,0,0,0" Height="15" Width="15" VerticalAlignment="Center" BorderBrush="AliceBlue" BorderThickness="{Binding ElementName=cbDC4,Path=IsChecked, Converter={StaticResource BoolToIntConvertor}}" >
+                                    <RadioButton GroupName="dcpi" x:Name="cbDC4" Content="" Width="15"    VerticalAlignment="Center"  Style="{StaticResource NoBorderRadioButton}" Checked="CbDC1_OnChecked"/>
+                                </Border>
+                            </StackPanel>
                         </Border>
                     </Border>
                 </StackPanel>
 
             </Popup>
+
+
+            <Popup  x:Name="debugLocationPopup"  IsOpen="{Binding ElementName=cbSetPosition,Path=IsChecked}" PlacementTarget="{Binding ElementName=cbSetPosition}" AllowsTransparency="True"  StaysOpen="False" PopupAnimation="Slide" HorizontalOffset="18" VerticalOffset="10">
+
+                <StackPanel >
+
+                    <Path Stroke="DarkCyan" StrokeThickness="0" Margin="10,0,0,-10" VerticalAlignment="Bottom">
+                        <Path.Fill>
+                            <LinearGradientBrush>
+                                <GradientStop Color="#FF423B57"/>
+                            </LinearGradientBrush>
+                        </Path.Fill>
+                        <Path.Data>
+                            <PathGeometry>
+                                <!-- 指明是闭线条并且指定起始位置-->
+                                <PathFigure IsClosed="True" StartPoint="5,0">
+                                    <LineSegment Point="0,5" />
+                                    <LineSegment Point="10,5" />
+                                </PathFigure>
+                            </PathGeometry>
+                        </Path.Data>
+                    </Path>
+                    <Border CornerRadius="0,4,4,4" Background="Transparent"  BorderThickness="10">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="10" Color="#FF201A33" ShadowDepth="3" Opacity="0.8"></DropShadowEffect>
+                        </Border.Effect>
+                        <Border  Background="#FF423B57" CornerRadius="0,4,4,4" Padding="10,8" BorderThickness="0">
+                            <StackPanel  >
+                                <Label Foreground="White" FontSize="11"  Margin="0,0,5,5">选择不同的参数来精准对位</Label>
+                                <Grid >
+                                    <Label   Foreground="White" FontSize="10" VerticalAlignment="Center">X标</Label>
+                                    <Slider x:Name="SliderPositionX" ValueChanged="SliderPosition_OnValueChanged"  Value="60" Maximum="100" Style="{StaticResource Slider_CustomStyle}" Margin="32,0,0,0" Minimum="20" />
+                                </Grid>
+                                <Grid >
+                                    <Label Foreground="White" FontSize="10" VerticalAlignment="Center">Y标</Label>
+                                    <Slider x:Name="SliderPositionY" ValueChanged="SliderPosition_OnValueChanged"  Value="60" Maximum="100" Style="{StaticResource Slider_CustomStyle}" Margin="32,0,0,0" Minimum="20" />
+                                </Grid>
+                                <Grid >
+                                    <Label   Foreground="White" FontSize="10" VerticalAlignment="Center">宽度</Label>
+                                    <Slider x:Name="SliderPositionWidth" ValueChanged="SliderPosition_OnValueChanged"  Value="550" Maximum="600" Style="{StaticResource Slider_CustomStyle}" Margin="32,0,0,0" Minimum="500" />
+                                </Grid>
+                                <Grid >
+                                    <Label  Foreground="White" FontSize="10" VerticalAlignment="Center">高度</Label>
+                                    <Slider x:Name="SliderPositionHeight" ValueChanged="SliderPosition_OnValueChanged"  Value="350" Maximum="400" Style="{StaticResource Slider_CustomStyle}" Margin="32,0,0,0" Minimum="300" />
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </Border>
+                </StackPanel>
+
+            </Popup>
+
+
         </Grid>
     </DockPanel>
 

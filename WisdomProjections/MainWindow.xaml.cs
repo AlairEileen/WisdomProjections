@@ -855,10 +855,17 @@ namespace WisdomProjections
             }
         }
 
-
-        private void LSetPosition_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void SliderPosition_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            imgContainer.RefreshPosition();
+            if (SliderPositionX!=null&&SliderPositionY!=null&&SliderPositionWidth!=null&&SliderPositionHeight!=null)
+            {
+                var x = SliderPositionX.Value;
+                var y = SliderPositionY.Value;
+                var w = SliderPositionWidth.Value;
+                var h = SliderPositionHeight.Value;
+                imgContainer.RefreshPosition(x, y, w, h);
+            }
+           
         }
     }
 
