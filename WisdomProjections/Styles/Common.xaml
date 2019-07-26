@@ -370,7 +370,15 @@
                             </Border>
                         </Grid>
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="False">
+                            <Setter Property="Opacity" Value="1"/>
+                        </Trigger>
 
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -395,7 +403,15 @@
                             </Border>
                         </Grid>
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="False">
+                            <Setter Property="Opacity" Value="1"/>
+                        </Trigger>
 
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -445,4 +461,40 @@
     </Style>
     <!--#endregion-->
 
+    <!--#region CheckBoxButton-->
+    <Style TargetType="CheckBox" x:Key="CheckBoxButton">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <Border VerticalAlignment="Center">
+                        <Grid>
+                            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" />
+                            <Border>
+                                <Border.Background>
+                                    <VisualBrush Opacity="1.0" Stretch="None">
+                                        <VisualBrush.Visual>
+                                            <Path Name="path" Opacity="0.1" 
+											  Data="M 0 5 L 3 10 10 0" 
+											  StrokeThickness="1.5" />
+                                        </VisualBrush.Visual>
+                                    </VisualBrush>
+                                </Border.Background>
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="False">
+                            <Setter Property="Opacity" Value="1"/>
+                        </Trigger>
+
+                    </ControlTemplate.Triggers>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+<!--#region -->
 </ResourceDictionary>

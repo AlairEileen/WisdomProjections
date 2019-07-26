@@ -4,7 +4,9 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:WisdomProjections"
+      xmlns:convertors="clr-namespace:WisdomProjections.Views.Convertors"
       mc:Ignorable="d" 
+      x:Name="root"
         Loaded="Window_Loaded"
         WindowStyle="None"
       BorderThickness="10"
@@ -14,12 +16,99 @@
     <Window.Effect>
         <DropShadowEffect BlurRadius="10"  ShadowDepth="3"></DropShadowEffect>
     </Window.Effect>
+    <Window.Resources>
+        <convertors:BoolReverseConvertor x:Key="BoolReverseConvertor"/>
+        <convertors:BoolDisplayConvertor x:Key="BoolDisplayConvertor"/>
+    </Window.Resources>
 
     <Window.Background>
         <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/loading_picture.jpg"/>
     </Window.Background>
-    <DockPanel>
+    <Grid>
 
-        <Label DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Foreground="White" FontSize="16" Width="200"  HorizontalAlignment="Left" Margin="33,0,0,46">投影设备正在拼命加载中···</Label>
-    </DockPanel>
+
+
+        <Label  VerticalAlignment="Bottom" Foreground="White" FontSize="16" Width="200"  HorizontalAlignment="Left" Margin="33,0,0,46">投影设备正在拼命加载中···</Label>
+        <Label x:Name="LabelCenter" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="427,242,609,368"></Label>
+
+        <Popup  x:Name="PopupSetCamera"  IsOpen="True" PlacementTarget="{Binding ElementName=LabelCenter}" AllowsTransparency="True"  StaysOpen="True" PopupAnimation="Slide" HorizontalOffset="18" VerticalOffset="10">
+
+            <StackPanel >
+
+                <Path Stroke="DarkCyan" StrokeThickness="0" Margin="10,0,0,-10" VerticalAlignment="Bottom">
+                    <Path.Fill>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#FF423B57"/>
+                        </LinearGradientBrush>
+                    </Path.Fill>
+                    <Path.Data>
+                        <PathGeometry>
+                            <!-- 指明是闭线条并且指定起始位置-->
+                            <PathFigure IsClosed="True" StartPoint="5,0">
+                                <LineSegment Point="0,5" />
+                                <LineSegment Point="10,5" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Border CornerRadius="0,4,4,4" Background="Transparent"  BorderThickness="10">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="10" Color="#FF201A33" ShadowDepth="3" Opacity="0.8"></DropShadowEffect>
+                    </Border.Effect>
+                    <Border  Background="#FF423B57" CornerRadius="0,4,4,4" Padding="10,8" BorderThickness="0">
+                        <StackPanel  >
+                            <Label Foreground="White" FontSize="11"  Margin="0,0,5,5">选择使用的摄像头类型</Label>
+                            <StackPanel Orientation="Horizontal">
+
+                                <RadioButton Height="22" GroupName="cameraSet" x:Name="CheckBoxUsbCamera" Content="Usb摄像头" Checked="CheckBoxUsbCamera_OnChecked" Margin="0,0,0,0" Padding="0" VerticalContentAlignment="Center" Style="{StaticResource NoBorderRadioButton}" Foreground="White"/>
+                                <RadioButton Height="22" GroupName="cameraSet" x:Name="CheckBoxIpCamera" Content="网络摄像头" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Style="{StaticResource NoBorderRadioButton}" Foreground="White"/>
+                            </StackPanel>
+                            <StackPanel  Visibility="{Binding ElementName=CheckBoxIpCamera,Path=IsChecked,Converter={StaticResource BoolDisplayConvertor}}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Label FontSize="12" Foreground="White" >IP</Label>
+                                    <Border Style="{StaticResource Round}" Padding="3,0,0,0" Height="16" >
+                                        <TextBox x:Name="TextBoxIp" Width="90" Text="192.168.1.101" Margin="0,0,0,0" Padding="0" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="12" Background="Transparent" Height="14" BorderThickness="0" Foreground="White" CaretBrush="White"  />
+                                    </Border>
+                                    <Label FontSize="12" Foreground="White" Margin="5,0,0,0" >端口</Label>
+                                    <Border Style="{StaticResource Round}" Padding="3,0,0,0" Height="16" >
+                                        <TextBox x:Name="TextBoxPort" Width="40" Text="8081" Margin="0,0,0,0" Padding="0" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="12" Background="Transparent" Height="14" BorderThickness="0" Foreground="White" CaretBrush="White"  />
+                                    </Border>
+                                    <Label FontSize="12" Foreground="White" Margin="5,0,0,0" >用户名</Label>
+                                    <Border Style="{StaticResource Round}" Padding="3,0,0,0" Height="16" >
+                                        <TextBox x:Name="TextBoxUserName" Width="40" Text="admin" Margin="0,0,0,0" Padding="0" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="12" Background="Transparent" Height="14" BorderThickness="0" Foreground="White" CaretBrush="White"  />
+                                    </Border>
+                                    <Label FontSize="12" Foreground="White" Margin="5,0,0,0" >密码</Label>
+                                    <Border Style="{StaticResource Round}" Padding="3,0,0,0" Height="16" >
+                                        <TextBox x:Name="TextBoxPassword" Width="40" Text="admin" Margin="0,0,0,0" Padding="0" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="12" Background="Transparent" Height="14" BorderThickness="0" Foreground="White" CaretBrush="White"  />
+                                    </Border>
+                                    <Border Width="40" x:Name="BorderTest" CornerRadius="4" Height="16" Margin="10,0,0,0" MouseLeftButtonDown="BorderTest_MouseLeftButtonDown">
+                                        <Border.Background>
+                                            <SolidColorBrush Color="#FF6D638E"/>
+                                        </Border.Background>
+                                        <Label Foreground="White" Padding="0"  Style="{StaticResource LabelButton}" Height="14" FontSize="10" Grid.IsSharedSizeScope="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" >
+                                            测试</Label>
+                                    </Border>
+                                </StackPanel>
+                                <Grid >
+                                    <Image x:Name="ImageViewer" Width="360" Height="225" HorizontalAlignment="Left"></Image>
+                                    <Border Width="40" x:Name="BorderOk" CornerRadius="4" VerticalAlignment="Bottom"  HorizontalAlignment="Right" Height="16" Margin="10,0,0,0" MouseLeftButtonDown="BorderOk_MouseLeftButtonDown">
+                                        <Border.Background>
+                                            <SolidColorBrush Color="#FF6D638E"/>
+                                        </Border.Background>
+                                        <Label Foreground="White" Padding="0"  Style="{StaticResource LabelButton}" Height="14" FontSize="10" Grid.IsSharedSizeScope="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" >
+                                            确认</Label>
+                                    </Border>
+                                </Grid>
+
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Border>
+            </StackPanel>
+
+        </Popup>
+
+
+
+    </Grid>
 </Window>
