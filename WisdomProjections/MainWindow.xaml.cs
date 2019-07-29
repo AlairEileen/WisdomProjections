@@ -29,9 +29,24 @@ namespace WisdomProjections
         public MainWindow()
         {
             InitializeComponent();
-            SensorDataExecutor.SensorDE.InitContent(imgContainer);
-            Closing += SensorDataExecutor.SensorDE.Close;
+            if (ApplicationInfoContext.IsIpCamera)
+            {
+                IpCameraDataExecutor.IpCameraDe.InitContent(imgContainer);
+                Closing += IpCameraDataExecutor.IpCameraDe.Close;
+            }
+            else
+            {
+                SensorDataExecutor.SensorDe.InitContent(imgContainer);
+                Closing += SensorDataExecutor.SensorDe.Close;
+            }
+            Closing += MainWindow_Closing;
         }
+
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
         /// <summary>
         /// 窗口加载完
         /// </summary>
@@ -42,9 +57,9 @@ namespace WisdomProjections
             Button btnGrdSplitter = gsSplitterr.Template.FindName("btnExpend", gsSplitterr) as Button;
             Button btnGrdSplitter2 = gsSplitterr2.Template.FindName("btnExpend", gsSplitterr2) as Button;
             if (btnGrdSplitter != null)
-                btnGrdSplitter.Click += new RoutedEventHandler(BtnGrdSplitter_Click);
+                btnGrdSplitter.Click += BtnGrdSplitter_Click;
             if (btnGrdSplitter2 != null)
-                btnGrdSplitter2.Click += new RoutedEventHandler(BtnGrdSplitter2_Click);
+                btnGrdSplitter2.Click += BtnGrdSplitter2_Click;
             InitData();
             InitDevices();
         }
@@ -126,9 +141,13 @@ namespace WisdomProjections
                 {
                     item.IsSelected = false;
 
-                    var ic = imgContainer.PaintTypeSelects.Where(x => x.PaintType == PaintType.None).FirstOrDefault();
-                    ic.IsSelected = true;
-                    ic.ChangeCursor(this);
+                    var ic = imgContainer.PaintTypeSelects.FirstOrDefault(x => x.PaintType == PaintType.None);
+                    if (ic != null)
+                    {
+                        ic.IsSelected = true;
+                        ic.ChangeCursor(this);
+                    }
+
                     break;
                 }
                 else
@@ -146,6 +165,7 @@ namespace WisdomProjections
         /// <param name="e"></param>
         private void ImgCircle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            SwitchPaintType(PaintType.Cricle);
 
         }
         /// <summary>
@@ -621,26 +641,26 @@ namespace WisdomProjections
             //otherScreens = System.Windows.Forms.Screen.AllScreens.Where(s => !s.Primary).ToList();
             deviceTimer = new Timer(o =>
             {
-                Application.Current ?.Dispatcher ?.Invoke(() =>
-                {
-                    var ss = System.Windows.Forms.Screen.AllScreens.ToList();
-                    ss.ForEach(x =>
-                    {
-                        if (!x.Primary && deviceModels.Find(y => y.Screen.Equals(x)) == null)
-                        {
-                            deviceModels.Add(new DeviceModel { Screen = x, Name = $"设备{++deviceFoundIndex}"});
-                        }
-                    });
-                    deviceModels?.ForEach(y =>
-                    {
-                        if (ss.Find(x => x.Equals(y.Screen)) == null)
-                        {
-                            y.Window?.Close();
-                            deviceModels.Remove(y);
-                        }
-                    });
-                    lvDevice.Items.Refresh();
-                });
+                Application.Current?.Dispatcher?.Invoke(() =>
+              {
+                  var ss = System.Windows.Forms.Screen.AllScreens.ToList();
+                  ss.ForEach(x =>
+                  {
+                      if (!x.Primary && deviceModels.Find(y => y.Screen.Equals(x)) == null)
+                      {
+                          deviceModels.Add(new DeviceModel { Screen = x, Name = $"设备{++deviceFoundIndex}" });
+                      }
+                  });
+                  deviceModels?.ForEach(y =>
+                  {
+                      if (ss.Find(x => x.Equals(y.Screen)) == null)
+                      {
+                          y.Window?.Close();
+                          deviceModels.Remove(y);
+                      }
+                  });
+                  lvDevice.Items.Refresh();
+              });
             }, null, 50, 500);
             lvDevice.ItemsSource = deviceModels;
         }
@@ -653,7 +673,7 @@ namespace WisdomProjections
 
         public void RefreshWindow()
         {
-          
+
             var dm = lvDevice.SelectedItem as DeviceModel;
             if (dm == null) return;
             dm.Window = dm.Window ?? CreateScreenWindowItem(dm.Screen);
@@ -857,7 +877,7 @@ namespace WisdomProjections
 
         private void SliderPosition_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (SliderPositionX!=null&&SliderPositionY!=null&&SliderPositionWidth!=null&&SliderPositionHeight!=null)
+            if (SliderPositionX != null && SliderPositionY != null && SliderPositionWidth != null && SliderPositionHeight != null)
             {
                 var x = SliderPositionX.Value;
                 var y = SliderPositionY.Value;
@@ -865,7 +885,7 @@ namespace WisdomProjections
                 var h = SliderPositionHeight.Value;
                 imgContainer.RefreshPosition(x, y, w, h);
             }
-           
+
         }
     }
 

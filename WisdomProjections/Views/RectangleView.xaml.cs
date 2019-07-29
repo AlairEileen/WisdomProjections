@@ -40,6 +40,18 @@ namespace WisdomProjections.Views
             this.Width = width;
             this.ifv = ifv;
         }
+        public RectangleView(ImageFactoryView ifv, double width, double height,bool isRound)
+        {
+            InitializeComponent();
+            this.Height = height;
+            this.Width = width;
+            this.ifv = ifv;
+            this.bContent.CornerRadius = new CornerRadius(1000000000);
+            bLT.Visibility = Visibility.Hidden;
+            bLB.Visibility = Visibility.Hidden;
+            bRT.Visibility = Visibility.Hidden;
+            bRB.Visibility = Visibility.Hidden;
+        }
         public PointLocationType CurrentPointType { get; set; }
 
         private bool mouseIsDown;

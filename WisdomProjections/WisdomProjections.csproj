@@ -137,8 +137,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ApplicationInfoContext.cs" />
     <Compile Include="Data_Executor\ImageSelectDataExecutor.cs" />
     <Compile Include="Data_Executor\Image_Emgu.cs" />
+    <Compile Include="Data_Executor\IpCameraDataExecutor.cs" />
     <Compile Include="Data_Executor\SensorDataExecutor.cs" />
     <Compile Include="Extensions\ListIndexChangeExtension.cs" />
     <Compile Include="Models\DeviceModel.cs" />

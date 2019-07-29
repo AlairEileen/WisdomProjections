@@ -122,7 +122,7 @@ namespace WisdomProjections.Views
         /// <param name="e"></param>
         private void Img_MouseMove(object sender, MouseEventArgs e)
         {
-
+            Point position;
             switch (GetPaintTypeSelect().PaintType)
             {
                 case PaintType.None:
@@ -155,7 +155,7 @@ namespace WisdomProjections.Views
 
                     break;
                 case PaintType.Rectangle:
-                    var position = e.GetPosition(canvas);
+                    position = e.GetPosition(canvas);
                     if (mouseDown)
                     {
                         if (position.X >= mouseCanvasXY.X && position.Y >= mouseCanvasXY.Y)
@@ -165,11 +165,21 @@ namespace WisdomProjections.Views
                         }
                     }
                     break;
+                case PaintType.Cricle:
+                    position = e.GetPosition(canvas);
+                    if (mouseDown)
+                    {
+                        if (position.X >= mouseCanvasXY.X && position.Y >= mouseCanvasXY.Y)
+                        {
+                            RectangleViews[RectangleViews.Count - 1].Height = position.Y - mouseCanvasXY.Y;
+                            RectangleViews[RectangleViews.Count - 1].Width = position.X - mouseCanvasXY.X;
+                        }
+                    }
+                    break; ;
 
                 default:
                     break;
             }
-
         }
 
 
@@ -235,6 +245,15 @@ namespace WisdomProjections.Views
                     RectangleViews[RectangleViews.Count - 1].Data.SetValue(Canvas.TopProperty, mouseCanvasXY.Y);
                     canvas.Children.Add(RectangleViews[RectangleViews.Count - 1].Data);
                     break;
+                case PaintType.Cricle:
+                    mouseCanvasXY = e.GetPosition(canvas);
+                    RectangleViews.Add(new BaseBlob { Data = new RectangleView(this, 0, 0, true) });
+                    RefreshRectangleZIndex();
+                    RectangleAdd?.Invoke(RectangleViews[RectangleViews.Count - 1]);
+                    RectangleViews[RectangleViews.Count - 1].Data.SetValue(Canvas.LeftProperty, mouseCanvasXY.X);
+                    RectangleViews[RectangleViews.Count - 1].Data.SetValue(Canvas.TopProperty, mouseCanvasXY.Y);
+                    canvas.Children.Add(RectangleViews[RectangleViews.Count - 1].Data);
+                    break;
                 default:
                     break;
             }
@@ -242,7 +261,6 @@ namespace WisdomProjections.Views
 
             foreach (var item in RectangleViews)
             {
-
                 item.OnContainerMouseDown(sender, e);
             }
         }
@@ -421,6 +439,7 @@ namespace WisdomProjections.Views
 
             var bf = BitmapFrame.Create((BitmapSource)img.Source);
             encoder.Frames.Add(bf);
+
             string folder = @"C:\wp_photos\";
             if (!System.IO.Directory.Exists(folder))
             {
@@ -444,6 +463,13 @@ namespace WisdomProjections.Views
             new Thread(() =>
             {
                 bitmap.RotateFlip(RotateFlipType.Rotate180FlipY);
+                var wP = bitmap.Width / 640;
+                var hP = bitmap.Height / 480;
+                x *= wP;
+                y *= hP;
+                w *= wP;
+                h *= hP;
+
                 var pointF = Image_Emgu.GetScreen(bitmap, x, y, w, h);
                 Application.Current?.Dispatcher?.Invoke(() =>
                 {

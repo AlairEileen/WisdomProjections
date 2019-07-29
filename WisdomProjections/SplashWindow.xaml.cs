@@ -16,6 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Emgu.CV;
 using Emgu.CV.Structure;
+using Emgu.CV.UI;
 using Newtonsoft.Json;
 using WisdomProjections.Data_Executor;
 using WisdomProjections.Views;
@@ -28,9 +29,8 @@ namespace WisdomProjections
     public partial class SplashWindow : Window
     {
         public static string IpCameraJsonPath = MaterialInputWindow.ResourcesRootPath + @"IpCamera.json";
-        private WriteableBitmap writeableBitmap;
-        public bool isStartCamera;
-        public Thread CameraThread;
+        private IpCameraViewer ipCameraViewer;
+        private IpCamera ipCameraInfo;
         public SplashWindow()
         {
             InitializeComponent();
@@ -39,7 +39,7 @@ namespace WisdomProjections
 
         private void SplashWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            isStartCamera = false;
+            ipCameraViewer?.Stop();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -52,6 +52,7 @@ namespace WisdomProjections
                 TextBoxUserName.Text = ic.UserName;
                 TextBoxPassword.Text = ic.Password;
             }
+            //StartInit();//执行默认摄像头启动
         }
 
 
@@ -63,83 +64,118 @@ namespace WisdomProjections
 
         private void StartInit()
         {
-            new Thread(() =>
+            //new Thread(() =>
+            //{
+            //Thread.Sleep(2000);
+            bool isLoaded = true;
+            SensorDataExecutor.SensorDe.InitSensorDE(s =>
             {
-                Thread.Sleep(2000);
-                bool isLoaded = true;
-                SensorDataExecutor.SensorDE.InitSensorDE(s =>
-                {
-                    MessageBox.Show("摄像头传感器" + s.ToString());
-                    isLoaded = false;
-                });
-                Application.Current.Dispatcher.Invoke(() =>
-                {
+                MessageBox.Show("摄像头传感器" + s.ToString());
+                isLoaded = false;
+            });
+            //Application.Current.Dispatcher.Invoke(() =>
+            //{
 
-                    if (isLoaded)
-                        new MainWindow().Show();
-                    this.Close();
-                });
+            if (isLoaded)
+                new MainWindow().Show();
+            this.Close();
+            //});
 
-            }).Start();
+            //}).Start();
         }
 
         private void BorderOk_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-
+            ApplicationInfoContext.IpCameraInfo = ipCameraInfo;
+            new MainWindow().Show();
+            Close();
         }
 
 
 
         private void BorderTest_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            isStartCamera = false;
-            CameraThread = null;
+            ipCameraViewer?.Stop();
 
-            var cameraInfo = new IpCamera { Port = TextBoxPort.Text, Ip = TextBoxIp.Text, UserName = TextBoxUserName.Text, Password = TextBoxPassword.Text };
+            ipCameraInfo = new IpCamera { Port = TextBoxPort.Text, Ip = TextBoxIp.Text, UserName = TextBoxUserName.Text, Password = TextBoxPassword.Text };
 
-            cameraInfo.SaveIpCameraInFile();
-            ConnectIpCamera(cameraInfo);
+            ipCameraInfo.SaveIpCameraInFile();
+            ipCameraViewer = new IpCameraViewer(ipCameraInfo, ImageViewer);
         }
 
-        private void ConnectIpCamera(IpCamera cameraInfo)
+
+    }
+
+
+    public class IpCameraViewer
+    {
+        private bool isStartCamera;
+        private WriteableBitmap writeableBitmap;
+        private readonly Thread cameraThread;
+
+        public IpCameraViewer(IpCamera cameraInfo, Image imageViewer)
         {
-
-
-            var capture = new VideoCapture($"http://{cameraInfo.UserName}:{cameraInfo.Password}@{cameraInfo.Ip}:{cameraInfo.Port}");
-
-            //capture.Start();
-            if (capture.IsOpened)
+            cameraThread = new Thread(() =>
             {
 
-                Mat mat = new Mat();
-                capture.Read(mat);
-                var img = mat.ToImage<Bgra, byte>();
-                writeableBitmap =
-                    new WriteableBitmap(img.Width, img.Height, 96, 96, PixelFormats.Bgra32, null);
+                var capture =
+                    new VideoCapture(
+                        $"http://{cameraInfo.UserName}:{cameraInfo.Password}@{cameraInfo.Ip}:{cameraInfo.Port}");
 
-                ImageViewer.Source = writeableBitmap;
-                writeableBitmap.WritePixels(new Int32Rect(0, 0, img.Width, img.Height), img.Bytes, img.Width * 4, 0);
-                isStartCamera = true;
-                new Thread(() =>
+                //capture.Start();
+                if (capture.IsOpened)
                 {
-                    while (isStartCamera)
+
+                    Mat mat = new Mat();
+                    capture.Read(mat);
+                    if (!mat.IsEmpty)
                     {
-                        capture.Read(mat);
-                        var img2 = mat.ToImage<Bgra, byte>();
-
-                        Application.Current?.Dispatcher?.Invoke(() =>
+                        var img = mat.ToImage<Bgra, byte>();
+                        Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                         {
-                            writeableBitmap.WritePixels(new Int32Rect(0, 0, img2.Width, img2.Height), img2.Bytes,
-                                img2.Width * 4, 0);
-                        });
-                        Thread.Sleep(15);
+                            writeableBitmap =
+                                new WriteableBitmap(img.Width, img.Height, 96, 96, PixelFormats.Bgra32, null);
+
+                            imageViewer.Source = writeableBitmap;
+                            writeableBitmap.WritePixels(new Int32Rect(0, 0, img.Width, img.Height), img.Bytes,
+                                img.Width * 4, 0);
+                        }));
+                        isStartCamera = true;
+                        //new Thread(() =>
+                        //{
+                        while (isStartCamera)
+                        {
+                            capture.Read(mat);
+                            if (!mat.IsEmpty)
+                            {
+                                var img2 = mat.ToImage<Bgra, byte>();
+
+                                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                                {
+                                    writeableBitmap.WritePixels(new Int32Rect(0, 0, img2.Width, img2.Height),
+                                        img2.Bytes,
+                                        img2.Width * 4, 0);
+                                }));
+                            }
+
+                            Thread.Sleep(15);
+                        }
+
                     }
+                    //}).Start();
+                }
+            });
+            cameraThread.Start();
+        }
 
-
-                }).Start();
-            }
+        public void Stop()
+        {
+            isStartCamera = false;
+            cameraThread.Abort();
         }
     }
+
+
 
     public class IpCamera
     {

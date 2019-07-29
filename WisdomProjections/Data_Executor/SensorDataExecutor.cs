@@ -402,16 +402,8 @@ namespace WisdomProjections.Data_Executor
         private const int MaxPersons = 6;
         private const int MaxJoints = 17;
         private const int MaxBones = 14;
-        private static SensorDataExecutor _sensorDE;
+        private static SensorDataExecutor _sensorDe;
 
-        public static SensorDataExecutor SensorDE
-        {
-            get
-            {
-                if (_sensorDE == null) _sensorDE = new SensorDataExecutor();
-
-                return _sensorDE;
-            }
-        }
+        public static SensorDataExecutor SensorDe => _sensorDe ?? (_sensorDe = new SensorDataExecutor());
     }
 }
