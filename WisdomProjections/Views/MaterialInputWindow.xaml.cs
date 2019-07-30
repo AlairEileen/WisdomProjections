@@ -82,7 +82,7 @@ namespace WisdomProjections.Views
                 meIcon.Visibility = Visibility.Visible;
                 meIcon.Source = new Uri(fileName);
             }
-            else iIcon.Source = (ImageSource)new BitmapImage(new Uri(fileName));
+            else iIcon.Source = new BitmapImage(new Uri(fileName));
 
 
             if (File.Exists(ResourcesMaterialPath))

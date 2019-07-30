@@ -41,7 +41,6 @@ namespace WisdomProjections
             }
             Closing += MainWindow_Closing;
         }
-
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Application.Current.Shutdown();
@@ -92,6 +91,7 @@ namespace WisdomProjections
         {
 
         }
+
         #endregion
 
         //private IOutputArray contours;
@@ -140,14 +140,12 @@ namespace WisdomProjections
                 if (item.PaintType == rectangle && item.IsSelected)
                 {
                     item.IsSelected = false;
-
                     var ic = imgContainer.PaintTypeSelects.FirstOrDefault(x => x.PaintType == PaintType.None);
                     if (ic != null)
                     {
                         ic.IsSelected = true;
                         ic.ChangeCursor(this);
                     }
-
                     break;
                 }
                 else
@@ -166,7 +164,6 @@ namespace WisdomProjections
         private void ImgCircle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             SwitchPaintType(PaintType.Cricle);
-
         }
         /// <summary>
         /// 笔点击
@@ -332,9 +329,6 @@ namespace WisdomProjections
                 return null;
             return lvModel.ItemContainerGenerator.ContainerFromIndex(index) as ListViewItem;
         }
-
-
-
 
         #endregion
 
@@ -789,91 +783,7 @@ namespace WisdomProjections
 
 
 
-        ///create by alair
-        ///
-        public Bitmap FloodFill(Bitmap src, System.Drawing.Point location, System.Drawing.Color fillColor, int threshould)
-        {
-            try
-            {
-                Bitmap srcbmp = src;
-                Bitmap dstbmp = new Bitmap(src.Width, src.Height);
-                int w = srcbmp.Width;
-                int h = srcbmp.Height;
-                Stack<System.Drawing.Point> fillPoints = new Stack<System.Drawing.Point>(w * h);
-                System.Drawing.Imaging.BitmapData bmpData = srcbmp.LockBits(new System.Drawing.Rectangle(0, 0, srcbmp.Width, srcbmp.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-                System.Drawing.Imaging.BitmapData dstbmpData = dstbmp.LockBits(new System.Drawing.Rectangle(0, 0, dstbmp.Width, dstbmp.Height), System.Drawing.Imaging.ImageLockMode.ReadWrite, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-
-                IntPtr ptr = bmpData.Scan0;
-                int stride = bmpData.Stride;
-                int bytes = bmpData.Stride * srcbmp.Height;
-                byte[] grayValues = new byte[bytes];
-                System.Runtime.InteropServices.Marshal.Copy(ptr, grayValues, 0, bytes);
-                System.Drawing.Color backColor = System.Drawing.Color.FromArgb(grayValues[location.X * 3 + 2 + location.Y * stride], grayValues[location.X * 3 + 1 + location.Y * stride], grayValues[location.X * 3 + location.Y * stride]);
-
-                IntPtr dstptr = dstbmpData.Scan0;
-                byte[] temp = new byte[bytes];
-                System.Runtime.InteropServices.Marshal.Copy(dstptr, temp, 0, bytes);
-
-                int gray = (int)((backColor.R + backColor.G + backColor.B) / 3);
-                if (location.X < 0 || location.X >= w || location.Y < 0 || location.Y >= h) return null;
-                fillPoints.Push(new System.Drawing.Point(location.X, location.Y));
-                int[,] mask = new int[w, h];
-
-                while (fillPoints.Count > 0)
-                {
-
-                    System.Drawing.Point p = fillPoints.Pop();
-                    mask[p.X, p.Y] = 1;
-                    temp[3 * p.X + p.Y * stride] = (byte)fillColor.B;
-                    temp[3 * p.X + 1 + p.Y * stride] = (byte)fillColor.G;
-                    temp[3 * p.X + 2 + p.Y * stride] = (byte)fillColor.R;
-                    if (p.X > 0 && (Math.Abs(gray - (int)((grayValues[3 * (p.X - 1) + p.Y * stride] + grayValues[3 * (p.X - 1) + 1 + p.Y * stride] + grayValues[3 * (p.X - 1) + 2 + p.Y * stride]) / 3)) < threshould) && (mask[p.X - 1, p.Y] != 1))
-                    {
-                        temp[3 * (p.X - 1) + p.Y * stride] = (byte)fillColor.B;
-                        temp[3 * (p.X - 1) + 1 + p.Y * stride] = (byte)fillColor.G;
-                        temp[3 * (p.X - 1) + 2 + p.Y * stride] = (byte)fillColor.R;
-                        fillPoints.Push(new System.Drawing.Point(p.X - 1, p.Y));
-                        mask[p.X - 1, p.Y] = 1;
-                    }
-                    if (p.X < w - 1 && (Math.Abs(gray - (int)((grayValues[3 * (p.X + 1) + p.Y * stride] + grayValues[3 * (p.X + 1) + 1 + p.Y * stride] + grayValues[3 * (p.X + 1) + 2 + p.Y * stride]) / 3)) < threshould) && (mask[p.X + 1, p.Y] != 1))
-                    {
-                        temp[3 * (p.X + 1) + p.Y * stride] = (byte)fillColor.B;
-                        temp[3 * (p.X + 1) + 1 + p.Y * stride] = (byte)fillColor.G;
-                        temp[3 * (p.X + 1) + 2 + p.Y * stride] = (byte)fillColor.R;
-                        fillPoints.Push(new System.Drawing.Point(p.X + 1, p.Y));
-                        mask[p.X + 1, p.Y] = 1;
-                    }
-                    if (p.Y > 0 && (Math.Abs(gray - (int)((grayValues[3 * p.X + (p.Y - 1) * stride] + grayValues[3 * p.X + 1 + (p.Y - 1) * stride] + grayValues[3 * p.X + 2 + (p.Y - 1) * stride]) / 3)) < threshould) && (mask[p.X, p.Y - 1] != 1))
-                    {
-                        temp[3 * p.X + (p.Y - 1) * stride] = (byte)fillColor.B;
-                        temp[3 * p.X + 1 + (p.Y - 1) * stride] = (byte)fillColor.G;
-                        temp[3 * p.X + 2 + (p.Y - 1) * stride] = (byte)fillColor.R;
-                        fillPoints.Push(new System.Drawing.Point(p.X, p.Y - 1));
-                        mask[p.X, p.Y - 1] = 1;
-                    }
-                    if (p.Y < h - 1 && (Math.Abs(gray - (int)((grayValues[3 * p.X + (p.Y + 1) * stride] + grayValues[3 * p.X + 1 + (p.Y + 1) * stride] + grayValues[3 * p.X + 2 + (p.Y + 1) * stride]) / 3)) < threshould) && (mask[p.X, p.Y + 1] != 1))
-                    {
-                        temp[3 * p.X + (p.Y + 1) * stride] = (byte)fillColor.B;
-                        temp[3 * p.X + 1 + (p.Y + 1) * stride] = (byte)fillColor.G;
-                        temp[3 * p.X + 2 + (p.Y + 1) * stride] = (byte)fillColor.R;
-                        fillPoints.Push(new System.Drawing.Point(p.X, p.Y + 1));
-                        mask[p.X, p.Y + 1] = 1;
-                    }
-                }
-                fillPoints.Clear();
-
-                System.Runtime.InteropServices.Marshal.Copy(temp, 0, dstptr, bytes);
-                srcbmp.UnlockBits(bmpData);
-                dstbmp.UnlockBits(dstbmpData);
-
-                return dstbmp;
-            }
-            catch (Exception exp)
-            {
-                MessageBox.Show(exp.Message);
-                return null;
-            }
-        }
+      
 
         private void SliderPosition_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {

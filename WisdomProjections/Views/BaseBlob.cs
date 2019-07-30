@@ -9,10 +9,23 @@ namespace WisdomProjections.Views
 {
     public class BaseBlob
     {
+        private UIElement data;
         /// <summary>
         /// 模型数据
         /// </summary>
-        public UIElement Data { get; set; }
+        public UIElement Data
+        {
+            get => data;
+            set
+            {
+                data = value;
+                if (data is RectangleView rv)
+                {
+                    rv.video.LoadedBehavior = MediaState.Manual;
+                    rv.video.Loaded += Me_Loaded;
+                    rv.video.MediaEnded += Me_MediaEnded;
+                }
+            } }
         private bool selected;
         /// <summary>
         /// 是否选中
@@ -161,6 +174,7 @@ namespace WisdomProjections.Views
         {
             if (Data is RectangleView rv)
             {
+                rv.video.LoadedBehavior = MediaState.Manual;
                 if (IsVideo)
                 {
                     rv.video.Visibility = Visibility.Visible;
@@ -186,6 +200,9 @@ namespace WisdomProjections.Views
                         LoadedBehavior = MediaState.Play,
                         Stretch = Stretch.UniformToFill
                     };
+                    me.LoadedBehavior = MediaState.Manual;
+                    me.Loaded += Me_Loaded;
+                    me.MediaEnded += Me_MediaEnded;
                     vb.Visual = me;
                 }
                 else
@@ -197,6 +214,22 @@ namespace WisdomProjections.Views
                 p.Stroke = null;
             }
         }
+
+        private void Me_MediaEnded(object sender, RoutedEventArgs e)
+        {
+            if (sender is MediaElement v)
+            {
+                v.Stop();
+                v.Play();
+            }
+        }
+
+        private void Me_Loaded(object sender, RoutedEventArgs e)
+        {
+            var v = sender as MediaElement;
+            v?.Play();
+        }
+
         /// <summary>
         /// 父容器鼠标移动
         /// </summary>
