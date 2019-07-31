@@ -671,28 +671,36 @@ namespace WisdomProjections
             var dm = lvDevice.SelectedItem as DeviceModel;
             if (dm == null) return;
             dm.Window = dm.Window ?? CreateScreenWindowItem(dm.Screen);
-            var oevList = new List<OutEffectsView>();
-            foreach (UIElement item in imgContainer.canvas.Children)
-            {
-                var rv = item as RectangleView;
-                if (rv == null) continue;
-                var outEffectsView = new OutEffectsView();
-                outEffectsView.Width = rv.bContent.ActualWidth;
-                outEffectsView.Height = rv.bContent.ActualHeight;
-                outEffectsView.img.Source = rv.img.Source;
-                //outEffectsView.img.Width = rv.img.ActualWidth;
-                //outEffectsView.img.Height = rv.img.Height;
-                outEffectsView.IsVideo = rv.IsVideo;
-                outEffectsView.video.Source = rv.video.Source;
-                //outEffectsView.video.Width = rv.video.ActualWidth;
-                //outEffectsView.video.Height = rv.video.Height;
-                var p = rv.bContent.TranslatePoint(new System.Windows.Point(), imgContainer.canvas);
-                outEffectsView.SetValue(Canvas.LeftProperty, p.X);
-                outEffectsView.SetValue(Canvas.TopProperty, p.Y);
-                oevList.Add(outEffectsView);
-            }
+            //var oevList = new List<OutEffectsView>();
+            //foreach (UIElement item in imgContainer.canvas.Children)
+            //{
+            //    var rv = item as RectangleView;
+            //    if (rv == null) continue;
+            //    var outEffectsView = new OutEffectsView
+            //    {
+            //        Width = rv.bContent.ActualWidth,
+            //        Height = rv.bContent.ActualHeight,
+            //        img = {Source = rv.img.Source},
+            //        IsVideo = rv.IsVideo,
+            //        video = {Source = rv.video.Source}
+            //    };
+            //    //outEffectsView.img.Width = rv.img.ActualWidth;
+            //    //outEffectsView.img.Height = rv.img.Height;
+            //    //outEffectsView.video.Width = rv.video.ActualWidth;
+            //    //outEffectsView.video.Height = rv.video.Height;
+            //    var p = rv.bContent.TranslatePoint(new System.Windows.Point(), imgContainer.canvas);
+            //    outEffectsView.SetValue(Canvas.LeftProperty, p.X);
+            //    outEffectsView.SetValue(Canvas.TopProperty, p.Y);
+            //    oevList.Add(outEffectsView);
+            //}
+
+            var newRvList = new List<BaseBlob>();
+
+            imgContainer.RectangleViews.ForEach(x=>newRvList.Add(x.Clone() as BaseBlob));
+
             //outEffectsView.canvas
-            dm.Window.Refresh(oevList, imgContainer.BSDSize, imgContainer.bSelectedDisplay.ActualWidth, imgContainer.bSelectedDisplay.ActualHeight);
+            //dm.Window.Refresh(oevList, imgContainer.BSDSize, imgContainer.bSelectedDisplay.ActualWidth, imgContainer.bSelectedDisplay.ActualHeight);
+            dm.Window.Refresh(newRvList, imgContainer.bSelectedDisplay.ActualWidth, imgContainer.bSelectedDisplay.ActualHeight);
         }
 
         private OutEffectsWindow CreateScreenWindowItem(System.Windows.Forms.Screen screen)
@@ -746,7 +754,7 @@ namespace WisdomProjections
         private void CbDisplay_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var index = cbDisplay.SelectedIndex;
-            imgContainer.BSDSize = (double)dpScale[index][0] / dpScale[index][1];
+            //imgContainer.BSDSize = (double)dpScale[index][0] / dpScale[index][1];
             //Console.WriteLine($"sd= w:{imgContainer.bSelectedDisplay.Width},h:{imgContainer.bSelectedDisplay.Height};gsd= w:{imgContainer.gSD.ActualWidth},h:{imgContainer.gSD.ActualHeight}");
             //imgContainer.bSelectedDisplay.Height = imgContainer.bSelectedDisplay.Width / dpScale[index][0] * dpScale[index][1];
         }

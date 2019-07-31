@@ -1,31 +1,41 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Image = System.Drawing.Image;
 
 namespace WisdomProjections.Views
 {
-    public class BaseBlob
+    public class BaseBlob : ICloneable
     {
-        private UIElement data;
         /// <summary>
         /// 模型数据
         /// </summary>
-        public UIElement Data
+        public UIElement Data { get; set; }
+
+        /// <summary>
+        /// 视频资源
+        /// </summary>
+        public Uri VideoSource { get; set; }
+        /// <summary>
+        /// 图片资源
+        /// </summary>
+        public ImageSource PictureSource { get; set; }
+
+
+        public void RePlay()
         {
-            get => data;
-            set
+            if (IsVideo && mediaElement != null)
             {
-                data = value;
-                if (data is RectangleView rv)
-                {
-                    rv.video.LoadedBehavior = MediaState.Manual;
-                    rv.video.Loaded += Me_Loaded;
-                    rv.video.MediaEnded += Me_MediaEnded;
-                }
-            } }
+                mediaElement.Stop();
+                mediaElement.Play();
+            }
+        }
+
+
         private bool selected;
         /// <summary>
         /// 是否选中
@@ -153,6 +163,7 @@ namespace WisdomProjections.Views
             }
         }
 
+        private MediaElement mediaElement = null;
         /// <summary>
         /// 矩形移动
         /// </summary>
@@ -172,50 +183,41 @@ namespace WisdomProjections.Views
         /// <param name="iIconSource"></param>
         public void SetMedia(Uri meIconSource, ImageSource iIconSource)
         {
+            //添加素材代码
+            var vb = new VisualBrush();
+            if (IsVideo)
+            {
+                mediaElement = new MediaElement
+                {
+                    Source = meIconSource,
+                    LoadedBehavior = MediaState.Play,
+                    Stretch = Stretch.UniformToFill
+                };
+                mediaElement.LoadedBehavior = MediaState.Manual;
+                mediaElement.Loaded += Me_Loaded;
+                mediaElement.MediaEnded += Me_MediaEnded;
+                vb.Visual = mediaElement;
+            }
+            else
+            {
+                var img = new System.Windows.Controls.Image { Source = iIconSource, Stretch = Stretch.UniformToFill };
+                vb.Visual = img;
+            }
+            VideoSource = meIconSource;
+            PictureSource = iIconSource;
             if (Data is RectangleView rv)
             {
-                rv.video.LoadedBehavior = MediaState.Manual;
-                if (IsVideo)
-                {
-                    rv.video.Visibility = Visibility.Visible;
-                    rv.img.Visibility = Visibility.Hidden;
-                    rv.video.Source = meIconSource;
-                }
-                else
-                {
-                    rv.img.Visibility = Visibility.Visible;
-                    rv.video.Visibility = Visibility.Hidden;
-                    rv.img.Source = iIconSource;
-                }
+                rv.bContent.Background = vb;
             }
             else if (Data is Path p)
             {
                 //添加素材代码
-                var vb = new VisualBrush();
-                if (IsVideo)
-                {
-                    var me = new MediaElement
-                    {
-                        Source = meIconSource,
-                        LoadedBehavior = MediaState.Play,
-                        Stretch = Stretch.UniformToFill
-                    };
-                    me.LoadedBehavior = MediaState.Manual;
-                    me.Loaded += Me_Loaded;
-                    me.MediaEnded += Me_MediaEnded;
-                    vb.Visual = me;
-                }
-                else
-                {
-                    var img = new Image { Source = iIconSource, Stretch = Stretch.UniformToFill };
-                    vb.Visual = img;
-                }
                 p.Fill = vb;
                 p.Stroke = null;
             }
         }
 
-        private void Me_MediaEnded(object sender, RoutedEventArgs e)
+        internal void Me_MediaEnded(object sender, RoutedEventArgs e)
         {
             if (sender is MediaElement v)
             {
@@ -224,7 +226,7 @@ namespace WisdomProjections.Views
             }
         }
 
-        private void Me_Loaded(object sender, RoutedEventArgs e)
+        internal void Me_Loaded(object sender, RoutedEventArgs e)
         {
             var v = sender as MediaElement;
             v?.Play();
@@ -268,6 +270,62 @@ namespace WisdomProjections.Views
             {
                 rv.OnContainerMouseUp(sender, mouseButtonEventArgs);
             }
+        }
+
+
+
+        public object Clone()
+        {
+            UIElement uie = null;
+            var bb = new BaseBlob();
+
+            var vb = new VisualBrush();
+            if (IsVideo)
+            {
+                var me = new MediaElement { Source = VideoSource, LoadedBehavior = MediaState.Manual };
+                me.Loaded += bb.Me_Loaded;
+                me.MediaEnded += bb.Me_MediaEnded;
+                vb.Visual = me;
+            }
+            else
+            {
+                vb.Visual = new System.Windows.Controls.Image { Source = PictureSource };
+            }
+            if (Data is RectangleView rv)
+            {
+                var rtf = new RotateTransform
+                {
+                    CenterX = rv.gRT.CenterX,
+                    CenterY = rv.gRT.CenterY,
+                    Angle = rv.gRT.Angle
+                };
+
+                uie = new System.Windows.Shapes.Rectangle
+                {
+                    Width = rv.bContent.ActualWidth,
+                    Height = rv.bContent.ActualHeight,
+                    RenderTransform = rtf,
+                    Fill = vb,
+                    RadiusX = rv.bContent.CornerRadius.BottomLeft,
+                    RadiusY = rv.bContent.CornerRadius.BottomLeft
+                };
+                uie.SetValue(Canvas.LeftProperty, (double)Data.GetValue(Canvas.LeftProperty) + rv.bContent.Margin.Left);
+                uie.SetValue(Canvas.TopProperty, (double)Data.GetValue(Canvas.TopProperty) + rv.bContent.Margin.Top);
+            }
+            else if (Data is Path p)
+            {
+                uie = new Path
+                {
+                    Data = p.Data,
+                    Fill = vb
+                };
+                uie?.SetValue(Canvas.LeftProperty, Data.GetValue(Canvas.LeftProperty));
+                uie?.SetValue(Canvas.TopProperty, Data.GetValue(Canvas.TopProperty));
+            }
+
+
+            bb.Data = uie;
+            return bb;
         }
     }
 }

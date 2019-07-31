@@ -69,8 +69,8 @@ namespace WisdomProjections.Views
             if (rv != null)
             {
                 rv.IsVideo = IsVideo;
-                rv.SetMedia(meIcon.Source,iIcon.Source);
-               
+                rv.SetMedia(meIcon.Source, iIcon.Source);
+                mainWindow.imgContainer.RectangleViews.ForEach(x => x.RePlay());
                 mainWindow.RefreshWindow();
             }
         }

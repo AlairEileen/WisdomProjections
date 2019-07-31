@@ -391,31 +391,13 @@ namespace WisdomProjections.Views
         }
 
         #region 投影区域框
-        private double bSDSize;
-        public double BSDSize
-        {
-            get => bSDSize; set
-            {
-                //bSDSize = value;
-                //var bw = gSD.ActualWidth - bSelectedDisplay.Margin.Left - bSelectedDisplay.Margin.Right;
-                //var bh = gSD.ActualHeight - bSelectedDisplay.Margin.Top - bSelectedDisplay.Margin.Bottom;
-                //if (bh < 0 || bw < 0) return;
-                //var h = bw / BSDSize;
-                //if (h > bh)
-                //{
-                //    bSelectedDisplay.Height = bh;
-                //    bSelectedDisplay.Width = bh * BSDSize;
-                //}
-                //else
-                //{
-                //    bSelectedDisplay.Height = bsdW / BSDSize;
-                //    bSelectedDisplay.Width = bw;
-                //}
 
-            }
-        }
+        public double BSDSize { get; set; }
+        //public double BSDSize
+        //{
+        //    get => ;
+        //}
 
-        double bsdW = 0;
         private void GSD_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             //if (bsdW != bSelectedDisplay.ActualWidth)

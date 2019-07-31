@@ -23,34 +23,21 @@ namespace WisdomProjections.Views
                 bContent.BorderBrush = new SolidColorBrush(selected ? Colors.Red : Colors.Blue);
             }
         }
-        private bool isVideo;
-        public bool IsVideo
+
+        public RectangleView(ImageFactoryView ifv, double width, double height, bool isRound=false)
         {
-            get => isVideo; set
+            InitializeComponent();
+            this.Height = height;
+            this.Width = width;
+            this.ifv = ifv;
+            if (isRound)
             {
-                isVideo = value;
-                img.Visibility = isVideo ? Visibility.Hidden : Visibility.Visible;
-                video.Visibility = isVideo ? Visibility.Visible : Visibility.Hidden;
+                this.bContent.CornerRadius = new CornerRadius(1000000000);
+                bLT.Visibility = Visibility.Hidden;
+                bLB.Visibility = Visibility.Hidden;
+                bRT.Visibility = Visibility.Hidden;
+                bRB.Visibility = Visibility.Hidden;
             }
-        }
-        public RectangleView(ImageFactoryView ifv, double width, double height)
-        {
-            InitializeComponent();
-            this.Height = height;
-            this.Width = width;
-            this.ifv = ifv;
-        }
-        public RectangleView(ImageFactoryView ifv, double width, double height,bool isRound)
-        {
-            InitializeComponent();
-            this.Height = height;
-            this.Width = width;
-            this.ifv = ifv;
-            this.bContent.CornerRadius = new CornerRadius(1000000000);
-            bLT.Visibility = Visibility.Hidden;
-            bLB.Visibility = Visibility.Hidden;
-            bRT.Visibility = Visibility.Hidden;
-            bRB.Visibility = Visibility.Hidden;
         }
         public PointLocationType CurrentPointType { get; set; }
 
@@ -125,7 +112,7 @@ namespace WisdomProjections.Views
         /// <summary>
         /// image工厂画布
         /// </summary>
-        private readonly ImageFactoryView ifv;
+        public readonly ImageFactoryView ifv;
 
         private Point pointOriginInside;
         private Point pointOriginInsideNew;
