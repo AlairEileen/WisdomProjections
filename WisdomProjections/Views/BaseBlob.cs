@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Image = System.Drawing.Image;
+using Point = System.Windows.Point;
 
 namespace WisdomProjections.Views
 {
@@ -309,11 +310,14 @@ namespace WisdomProjections.Views
                     RadiusX = rv.bContent.CornerRadius.BottomLeft,
                     RadiusY = rv.bContent.CornerRadius.BottomLeft
                 };
-                uie.SetValue(Canvas.LeftProperty, (double)Data.GetValue(Canvas.LeftProperty) + rv.bContent.Margin.Left);
-                uie.SetValue(Canvas.TopProperty, (double)Data.GetValue(Canvas.TopProperty) + rv.bContent.Margin.Top);
+                var bPoint = rv.bContent.TranslatePoint(new Point(), rv);
+
+
+                uie.SetValue(Canvas.LeftProperty, (double)Data.GetValue(Canvas.LeftProperty) + bPoint.X);
+                uie.SetValue(Canvas.TopProperty, (double)Data.GetValue(Canvas.TopProperty) + bPoint.Y);
             }
             else if (Data is Path p)
-            {
+            {                                   
                 uie = new Path
                 {
                     Data = p.Data,

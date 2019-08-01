@@ -131,7 +131,7 @@ namespace WisdomProjections
                     if (!mat.IsEmpty)
                     {
                         var img = mat.ToImage<Bgra, byte>();
-                        Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                        Application.Current?.Dispatcher?.BeginInvoke(new Action(() =>
                         {
                             writeableBitmap =
                                 new WriteableBitmap(img.Width, img.Height, 96, 96, PixelFormats.Bgra32, null);

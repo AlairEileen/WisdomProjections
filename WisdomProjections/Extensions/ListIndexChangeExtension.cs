@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZedGraph;
 
 namespace WisdomProjections.Extensions
 {
@@ -12,9 +13,27 @@ namespace WisdomProjections.Extensions
         //{
         //    return list.FindIndex(x=>x.Equals(item));
         //}
+
+
     }
     public abstract class ListItemIndex
     {
         public int Index { get; set; }
+    }
+
+    public static class ListExtension
+    {
+        //public static IEnumerable<TSource> Append<TSource>(this IEnumerable<TSource> source, TSource element)
+        //{
+        //    if (source==null)
+        //    {
+        //        throw new Exception("AppendError");
+        //    }
+
+        //    if (!(source is Enumerable.AppendPrependIterator<TSource> appendPrependIterator))
+        //    {
+                
+        //    }
+        //}
     }
 }

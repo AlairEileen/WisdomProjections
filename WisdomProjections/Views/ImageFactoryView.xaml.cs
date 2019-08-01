@@ -16,8 +16,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using Emgu.CV;
+using Emgu.CV.Structure;
 using Emgu.CV.Util;
 using WisdomProjections.Data_Executor;
+using WisdomProjections.Extensions;
 using WisdomProjections.Models;
 using WisdomProjections.Views.Sys;
 using Point = System.Windows.Point;
@@ -38,18 +41,10 @@ namespace WisdomProjections.Views
         public ImageFactoryView()
         {
             InitializeComponent();
-        }
-        public ImageSource GetImageSource()
-        {
-
-            return img.Source;
-        }
-        public void SetImageSource(ImageSource imageSource)
-        {
-            Application.Current.Dispatcher.Invoke(() =>
+            if (ApplicationInfoContext.IsIpCamera)
             {
-                img.Source = imageSource;
-            });
+                ScaleTransformImg.ScaleX = 1;
+            }
         }
 
         #region 图片缩放
@@ -67,7 +62,7 @@ namespace WisdomProjections.Views
             }
             var point = e.GetPosition(img);
             //Console.WriteLine("position:" + point.X + "," + point.Y);
-            var group = IMG.FindResource("Imageview") as TransformGroup;
+            var group = IMG.FindResource("ImageTransform") as TransformGroup;
             var delta = e.Delta * 0.001;
             DowheelZoom(group, point, delta);
         }
@@ -79,7 +74,7 @@ namespace WisdomProjections.Views
         {
 
             Point point1 = new Point(IMG.ActualWidth / 2, ImgContent.ActualHeight / 2);
-            var group = IMG.FindResource("Imageview") as TransformGroup;
+            var group = IMG.FindResource("ImageTransform") as TransformGroup;
             var d = delta * 0.001;
             DowheelZoom(group, point1, d);
         }
@@ -89,18 +84,27 @@ namespace WisdomProjections.Views
             var cw = canvas.ActualWidth;
             Console.WriteLine($"前:{cw},{ch}");
 
-            var pointToContent = group.Inverse.Transform(point);
-            var transform = group.Children[0] as ScaleTransform;
-            if (transform.ScaleX + delta < 0.1) return;
-            transform.ScaleX += delta;
-            transform.ScaleY += delta;
-            var transform1 = group.Children[1] as TranslateTransform;
-            transform1.X = -1 * ((pointToContent.X * transform.ScaleX) - point.X);
-            transform1.Y = -1 * ((pointToContent.Y * transform.ScaleY) - point.Y);
+            if (@group.Inverse != null)
+            {
+                var pointToContent = @group.Inverse.Transform(point);
 
-            var nh = canvas.ActualHeight;
-            var nw = canvas.ActualWidth;
-            Console.WriteLine($"后:{nw},{nh}");
+                //var transform = itemGroupChild as ScaleTransform;
+                if (@group.Children[0] is ScaleTransform transform)
+                {
+                    if (transform.ScaleX + delta < 0.1) return;
+                    transform.ScaleX += delta;
+                    transform.ScaleY += delta;
+                    if (@group.Children[1] is TranslateTransform transform1)
+                    {
+                        transform1.X = -1 * ((pointToContent.X * transform.ScaleX) - point.X);
+                        transform1.Y = -1 * ((pointToContent.Y * transform.ScaleY) - point.Y);
+                    }
+                }
+            }
+
+            //var nh = canvas.ActualHeight;
+            //var nw = canvas.ActualWidth;
+            //Console.WriteLine($"后:{nw},{nh}");
             //changeOtherSize(ch,cw,nh,nw);
 
         }
@@ -194,17 +198,23 @@ namespace WisdomProjections.Views
             {
                 return;
             }
-            var group = IMG.FindResource("Imageview") as TransformGroup;
-            var transform = group.Children[1] as TranslateTransform;
+            var group = IMG.FindResource("ImageTransform") as TransformGroup;
+            var transform = group?.Children[1] as TranslateTransform;
             var position = e.GetPosition(img);
-            transform.X -= mouseXY.X - position.X;
-            transform.Y -= mouseXY.Y - position.Y;
+            if (transform != null)
+            {
+                transform.X -= mouseXY.X - position.X;
+                transform.Y -= mouseXY.Y - position.Y;
+            }
+
             mouseXY = position;
         }
 
         private bool mouseDown;
         private Point mouseXY;
         private Point mouseCanvasXY;
+        private Mat currentMat;
+        private WriteableBitmap writeableBitmap;
 
 
         /// <summary>
@@ -232,8 +242,8 @@ namespace WisdomProjections.Views
                     break;
                 case PaintType.Pen:
                     var point = e.GetPosition(canvas);
-                    CreatePathAreaPoint(point);
-
+                    currentModePoint = point;
+                    FindMode();
                     break;
 
                 case PaintType.Rectangle:
@@ -268,9 +278,9 @@ namespace WisdomProjections.Views
         /// 创建路径从当前鼠标的桌标下
         /// </summary>
         /// <param name="point"></param>
-        private void CreatePathAreaPoint(Point point)
+        private void CreatePathAreaPoint(RectPathModel rpm)
         {
-            var rpm = GetPointRpm(point);
+
             var linePoint = ConvertToLinePoint(rpm.Points);
             var p = new Path();
             var g = Geometry.Parse("M 0,0 L " + linePoint);
@@ -304,7 +314,7 @@ namespace WisdomProjections.Views
         /// </summary>
         /// <param name="rpmPoints"></param>
         /// <returns></returns>
-        private string ConvertToLinePoint(Point[] rpmPoints)
+        private string ConvertToLinePoint(List<Point> rpmPoints)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -319,32 +329,40 @@ namespace WisdomProjections.Views
         /// <summary>
         /// 从鼠标获取轮廓点的集合
         /// </summary>
-        /// <param name="point"></param>
         /// <returns></returns>
-        private RectPathModel GetPointRpm(Point point)
+        public void FindMode()
         {
-            return new RectPathModel
+
+           
+            ImageTool.ImageSourceToBitmap(img.Source, out var bitmap);
+            var param = canvas.ActualWidth / bitmap.Width;
+         
+            var pointInImage = new Point(currentModePoint.X/param,currentModePoint.Y/param);
+            new Thread(() =>
             {
-                Location = point,
-                Points = new[]
+                if (!ApplicationInfoContext.IsIpCamera)
                 {
-                    new Point(1,2),
-                    new Point(2,5),
-                    new Point(8,9),
-                    new Point(8,10),
-                    new Point(10,2),
-                    new Point(18,6),
-                    new Point(17,10),
-                    new Point(16,11),
-                    new Point(10,15),
-                    new Point(8,17),
-                    new Point(5,12),
-                    new Point(0,5),
-                    new Point(0,0)
-                },
-                Width = 20,
-                Height = 20
-            };
+                    bitmap.RotateFlip(RotateFlipType.Rotate180FlipY);
+                }
+
+                //获取鼠标点击的轮廓
+                var mode = Image_Emgu.GetBlobView(currentMat, pointInImage.ToDrawingPoint(), CurrentNumber);
+
+                Application.Current?.Dispatcher?.BeginInvoke(new Action(() => CreatePathAreaPoint(
+                    //最终需要的实体
+                    new RectPathModel
+                    {
+                        //轮廓位置
+                        Location = mode.Item2.Location.ToWindowsPoint(),
+                        //轮廓pointList
+                        Points = mode.Item1.ToWindowsPointList(),
+                        //轮廓宽度
+                        Width = mode.Item2.Width,
+                        //轮廓高度
+                        Height = mode.Item2.Height
+                    }
+                )), DispatcherPriority.Render);
+            }).Start();
         }
 
 
@@ -393,6 +411,20 @@ namespace WisdomProjections.Views
         #region 投影区域框
 
         public double BSDSize { get; set; }
+        private bool isDebugMode;
+        private Point currentModePoint;
+
+        public bool IsDebugMode
+        {
+            get => isDebugMode;
+            set
+            {
+                isDebugMode = value;
+                ImageCanny.Visibility = isDebugMode ? Visibility.Visible : Visibility.Hidden;
+            }
+        }
+
+        public int CurrentNumber { get; set; }
         //public double BSDSize
         //{
         //    get => ;
@@ -441,10 +473,15 @@ namespace WisdomProjections.Views
             {
                 return;
             }
+
+
             ImageTool.ImageSourceToBitmap(img.Source, out var bitmap);
             new Thread(() =>
             {
-                bitmap.RotateFlip(RotateFlipType.Rotate180FlipY);
+                if (!ApplicationInfoContext.IsIpCamera)
+                {
+                    bitmap.RotateFlip(RotateFlipType.Rotate180FlipY);
+                }
                 var wP = bitmap.Width / 640;
                 var hP = bitmap.Height / 480;
                 x *= wP;
@@ -482,7 +519,42 @@ namespace WisdomProjections.Views
             return a;
         }
 
+        /// <summary>
+        /// 刷新精度
+        /// </summary>
+        /// <param name="threshold1"></param>
+        /// <param name="threshold2"></param>
+        public void RefreshPrecision(double threshold1, double threshold2)
+        {
+            if (img?.Source == null)
+            {
+                return;
+            }
 
+
+            ImageTool.ImageSourceToBitmap(img.Source, out var bitmap);
+            new Thread(() =>
+            {
+                if (!ApplicationInfoContext.IsIpCamera)
+                {
+                    bitmap.RotateFlip(RotateFlipType.Rotate180FlipY);
+                }
+
+                currentMat = Image_Emgu.GetContourView(bitmap, threshold1, threshold2);
+                var currentImage = currentMat.ToImage<Bgra, byte>();
+                Application.Current?.Dispatcher?.BeginInvoke(new Action(() =>
+                {
+                    if (writeableBitmap == null)
+                    {
+                        writeableBitmap = new WriteableBitmap(currentImage.Width, currentImage.Height, 96, 96, PixelFormats.Bgra32, null);
+                        ImageCanny.Source = writeableBitmap;
+                    }
+                    writeableBitmap.WritePixels(new Int32Rect(0, 0, currentImage.Width, currentImage.Height), currentImage.Bytes,
+                        currentImage.Width * 4, 0);
+                }));
+            }).Start();
+
+        }
     }
 
 

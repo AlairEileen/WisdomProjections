@@ -237,6 +237,7 @@ namespace WisdomProjections
             if (item == null) return;
             imgContainer.RectangleViews.ForEach(x => x.Selected = false);
             item.View.Selected = true;
+            StackPanelModeNumber.Visibility = item.View.Data is System.Windows.Shapes.Path ? Visibility.Visible : Visibility.Hidden;
             //Keyboard.Focus(this);
             Keyboard.Focus(item.View.Data);
             //Console.WriteLine("LvModel_SelectionChanged");
@@ -667,39 +668,11 @@ namespace WisdomProjections
 
         public void RefreshWindow()
         {
-
             var dm = lvDevice.SelectedItem as DeviceModel;
             if (dm == null) return;
             dm.Window = dm.Window ?? CreateScreenWindowItem(dm.Screen);
-            //var oevList = new List<OutEffectsView>();
-            //foreach (UIElement item in imgContainer.canvas.Children)
-            //{
-            //    var rv = item as RectangleView;
-            //    if (rv == null) continue;
-            //    var outEffectsView = new OutEffectsView
-            //    {
-            //        Width = rv.bContent.ActualWidth,
-            //        Height = rv.bContent.ActualHeight,
-            //        img = {Source = rv.img.Source},
-            //        IsVideo = rv.IsVideo,
-            //        video = {Source = rv.video.Source}
-            //    };
-            //    //outEffectsView.img.Width = rv.img.ActualWidth;
-            //    //outEffectsView.img.Height = rv.img.Height;
-            //    //outEffectsView.video.Width = rv.video.ActualWidth;
-            //    //outEffectsView.video.Height = rv.video.Height;
-            //    var p = rv.bContent.TranslatePoint(new System.Windows.Point(), imgContainer.canvas);
-            //    outEffectsView.SetValue(Canvas.LeftProperty, p.X);
-            //    outEffectsView.SetValue(Canvas.TopProperty, p.Y);
-            //    oevList.Add(outEffectsView);
-            //}
-
             var newRvList = new List<BaseBlob>();
-
-            imgContainer.RectangleViews.ForEach(x=>newRvList.Add(x.Clone() as BaseBlob));
-
-            //outEffectsView.canvas
-            //dm.Window.Refresh(oevList, imgContainer.BSDSize, imgContainer.bSelectedDisplay.ActualWidth, imgContainer.bSelectedDisplay.ActualHeight);
+            imgContainer.RectangleViews.ForEach(x => newRvList.Add(x.Clone() as BaseBlob));
             dm.Window.Refresh(newRvList, imgContainer.bSelectedDisplay.ActualWidth, imgContainer.bSelectedDisplay.ActualHeight);
         }
 
@@ -768,9 +741,17 @@ namespace WisdomProjections
             else
             {
                 RefreshDMWindow();
+                imgContainer.IsDebugMode = true;
             }
         }
-
+        private void CbDebug_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            if (lvDevice.SelectedItem != null)
+            {
+                imgContainer.IsDebugMode = false;
+                SelectedDisplayColor = new SolidColorBrush(Colors.Black);
+            }
+        }
         private void RefreshDMWindow()
         {
             var dm = lvDevice.SelectedItem as DeviceModel;
@@ -791,7 +772,7 @@ namespace WisdomProjections
 
 
 
-      
+
 
         private void SliderPosition_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -804,6 +785,28 @@ namespace WisdomProjections
                 imgContainer.RefreshPosition(x, y, w, h);
             }
 
+        }
+
+        private void SliderPrecision_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (SliderThreshold1 != null && SliderThreshold2 != null&&imgContainer!=null)
+            {
+                var threshold1 = SliderThreshold1.Value;
+                var threshold2 = SliderThreshold2.Value;
+                imgContainer.RefreshPrecision(threshold1, threshold2);
+            }
+
+        }
+
+
+        private void SliderModeNumber_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (SliderModeNumber != null&&imgContainer!=null )
+            {
+                var number = SliderModeNumber.Value;
+                imgContainer.CurrentNumber = (int) number;
+                imgContainer.FindMode();
+            }
         }
     }
 

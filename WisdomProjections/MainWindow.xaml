@@ -16,6 +16,7 @@
     </Window.InputBindings>
     <Window.Resources>
         <convertor:BoolDisplayConvertor x:Key="BoolDisplayConvertor"/>
+        <convertor:BoolReverseConvertor x:Key="BoolReverseConvertor"/>
         <convertor:BoolToIntConvertor x:Key="BoolToIntConvertor"/>
         <!--GridSplitter样式-->
         <Style x:Key="GridSplitterPreviewStyle">
@@ -68,94 +69,24 @@
                 </MenuItem>
             </Menu>
             <StackPanel DockPanel.Dock="Top"  VerticalAlignment="Top" Height="46" Orientation="Horizontal"  HorizontalAlignment="Left" Margin="20,0,0,0">
-                <Image Width="22" Name="imgBack" Height="22" Source="pack://siteoforigin:,,,/Resources/back.png" MouseLeftButtonDown="ImgBack_MouseLeftButtonDown" Style="{StaticResource ImageButton}"/>
-                <Image Width="22" Name="imgNext" Height="22" Source="pack://siteoforigin:,,,/Resources/next.png" Margin="32,0,0,0" MouseLeftButtonDown="ImgNext_MouseLeftButtonDown" Style="{StaticResource ImageButton}"/>
-                <Image Width="22" Name="imgSlect" Height="22" Source="pack://siteoforigin:,,,/Resources/slect.png" Margin="32,0,0,0" MouseLeftButtonDown="ImgSlect_MouseLeftButtonDown" Style="{StaticResource ImageButton}"/>
-                <Image Width="22" Name="imgSquare" Height="22" Source="pack://siteoforigin:,,,/Resources/square.png" Margin="32,0,0,0"  Style="{StaticResource ImageButton}" MouseLeftButtonDown="ImgSquare_MouseLeftButtonDown"/>
-                <Image Width="22" Name="imgCircle" Height="22" Source="pack://siteoforigin:,,,/Resources/circle.png" Margin="32,0,0,0"  Style="{StaticResource ImageButton}" MouseLeftButtonDown="ImgCircle_MouseLeftButtonDown"/>
-                <Image Width="22" Name="imgPen" Height="22" Source="pack://siteoforigin:,,,/Resources/pen.png" Margin="32,0,0,0" MouseLeftButtonDown="ImgPen_MouseLeftButtonDown" Style="{StaticResource ImageButton}"/>
-                <Image Width="22" Name="imgShrink" Height="22" Source="pack://siteoforigin:,,,/Resources/shrink.png" Margin="32,0,0,0" MouseLeftButtonDown="ImgShrink_MouseLeftButtonDown" Style="{StaticResource ImageButton}"/>
-                <Image Width="22" Name="imgMagnify" Height="22" Source="pack://siteoforigin:,,,/Resources/magnify.png" Margin="32,0,0,0" MouseLeftButtonDown="ImgMagnify_MouseLeftButtonDown" Style="{StaticResource ImageButton}"/>
-                <CheckBox Height="22" x:Name="cbDebug" Content="调校模式" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Foreground="White" Checked="CbDebug_Checked">
-                    <CheckBox.Resources>
-                        <Style TargetType="CheckBox">
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="CheckBox">
-                                        <Border VerticalAlignment="Center">
-                                            <Grid>
-                                                <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" />
-                                                <Border>
-                                                    <Border.Background>
-                                                        <VisualBrush Opacity="1.0" Stretch="None">
-                                                            <VisualBrush.Visual>
-                                                                <Path Name="path" Opacity="0.1" 
-											  Data="M 0 5 L 3 10 10 0" 
-											  StrokeThickness="1.5" />
-                                                            </VisualBrush.Visual>
-                                                        </VisualBrush>
-                                                    </Border.Background>
-                                                </Border>
-                                            </Grid>
-                                        </Border>
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsChecked" Value="True">
-                                                <Setter Property="Opacity" Value="0.6"/>
-                                            </Trigger>
-                                            <Trigger Property="IsChecked" Value="False">
-                                                <Setter Property="Opacity" Value="1"/>
-                                            </Trigger>
+                <Image Width="22" Name="imgBack" IsEnabled="{Binding ElementName=cbDebug,Path=IsChecked,Converter={StaticResource BoolReverseConvertor}}" Height="22" Source="pack://siteoforigin:,,,/Resources/back.png" MouseLeftButtonDown="ImgBack_MouseLeftButtonDown" Style="{StaticResource ImageButton}"/>
+                <Image Width="22" Name="imgNext" IsEnabled="{Binding ElementName=cbDebug,Path=IsChecked,Converter={StaticResource BoolReverseConvertor}}" Height="22" Source="pack://siteoforigin:,,,/Resources/next.png" Margin="32,0,0,0" MouseLeftButtonDown="ImgNext_MouseLeftButtonDown" Style="{StaticResource ImageButton}"/>
+                <Image Width="22" Name="imgSlect" IsEnabled="{Binding ElementName=cbDebug,Path=IsChecked,Converter={StaticResource BoolReverseConvertor}}" Height="22" Source="pack://siteoforigin:,,,/Resources/slect.png" Margin="32,0,0,0" MouseLeftButtonDown="ImgSlect_MouseLeftButtonDown" Style="{StaticResource ImageButton}"/>
+                <Image Width="22" Name="imgSquare" IsEnabled="{Binding ElementName=cbDebug,Path=IsChecked,Converter={StaticResource BoolReverseConvertor}}" Height="22" Source="pack://siteoforigin:,,,/Resources/square.png" Margin="32,0,0,0"  Style="{StaticResource ImageButton}" MouseLeftButtonDown="ImgSquare_MouseLeftButtonDown"/>
+                <Image Width="22" Name="imgCircle" IsEnabled="{Binding ElementName=cbDebug,Path=IsChecked,Converter={StaticResource BoolReverseConvertor}}" Height="22" Source="pack://siteoforigin:,,,/Resources/circle.png" Margin="32,0,0,0"  Style="{StaticResource ImageButton}" MouseLeftButtonDown="ImgCircle_MouseLeftButtonDown"/>
+                <Image Width="22" Name="imgPen" IsEnabled="{Binding ElementName=cbDebug,Path=IsChecked,Converter={StaticResource BoolReverseConvertor}}" Height="22" Source="pack://siteoforigin:,,,/Resources/pen.png" Margin="32,0,0,0" MouseLeftButtonDown="ImgPen_MouseLeftButtonDown" Style="{StaticResource ImageButton}"/>
+                <Image Width="22" Name="imgShrink" IsEnabled="{Binding ElementName=cbDebug,Path=IsChecked,Converter={StaticResource BoolReverseConvertor}}" Height="22" Source="pack://siteoforigin:,,,/Resources/shrink.png" Margin="32,0,0,0" MouseLeftButtonDown="ImgShrink_MouseLeftButtonDown" Style="{StaticResource ImageButton}"/>
+                <Image Width="22" Name="imgMagnify" IsEnabled="{Binding ElementName=cbDebug,Path=IsChecked,Converter={StaticResource BoolReverseConvertor}}" Height="22" Source="pack://siteoforigin:,,,/Resources/magnify.png" Margin="32,0,0,0" MouseLeftButtonDown="ImgMagnify_MouseLeftButtonDown" Style="{StaticResource ImageButton}"/>
+                <CheckBox Height="22" x:Name="cbDebug" Content="调校模式" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Foreground="White" Style="{StaticResource CheckBoxButton}" Checked="CbDebug_Checked" Unchecked="CbDebug_OnUnchecked">
 
-                                        </ControlTemplate.Triggers>
-
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </CheckBox.Resources>
                 </CheckBox>
                 <!--<Label  Name="lDebug" Height="22" Content="调校模式" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Foreground="White" >
                   
                 </Label>-->
                 <StackPanel Orientation="Horizontal" x:Name="spDebug" Visibility="{Binding ElementName=cbDebug, Path=IsChecked, Converter={StaticResource BoolDisplayConvertor}}">
 
-                    <CheckBox Height="22" x:Name="cbDebugColor" Content="投影颜色" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Foreground="White">
-                        <CheckBox.Resources>
-                            <Style TargetType="CheckBox">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="CheckBox">
-                                            <Border VerticalAlignment="Center">
-                                                <Grid>
-                                                    <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" />
-                                                    <Border>
-                                                        <Border.Background>
-                                                            <VisualBrush Opacity="1.0" Stretch="None">
-                                                                <VisualBrush.Visual>
-                                                                    <Path Name="path" Opacity="0.1" 
-											  Data="M 0 5 L 3 10 10 0" 
-											  StrokeThickness="1.5" />
-                                                                </VisualBrush.Visual>
-                                                            </VisualBrush>
-                                                        </Border.Background>
-                                                    </Border>
-                                                </Grid>
-                                            </Border>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsChecked" Value="True">
-                                                    <Setter Property="Opacity" Value="0.6"/>
-                                                </Trigger>
-                                                <Trigger Property="IsChecked" Value="False">
-                                                    <Setter Property="Opacity" Value="1"/>
-                                                </Trigger>
+                    <CheckBox Height="22" x:Name="cbDebugColor" Content="投影颜色" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Style="{StaticResource CheckBoxButton}" Foreground="White">
 
-                                            </ControlTemplate.Triggers>
-
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </CheckBox.Resources>
                     </CheckBox>
 
                     <Label  Name="lDisplay" Height="22" Content="投影仪显示比例" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Foreground="White" />
@@ -169,44 +100,16 @@
                     <Label  Name="lStartProjector" Height="22" Content="开启投影仪" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Foreground="White" />
                     <Label  Name="lStopProjector" Height="22" Content="关闭投影仪" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Foreground="White" />
 
-                    <CheckBox Height="22" x:Name="cbSetPosition" Content="对位" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Foreground="White">
-                        <CheckBox.Resources>
-                            <Style TargetType="CheckBox">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="CheckBox">
-                                            <Border VerticalAlignment="Center">
-                                                <Grid>
-                                                    <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" />
-                                                    <Border>
-                                                        <Border.Background>
-                                                            <VisualBrush Opacity="1.0" Stretch="None">
-                                                                <VisualBrush.Visual>
-                                                                    <Path Name="path" Opacity="0.1" 
-											  Data="M 0 5 L 3 10 10 0" 
-											  StrokeThickness="1.5" />
-                                                                </VisualBrush.Visual>
-                                                            </VisualBrush>
-                                                        </Border.Background>
-                                                    </Border>
-                                                </Grid>
-                                            </Border>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsChecked" Value="True">
-                                                    <Setter Property="Opacity" Value="0.6"/>
-                                                </Trigger>
-                                                <Trigger Property="IsChecked" Value="False">
-                                                    <Setter Property="Opacity" Value="1"/>
-                                                </Trigger>
+                    <CheckBox Height="22" x:Name="cbSetPosition" Content="对位" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Style="{StaticResource CheckBoxButton}" Foreground="White">
 
-                                            </ControlTemplate.Triggers>
-
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </CheckBox.Resources>
                     </CheckBox>
+                    <CheckBox Height="22" x:Name="cbSetPrecision" Content="精度设置" Margin="32,0,0,0" Padding="0" VerticalContentAlignment="Center" Style="{StaticResource CheckBoxButton}" Foreground="White">
+
+                    </CheckBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="32,0,0,0" Visibility="Hidden" x:Name="StackPanelModeNumber">
+                    <Label Foreground="White" VerticalAlignment="Center">模型精度调整</Label>
+                    <Slider x:Name="SliderModeNumber" Width="150" ValueChanged="SliderModeNumber_OnValueChanged" Background="Blue" Value="60" Maximum="100" Style="{StaticResource Slider_CustomStyle2}" Margin="5,0,0,0" Minimum="20" />
 
                 </StackPanel>
             </StackPanel>
@@ -403,7 +306,46 @@
 
             </Popup>
 
+            <Popup  x:Name="debugPrecisionPopup"  IsOpen="{Binding ElementName=cbSetPrecision,Path=IsChecked}" PlacementTarget="{Binding ElementName=cbSetPrecision}" AllowsTransparency="True"  StaysOpen="False" PopupAnimation="Slide" HorizontalOffset="18" VerticalOffset="10">
 
+                <StackPanel >
+
+                    <Path Stroke="DarkCyan" StrokeThickness="0" Margin="10,0,0,-10" VerticalAlignment="Bottom">
+                        <Path.Fill>
+                            <LinearGradientBrush>
+                                <GradientStop Color="#FF423B57"/>
+                            </LinearGradientBrush>
+                        </Path.Fill>
+                        <Path.Data>
+                            <PathGeometry>
+                                <!-- 指明是闭线条并且指定起始位置-->
+                                <PathFigure IsClosed="True" StartPoint="5,0">
+                                    <LineSegment Point="0,5" />
+                                    <LineSegment Point="10,5" />
+                                </PathFigure>
+                            </PathGeometry>
+                        </Path.Data>
+                    </Path>
+                    <Border CornerRadius="0,4,4,4" Background="Transparent"  BorderThickness="10">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="10" Color="#FF201A33" ShadowDepth="3" Opacity="0.8"></DropShadowEffect>
+                        </Border.Effect>
+                        <Border  Background="#FF423B57" CornerRadius="0,4,4,4" Padding="10,8" BorderThickness="0">
+                            <StackPanel  Width="150">
+                                <Grid >
+                                    <Label   Foreground="White" FontSize="10" VerticalAlignment="Center">高阈值</Label>
+                                    <Slider x:Name="SliderThreshold2" ValueChanged="SliderPrecision_OnValueChanged"  Value="60" Maximum="100" Style="{StaticResource Slider_CustomStyle}" Margin="32,0,0,0" Minimum="20" />
+                                </Grid>
+                                <Grid >
+                                    <Label Foreground="White" FontSize="10" VerticalAlignment="Center">低阈值</Label>
+                                    <Slider x:Name="SliderThreshold1" ValueChanged="SliderPrecision_OnValueChanged"  Value="60" Maximum="100" Style="{StaticResource Slider_CustomStyle}" Margin="32,0,0,0" Minimum="20" />
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </Border>
+                </StackPanel>
+
+            </Popup>
         </Grid>
     </DockPanel>
 

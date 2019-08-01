@@ -459,6 +459,50 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+
+
+    <Style x:Key="Slider_Thumb2" TargetType="Thumb">
+        <Setter Property="Focusable" Value="false" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Thumb">
+                    <Ellipse Fill="White" Height="15" Stroke="Transparent" Width="15"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Slider_CustomStyle2" TargetType="Slider" >
+        <Setter Property="Focusable" Value="false"  />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Slider">
+                    <Grid Height="15" >
+                        <Rectangle Height="3" RadiusX="1.5" RadiusY="3" >
+                            <Rectangle.Fill>
+                                <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
+                                    <GradientStop Color="#FFC6C6C6" Offset="0"/>
+                                    <GradientStop Color="White" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+
+
+                        <!--<Grid.Effect>
+                                <DropShadowEffect BlurRadius="0" ShadowDepth="0" />
+                            </Grid.Effect>-->
+
+                        <Track  Name="PART_Track">
+                            <Track.Thumb>
+                                <Thumb Style="{StaticResource Slider_Thumb2}"/>
+                            </Track.Thumb>
+                        </Track>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!--#endregion-->
 
     <!--#region CheckBoxButton-->

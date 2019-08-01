@@ -73,5 +73,10 @@ namespace WisdomProjections.Views
 
         //    throw new IndexOutOfRangeException();
         //}
+        public void RefreshPrecision(double threshold1, double threshold2)
+        {
+            
+
+        }
     }
 }

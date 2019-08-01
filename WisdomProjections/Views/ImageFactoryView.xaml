@@ -9,11 +9,10 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid.Resources>
         <convertor:HalfNumConvertor x:Key="HalfNumConvertor"/>
-        <convertor:DivideConvertor x:Key="DivideConvertor"/>
     </Grid.Resources>
     <Grid x:Name="IMG">
         <Grid.Resources>
-            <TransformGroup x:Key="Imageview">
+            <TransformGroup x:Key="ImageTransform">
                 <ScaleTransform/>
                 <TranslateTransform/>
             </TransformGroup>
@@ -25,20 +24,26 @@
                              MouseMove="Img_MouseMove"
                              MouseWheel="Img_MouseWheel" >
                 <Grid >
-                    <Grid RenderTransform="{StaticResource Imageview}" HorizontalAlignment="Center">
+                    <Grid RenderTransform="{StaticResource ImageTransform}" HorizontalAlignment="Center">
                         <Image Name="img"  RenderOptions.BitmapScalingMode="NearestNeighbor">
 
                             <Image.RenderTransform>
-                                <ScaleTransform ScaleX="-1" CenterX="{Binding ElementName=img, Path=ActualWidth,Converter={StaticResource HalfNumConvertor},ConverterParameter=2}" CenterY="0"/>
+                                <ScaleTransform x:Name="ScaleTransformImg" ScaleX="-1" CenterX="{Binding ElementName=img, Path=ActualWidth,Converter={StaticResource HalfNumConvertor},ConverterParameter=2}" CenterY="0"/>
                             </Image.RenderTransform>
                         </Image>
                     </Grid>
-                    <Grid x:Name="gSD" Width="{Binding ElementName=img, Path=ActualWidth}" Height="{Binding ElementName=img, Path=ActualHeight}"  RenderTransform="{StaticResource Imageview}" SizeChanged="GSD_SizeChanged">
+                    <Grid x:Name="gSD" Width="{Binding ElementName=img, Path=ActualWidth}" Height="{Binding ElementName=img, Path=ActualHeight}"  RenderTransform="{StaticResource ImageTransform}" SizeChanged="GSD_SizeChanged" >
                         <Border x:Name="bSelectedDisplay"  BorderBrush="White" BorderThickness="1"   SizeChanged="BSelectedDisplay_SizeChanged" HorizontalAlignment="Left" VerticalAlignment="Top" >
                             <Canvas  Width="{Binding ElementName=bSelectedDisplay, Path=ActualWidth}" Height="{Binding ElementName=bSelectedDisplay, Path=ActualHeight}" x:Name="canvas" />
                         </Border>
                     </Grid>
-                    <local:ImageSelectView x:Name="ImageSelectView" Width="{Binding ElementName=img, Path=ActualWidth}" Height="{Binding ElementName=img, Path=ActualHeight}"  RenderTransform="{StaticResource Imageview}"></local:ImageSelectView>
+                    <Grid RenderTransform="{StaticResource ImageTransform}" HorizontalAlignment="Center">
+                        <Image Name="ImageCanny"  RenderOptions.BitmapScalingMode="NearestNeighbor">
+
+                          
+                        </Image>
+                    </Grid>
+                    <!--<local:ImageSelectView x:Name="ImageSelectView" Width="{Binding ElementName=img, Path=ActualWidth}" Height="{Binding ElementName=img, Path=ActualHeight}"  RenderTransform="{StaticResource ImageTransform}"></local:ImageSelectView>-->
                 </Grid>
             </ContentControl>
         </ScrollViewer>
