@@ -165,9 +165,8 @@ namespace WisdomProjections.Data_Executor
                     flag = 1;
                     rectSet.Add(new Rectangle(
                         new Point(minValue(rectList[i].X, rect.X), minValue(rectList[i].Y, rect.Y)),
-                        new Size(
-                            maxValue(rectList[i].X + rectList[i].Width, rect.X + rect.Width) -
-                            minValue(rectList[i].X, rect.X),
+                        new Size(maxValue(rectList[i].X + rectList[i].Width, rect.X + rect.Width) -
+                                 minValue(rectList[i].X, rect.X),
                             maxValue(rectList[i].Y + rectList[i].Height, rect.Y + rect.Height) -
                             minValue(rectList[i].Y, rect.Y))));
                 }
@@ -208,9 +207,9 @@ namespace WisdomProjections.Data_Executor
             // 得到左边和右边的点集合
             foreach (var dict in pointDictDesc)
             {
-                if (dict.Value.Count >= 2) // 对应的X列表至少应该包含2个元素
+                if (dict.Value.Count >= 2) //对应的X列表至少应该包含2个元素
                 {
-                    if ((dict.Value.Max() - dict.Value.Min()) > 10)
+                    if ((dict.Value.Max() - dict.Value.Min()) >= 10)
                     {
                         leftPoint.Add(new Point(dict.Value.Min(), dict.Key));
                         rightPoint.Add(new Point(dict.Value.Max(), dict.Key));
@@ -237,6 +236,7 @@ namespace WisdomProjections.Data_Executor
         {
             // 根据路径读取图像[RGB]
             Mat imgOriginal = new Image<Bgr, byte>(imgPath).Mat;
+
             //将RGB图像转换为灰度图像
             Mat grayImg = new Mat();
             CvInvoke.CvtColor(imgOriginal, grayImg, ColorConversion.Rgb2Gray);
@@ -245,6 +245,7 @@ namespace WisdomProjections.Data_Executor
             CvInvoke.Canny(grayImg, cannyImg, threshold1, threshold2, apertureSize: 3);
             //使用高斯滤波进行噪音去除
             CvInvoke.GaussianBlur(cannyImg, cannyImg, new Size(3, 3), 0);
+
             return cannyImg;
         }
 
@@ -261,10 +262,10 @@ namespace WisdomProjections.Data_Executor
             {
                 areaIndex.Add(Convert.ToString(i), CvInvoke.ContourArea(contoursImg[i]));
             }
+
             // 按照轮廓面积值的索引从大到小进行排序
             List<int> listIndex = new List<int>();
-            Dictionary<string, double> areaIndexDesc =
-                areaIndex.OrderByDescending(s => s.Value).ToDictionary(o => o.Key, p => p.Value);
+            Dictionary<string, double> areaIndexDesc = areaIndex.OrderByDescending(s => s.Value).ToDictionary(o => o.Key, p => p.Value);
             foreach (KeyValuePair<string, double> kvp in areaIndexDesc)
             {
                 listIndex.Add(Convert.ToInt16(kvp.Key));
@@ -277,7 +278,7 @@ namespace WisdomProjections.Data_Executor
             Image<Bgr, byte> imageContour = new Image<Bgr, byte>(cannyImg.Width, cannyImg.Height);
             for (int i = 0; i < listIndexTopK.Count; i++)
             {
-                CvInvoke.DrawContours(imageContour, contoursImg, listIndexTopK[i], new MCvScalar(255, 0, 0), 2);
+                CvInvoke.DrawContours(imageContour, contoursImg, listIndexTopK[i], new MCvScalar(255, 0, 0), 1);
             }
 
             // 画出轮廓的最小外接矩形
@@ -285,8 +286,12 @@ namespace WisdomProjections.Data_Executor
             for (int i = 0; i < listIndexTopK.Count; i++)
             {
                 RotatedRect rotatedRect = CvInvoke.MinAreaRect(contoursImg[listIndexTopK[i]]);
-                contourOfRect.Add(rotatedRect.MinAreaRect());
+                if (rotatedRect.Angle == 0)
+                {
+                    contourOfRect.Add(rotatedRect.MinAreaRect());
+                }
             }
+
             // 调用去除冗余外接矩形函数
             for (int i = 0; i < contourOfRect.Count; i++)
             {
@@ -307,11 +312,12 @@ namespace WisdomProjections.Data_Executor
 
             // 调试点2：将外接矩形显示在图像上，调整自定义TopK最大轮廓数目
             // ****************************************************
-            for (int i = 0; i < contourFinal.Count; i++)
-            {
-                CvInvoke.Rectangle(imageContour, contourFinal[i], new MCvScalar(255, 255, 255), 3);
-            }
+            //for (int i = 0; i < contourFinal.Count; i++)
+            //{
+            //    CvInvoke.Rectangle(imageContour, contourFinal[i], new MCvScalar(255, 255, 255), 1);
+            //}
             //****************************************************
+            //CvInvoke.Imwrite("demo.png", imageContour);
 
             // 找出最终的矩形质心及对应矩阵坐标[字典类型]
             Dictionary<Point, Rectangle> dictOfPoint = new Dictionary<Point, Rectangle>();
@@ -348,7 +354,7 @@ namespace WisdomProjections.Data_Executor
             {
                 // 调试点3：显示输入的坐标所对应的矩形[输入的点在检测的矩形中]
                 // ****************************************************
-                //CvInvoke.Rectangle(imageContour, inputRect[0], new MCvScalar(255, 255, 255), 3);
+                //CvInvoke.Rectangle(imageContour, inputRect[0], new MCvScalar(255, 255, 255), 1);
                 // ****************************************************
             }
             else //输入的点不在检测的矩形中
@@ -361,7 +367,7 @@ namespace WisdomProjections.Data_Executor
 
                 // 调试点4：显示输入的坐标所对应的矩形[输入的点不在检测的矩形中]
                 // ****************************************************
-                //CvInvoke.Rectangle(imageContour, dictOfPoint[resultRect[resultRect.Keys.Min()]], new MCvScalar(255, 255, 255), 3);
+                //CvInvoke.Rectangle(imageContour, dictOfPoint[resultRect[resultRect.Keys.Min()]], new MCvScalar(255, 255, 255), 1);
                 // ****************************************************
             }
 
@@ -401,24 +407,27 @@ namespace WisdomProjections.Data_Executor
 
             // 拟合点集得到轮廓
             List<Point> finalPoint = new List<Point>();
-            if (flag == 0)
+            if (flag == 0 && listOfPoint.Count != 0)
             {
                 finalPoint = FitPointContour(listOfPoint, inputRect[0]);
             }
-            else
+            else if (flag == 1 && listOfPoint.Count != 0)
             {
                 finalPoint = FitPointContour(listOfPoint, dictOfPoint[resultRect[resultRect.Keys.Min()]]);
             }
 
             // 记录相邻点对，为画直线做准备[调试程序用，根据该结果进行参数调整]
-            for (int i = 0; i < finalPoint.Count - 1; i++)
+            if (listOfPoint.Count != 0 && finalPoint.Count != 0)
             {
-                CvInvoke.Line(imageContour, finalPoint[i], finalPoint[i + 1], new MCvScalar(255, 255, 255), 1,
-                    LineType.EightConnected, 0);
-            }
+                for (int i = 0; i < finalPoint.Count - 1; i++)
+                {
+                    CvInvoke.Line(imageContour, finalPoint[i], finalPoint[i + 1], new MCvScalar(255, 255, 255), 1,
+                        LineType.EightConnected, 0);
+                }
 
-            CvInvoke.Line(imageContour, finalPoint[0], finalPoint[finalPoint.Count - 1], new MCvScalar(255, 255, 255),
-                1, LineType.EightConnected, 0);
+                CvInvoke.Line(imageContour, finalPoint[0], finalPoint[finalPoint.Count - 1],
+                    new MCvScalar(255, 255, 255), 1, LineType.EightConnected, 0);
+            }
 
             // 调试点5：将外轮廓点显示在图像上
             // ****************************************************
@@ -430,20 +439,24 @@ namespace WisdomProjections.Data_Executor
 
             // 调试点6：显示图形用于调试代码
             // ****************************************************
-            CvInvoke.NamedWindow("Contour Coordinates", NamedWindowType.FreeRatio);
-            CvInvoke.Circle(imageContour, new Point(inputPoint.X, inputPoint.Y), 20, new MCvScalar(255, 255, 255), 3,
-                LineType.EightConnected, 0);
+            //CvInvoke.NamedWindow("Contour Coordinates", NamedWindowType.FreeRatio);
+            //CvInvoke.Circle(imageContour, new Point(inputPoint.X, inputPoint.Y), 5, new MCvScalar(255, 255, 255), 1,
+            //    LineType.EightConnected, 0);
             //CvInvoke.Imshow("Contour Coordinates", imageContour);
             //CvInvoke.WaitKey(0);
             // ****************************************************
 
-            if (flag == 0)
+            if (flag == 0 && listOfPoint.Count != 0 && finalPoint.Count != 0)
             {
                 return new Tuple<List<Point>, Rectangle>(finalPoint, inputRect[0]);
             }
-            else
+            else if (flag == 1 && listOfPoint.Count != 0 && finalPoint.Count != 0)
             {
                 return new Tuple<List<Point>, Rectangle>(finalPoint, dictOfPoint[resultRect[resultRect.Keys.Min()]]);
+            }
+            else
+            {
+                return new Tuple<List<Point>, Rectangle>(new List<Point>(), new Rectangle());
             }
         }
 
