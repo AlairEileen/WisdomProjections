@@ -61,6 +61,7 @@ namespace WisdomProjections
                 btnGrdSplitter2.Click += BtnGrdSplitter2_Click;
             InitData();
             InitDevices();
+            imgContainer.CurrentNumber = (int)SliderModeNumber.Value;
         }
 
         /// <summary>
@@ -200,6 +201,7 @@ namespace WisdomProjections
 
 
         #region 模型列表操作
+
         /// <summary>
         /// 模型列表
         /// </summary>
@@ -217,6 +219,7 @@ namespace WisdomProjections
                 d.ToolTip = name;
                 ModelItems.Add(new ModelItem { Name = name, View = d });
                 lvModel.Items.Refresh();
+                lvModel.SelectedItem = ModelItems[ModelItems.Count - 1];
             };
             imgContainer.RectangleDel += d =>
             {
@@ -742,6 +745,15 @@ namespace WisdomProjections
             {
                 RefreshDMWindow();
                 imgContainer.IsDebugMode = true;
+                ModelItems.Clear();
+                if (lvModel?.Items?.Count > 0)
+                {
+                    lvModel.Items.Clear();
+                }
+                imgContainer.CleanMode();
+                ImgSlect_MouseLeftButtonDown(imgSlect, null);
+                ImgSlect_MouseLeftButtonDown(imgSlect, null);
+
             }
         }
         private void CbDebug_OnUnchecked(object sender, RoutedEventArgs e)
@@ -789,7 +801,7 @@ namespace WisdomProjections
 
         private void SliderPrecision_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (SliderThreshold1 != null && SliderThreshold2 != null&&imgContainer!=null)
+            if (SliderThreshold1 != null && SliderThreshold2 != null && imgContainer != null)
             {
                 var threshold1 = SliderThreshold1.Value;
                 var threshold2 = SliderThreshold2.Value;
@@ -801,10 +813,10 @@ namespace WisdomProjections
 
         private void SliderModeNumber_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (SliderModeNumber != null&&imgContainer!=null )
+            if (SliderModeNumber != null && imgContainer != null)
             {
                 var number = SliderModeNumber.Value;
-                imgContainer.CurrentNumber = (int) number;
+                imgContainer.CurrentNumber = (int)number;
                 imgContainer.FindMode();
             }
         }

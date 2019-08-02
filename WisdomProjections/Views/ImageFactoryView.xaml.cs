@@ -24,6 +24,7 @@ using WisdomProjections.Extensions;
 using WisdomProjections.Models;
 using WisdomProjections.Views.Sys;
 using Point = System.Windows.Point;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace WisdomProjections.Views
 {
@@ -102,22 +103,9 @@ namespace WisdomProjections.Views
                 }
             }
 
-            //var nh = canvas.ActualHeight;
-            //var nw = canvas.ActualWidth;
-            //Console.WriteLine($"后:{nw},{nh}");
-            //changeOtherSize(ch,cw,nh,nw);
 
         }
 
-        //private void changeOtherSize(double ch, double cw, double nh, double nw)
-        //{
-
-        //    foreach (var item in RectangleViews)
-        //    {
-        //        item.SetValue(Canvas.LeftProperty, Convert.ToDouble(item.GetValue(Canvas.LeftProperty)) * nw / cw);
-        //        item.SetValue(Canvas.TopProperty, Convert.ToDouble(item.GetValue(Canvas.TopProperty)) * nh / ch);
-        //    }
-        //}
 
         /// <summary>
         /// 鼠标拖动
@@ -333,11 +321,11 @@ namespace WisdomProjections.Views
         public void FindMode()
         {
 
-           
+
             ImageTool.ImageSourceToBitmap(img.Source, out var bitmap);
             var param = canvas.ActualWidth / bitmap.Width;
-         
-            var pointInImage = new Point(currentModePoint.X/param,currentModePoint.Y/param);
+
+            var pointInImage = new Point(currentModePoint.X / param, currentModePoint.Y / param);
             new Thread(() =>
             {
                 if (!ApplicationInfoContext.IsIpCamera)
@@ -348,21 +336,29 @@ namespace WisdomProjections.Views
                 //获取鼠标点击的轮廓
                 var mode = Image_Emgu.GetBlobView(currentMat, pointInImage.ToDrawingPoint(), CurrentNumber);
 
-                Application.Current?.Dispatcher?.BeginInvoke(new Action(() => CreatePathAreaPoint(
-                    //最终需要的实体
-                    new RectPathModel
-                    {
-                        //轮廓位置
-                        Location = mode.Item2.Location.ToWindowsPoint(),
-                        //轮廓pointList
-                        Points = mode.Item1.ToWindowsPointList(),
-                        //轮廓宽度
-                        Width = mode.Item2.Width,
-                        //轮廓高度
-                        Height = mode.Item2.Height
-                    }
-                )), DispatcherPriority.Render);
+                TransformForCanvas(param, bitmap.Width, mode);
+
+
             }).Start();
+        }
+
+        private void TransformForCanvas(double param, int bitmapWidth, Tuple<List<System.Drawing.Point>, Rectangle> mode)
+        {
+            Application.Current?.Dispatcher?.BeginInvoke(new Action(() =>
+            {
+                var rpm = new RectPathModel
+                {
+                    Width = mode.Item2.Width * param,
+                    Height = mode.Item2.Height * param,
+                    Location = new Point(mode.Item2.X * param , mode.Item2.Y * param),
+                    Points = new List<Point>()
+                };
+                foreach (var point in mode.Item1)
+                {
+                    rpm.Points.Add(new Point((point.X - mode.Item2.X) * param , (point.Y - mode.Item2.Y) * param));
+                }
+                CreatePathAreaPoint(rpm);
+            }), DispatcherPriority.Render);
         }
 
 
@@ -554,6 +550,12 @@ namespace WisdomProjections.Views
                 }));
             }).Start();
 
+        }
+
+        public void CleanMode()
+        {
+            canvas.Children.Clear();
+            RectangleViews.Clear();
         }
     }
 

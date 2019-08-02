@@ -235,26 +235,8 @@ namespace WisdomProjections.Data_Executor
         //根据输入参数调整物体的轮廓
         public static Mat GetContourView(Bitmap imgPath, double threshold1, double threshold2)
         {
-            //// 根据路径读取图像[RGB]
-            //Mat imgOriginal = new Image<Bgra, byte>(imgPath).Mat;
-
-            ////将RGB图像转换为灰度图像
-            //Mat grayImg = new Mat();
-            //CvInvoke.CvtColor(imgOriginal, grayImg, ColorConversion.Rgb2Gray);
-            ////使用Canny算子做边缘检测
-            //var cannyImg = new Image<Bgra, byte>(imgOriginal.Width, imgOriginal.Height, new Bgra(255, 255, 255, 0));
-            //CvInvoke.Canny(grayImg, cannyImg, threshold1, threshold2, apertureSize: 3);
-            ////使用高斯滤波进行噪音去除
-            //CvInvoke.GaussianBlur(cannyImg, cannyImg, new Size(3, 3), 0);
-
-            //return cannyImg;
-
-
-
-
             // 根据路径读取图像[RGB]
             Mat imgOriginal = new Image<Bgr, byte>(imgPath).Mat;
-
             //将RGB图像转换为灰度图像
             Mat grayImg = new Mat();
             CvInvoke.CvtColor(imgOriginal, grayImg, ColorConversion.Rgb2Gray);
@@ -263,7 +245,6 @@ namespace WisdomProjections.Data_Executor
             CvInvoke.Canny(grayImg, cannyImg, threshold1, threshold2, apertureSize: 3);
             //使用高斯滤波进行噪音去除
             CvInvoke.GaussianBlur(cannyImg, cannyImg, new Size(3, 3), 0);
-
             return cannyImg;
         }
 
@@ -280,7 +261,6 @@ namespace WisdomProjections.Data_Executor
             {
                 areaIndex.Add(Convert.ToString(i), CvInvoke.ContourArea(contoursImg[i]));
             }
-
             // 按照轮廓面积值的索引从大到小进行排序
             List<int> listIndex = new List<int>();
             Dictionary<string, double> areaIndexDesc =
@@ -307,7 +287,6 @@ namespace WisdomProjections.Data_Executor
                 RotatedRect rotatedRect = CvInvoke.MinAreaRect(contoursImg[listIndexTopK[i]]);
                 contourOfRect.Add(rotatedRect.MinAreaRect());
             }
-
             // 调用去除冗余外接矩形函数
             for (int i = 0; i < contourOfRect.Count; i++)
             {
@@ -454,8 +433,8 @@ namespace WisdomProjections.Data_Executor
             CvInvoke.NamedWindow("Contour Coordinates", NamedWindowType.FreeRatio);
             CvInvoke.Circle(imageContour, new Point(inputPoint.X, inputPoint.Y), 20, new MCvScalar(255, 255, 255), 3,
                 LineType.EightConnected, 0);
-            CvInvoke.Imshow("Contour Coordinates", imageContour);
-            CvInvoke.WaitKey(0);
+            //CvInvoke.Imshow("Contour Coordinates", imageContour);
+            //CvInvoke.WaitKey(0);
             // ****************************************************
 
             if (flag == 0)

@@ -109,7 +109,7 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="32,0,0,0" Visibility="Hidden" x:Name="StackPanelModeNumber">
                     <Label Foreground="White" VerticalAlignment="Center">模型精度调整</Label>
-                    <Slider x:Name="SliderModeNumber" Width="150" ValueChanged="SliderModeNumber_OnValueChanged" Background="Blue" Value="60" Maximum="100" Style="{StaticResource Slider_CustomStyle2}" Margin="5,0,0,0" Minimum="20" />
+                    <Slider x:Name="SliderModeNumber" Width="150" ValueChanged="SliderModeNumber_OnValueChanged" Background="Blue" Value="80" Maximum="150" Style="{StaticResource Slider_CustomStyle2}" Margin="5,0,0,0" Minimum="10" />
 
                 </StackPanel>
             </StackPanel>
