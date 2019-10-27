@@ -326,7 +326,7 @@ namespace WisdomProjections.Data_Executor
                 // 如果字典dictOfPoint已经包含该点，那么将该点右下移动1个像素
                 if (dictOfPoint.ContainsKey(new Point(rect.X + rect.Width / 2, rect.Y + rect.Height / 2)))
                 {
-                    dictOfPoint.Add(new Point(rect.X + rect.Width / 2 + 1, rect.Y + rect.Height / 2 + 1), rect);
+                    //dictOfPoint.Add(new Point(rect.X + rect.Width / 2 + 1, rect.Y + rect.Height / 2 + 1), rect);
                 }
                 else
                 {
